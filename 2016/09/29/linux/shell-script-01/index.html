@@ -16,13 +16,13 @@
   <title>shell 脚本基础学习（一） | Xiho’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="keywords" content="ShellLinux" />
+  <meta name="keywords" content="LinuxShell" />
   
   
   
   
   <meta name="description" content="前言Linux shell 脚本基础我们将分几篇文章来记录，希望对我们这些初次接触Linxu shell脚本编程的初学者有帮助；Linxu shell 脚本基础学习先来介绍shell的语法，开头、注释、变量和环境，虽然不涉及到具体的东西，但是大号基础是以后学习的前提，很多时候我们拿到别人的开源库，需要编译使用，但是由于各种原因，总是编译不成功，其中就有shell 脚本，如果我们看不懂别人的脚本，编">
-<meta name="keywords" content="Shell,Linux">
+<meta name="keywords" content="Linux,Shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shell 脚本基础学习（一）">
 <meta property="og:url" content="http://xuhaoblog.com/2016/09/29/linux/shell-script-01/index.html">
@@ -161,7 +161,7 @@ var themeMenus = {};
             
       <div id="content" class="outer">
         
-          <section id="main" style="float:none;"><article id="post-linux/shell-script-01" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+          <section id="main" style="float:none;"><article id="post-linux/shell-script-01"  class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -292,15 +292,6 @@ var a = new Donate({
 </article>
 
 <!-- Table of Contents -->
-
-  <aside id="sidebar">
-    <div id="toc" class="toc-article">
-    <strong class="toc-title">Contents</strong>
-    
-      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x6B63;&#x6587;" class="headerlink" title="&#x6B63;&#x6587;"></a>&#x6B63;&#x6587;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Linux-脚本编写基础"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#1-Linux-&#x811A;&#x672C;&#x7F16;&#x5199;&#x57FA;&#x7840;" class="headerlink" title="1.Linux &#x811A;&#x672C;&#x7F16;&#x5199;&#x57FA;&#x7840;"></a>1.Linux &#x811A;&#x672C;&#x7F16;&#x5199;&#x57FA;&#x7840;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-语法的基本介绍"><span class="nav-number">2.1.1.</span> <span class="nav-text"><a href="#1-1-&#x8BED;&#x6CD5;&#x7684;&#x57FA;&#x672C;&#x4ECB;&#x7ECD;" class="headerlink" title="1.1 &#x8BED;&#x6CD5;&#x7684;&#x57FA;&#x672C;&#x4ECB;&#x7ECD;"></a>1.1 &#x8BED;&#x6CD5;&#x7684;&#x57FA;&#x672C;&#x4ECB;&#x7ECD;</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-1-开头"><span class="nav-number">2.1.1.1.</span> <span class="nav-text"><a href="#1-1-1-&#x5F00;&#x5934;" class="headerlink" title="1.1.1 &#x5F00;&#x5934;"></a><strong>1.1.1 &#x5F00;&#x5934;</strong></span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-2-注释"><span class="nav-number">2.1.1.2.</span> <span class="nav-text"><a href="#1-1-2-&#x6CE8;&#x91CA;" class="headerlink" title="1.1.2 &#x6CE8;&#x91CA;"></a><strong>1.1.2 &#x6CE8;&#x91CA;</strong></span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-3-变量"><span class="nav-number">2.1.1.3.</span> <span class="nav-text"><a href="#1-1-3-&#x53D8;&#x91CF;" class="headerlink" title="1.1.3 &#x53D8;&#x91CF;"></a><strong>1.1.3 &#x53D8;&#x91CF;</strong></span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-4-环境变量"><span class="nav-number">2.1.1.4.</span> <span class="nav-text"><a href="#1-1-4-&#x73AF;&#x5883;&#x53D8;&#x91CF;" class="headerlink" title="1.1.4 &#x73AF;&#x5883;&#x53D8;&#x91CF;"></a><strong>1.1.4 &#x73AF;&#x5883;&#x53D8;&#x91CF;</strong></span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多相关系列传送门："><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;" class="headerlink" title="&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;"></a>&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;</span></a></li></ol>
-    
-    </div>
-  </aside>
 </section>
         
       </div>

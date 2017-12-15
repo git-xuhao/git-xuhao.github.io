@@ -16,13 +16,13 @@
   <title>shell 流程控制loop和引号（三） | Xiho’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="keywords" content="ShellLinux" />
+  <meta name="keywords" content="LinuxShell" />
   
   
   
   
   <meta name="description" content="前言Linux shell 脚本基础学习第三篇；上一篇Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。">
-<meta name="keywords" content="Shell,Linux">
+<meta name="keywords" content="Linux,Shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shell 流程控制Loop和引号（三）">
 <meta property="og:url" content="http://xuhaoblog.com/2016/09/30/linux/shell-script-03/index.html">
@@ -163,7 +163,7 @@ var themeMenus = {};
             
       <div id="content" class="outer">
         
-          <section id="main" style="float:none;"><article id="post-linux/shell-script-03" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+          <section id="main" style="float:none;"><article id="post-linux/shell-script-03"  class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -337,15 +337,6 @@ var a = new Donate({
 </article>
 
 <!-- Table of Contents -->
-
-  <aside id="sidebar">
-    <div id="toc" class="toc-article">
-    <strong class="toc-title">Contents</strong>
-    
-      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x6B63;&#x6587;" class="headerlink" title="&#x6B63;&#x6587;"></a>&#x6B63;&#x6587;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4、loop"><span class="nav-number">2.0.1.</span> <span class="nav-text"><a href="#4&#x3001;loop" class="headerlink" title="4&#x3001;loop"></a><strong>4&#x3001;loop</strong></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、引号"><span class="nav-number">2.0.2.</span> <span class="nav-text"><a href="#5&#x3001;&#x5F15;&#x53F7;" class="headerlink" title="5&#x3001;&#x5F15;&#x53F7;"></a><strong>5&#x3001;&#x5F15;&#x53F7;</strong></span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1、双引号"><span class="nav-number">2.0.2.1.</span> <span class="nav-text"><a href="#5-1&#x3001;&#x53CC;&#x5F15;&#x53F7;" class="headerlink" title="5.1&#x3001;&#x53CC;&#x5F15;&#x53F7;"></a><strong>5.1&#x3001;&#x53CC;&#x5F15;&#x53F7;</strong></span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2、单引号"><span class="nav-number">2.0.2.2.</span> <span class="nav-text"><a href="#5-2&#x3001;&#x5355;&#x5F15;&#x53F7;" class="headerlink" title="5.2&#x3001;&#x5355;&#x5F15;&#x53F7;"></a><strong>5.2&#x3001;&#x5355;&#x5F15;&#x53F7;</strong></span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-3、单引号和双引号的区别"><span class="nav-number">2.0.2.3.</span> <span class="nav-text"><a href="#5-3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;" class="headerlink" title="5.3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;"></a><strong>5.3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;</strong></span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-4、反引号"><span class="nav-number">2.0.2.4.</span> <span class="nav-text"><a href="#5-4&#x3001;&#x53CD;&#x5F15;&#x53F7;" class="headerlink" title="5.4&#x3001;&#x53CD;&#x5F15;&#x53F7;"></a><strong>5.4&#x3001;&#x53CD;&#x5F15;&#x53F7;</strong></span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-5、反斜杠"><span class="nav-number">2.0.2.5.</span> <span class="nav-text"><a href="#5-5&#x3001;&#x53CD;&#x659C;&#x6760;" class="headerlink" title="5.5&#x3001;&#x53CD;&#x659C;&#x6760;"></a><strong>5.5&#x3001;&#x53CD;&#x659C;&#x6760;</strong></span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多相关系列传送门："><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;" class="headerlink" title="&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;"></a>&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;</span></a></li></ol>
-    
-    </div>
-  </aside>
 </section>
         
       </div>

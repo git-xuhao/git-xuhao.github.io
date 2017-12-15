@@ -165,7 +165,7 @@ var themeMenus = {};
             
       <div id="content" class="outer">
         
-          <section id="main" style="float:none;"><article id="post-android-retrofit" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+          <section id="main" style="float:none;"><article id="post-android-retrofit"  class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -303,9 +303,9 @@ var a = new Donate({
     </a>
   
   
-    <a href="/2016/04/12/android-change-language_01/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/04/12/android-change-language_02/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Älter</strong>
-      <div class="article-nav-title">Android 切换系统语言源码分析（上）</div>
+      <div class="article-nav-title">Android 切换系统语言功能实现（下）</div>
     </a>
   
 </nav>
@@ -314,15 +314,6 @@ var a = new Donate({
 </article>
 
 <!-- Table of Contents -->
-
-  <aside id="sidebar">
-    <div id="toc" class="toc-article">
-    <strong class="toc-title">Contents</strong>
-    
-      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-Retrofit"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x4EC0;&#x4E48;&#x662F;-Retrofit" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F; Retrofit ?"></a><strong>&#x4EC0;&#x4E48;&#x662F; Retrofit ?</strong></span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、集成"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#&#x4E00;&#x3001;&#x96C6;&#x6210;" class="headerlink" title="&#x4E00;&#x3001;&#x96C6;&#x6210;"></a><strong>&#x4E00;&#x3001;&#x96C6;&#x6210;</strong></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、返回的数据格式"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#&#x4E8C;&#x3001;&#x8FD4;&#x56DE;&#x7684;&#x6570;&#x636E;&#x683C;&#x5F0F;" class="headerlink" title="&#x4E8C;&#x3001;&#x8FD4;&#x56DE;&#x7684;&#x6570;&#x636E;&#x683C;&#x5F0F;"></a><strong>&#x4E8C;&#x3001;&#x8FD4;&#x56DE;&#x7684;&#x6570;&#x636E;&#x683C;&#x5F0F;</strong></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、AndroidStudio插件-GsonFormat"><span class="nav-number">1.3.</span> <span class="nav-text"><a href="#&#x4E09;&#x3001;AndroidStudio&#x63D2;&#x4EF6;-GsonFormat" class="headerlink" title="&#x4E09;&#x3001;AndroidStudio&#x63D2;&#x4EF6; GsonFormat"></a><strong>&#x4E09;&#x3001;AndroidStudio&#x63D2;&#x4EF6;<a href="https://plugins.jetbrains.com/plugin/7654?pr=androidstudio" target="_blank" rel="noopener"> GsonFormat</a></strong></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、实现过程"><span class="nav-number">1.4.</span> <span class="nav-text"><a href="#&#x56DB;&#x3001;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;" class="headerlink" title="&#x56DB;&#x3001;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;"></a><strong>&#x56DB;&#x3001;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;</strong></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、如何使用"><span class="nav-number">1.5.</span> <span class="nav-text"><a href="#&#x4E94;&#x3001;&#x5982;&#x4F55;&#x4F7F;&#x7528;" class="headerlink" title="&#x4E94;&#x3001;&#x5982;&#x4F55;&#x4F7F;&#x7528;"></a><strong>&#x4E94;&#x3001;&#x5982;&#x4F55;&#x4F7F;&#x7528;</strong></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、扩展阅读"><span class="nav-number">1.6.</span> <span class="nav-text"><a href="#&#x516D;&#x3001;&#x6269;&#x5C55;&#x9605;&#x8BFB;" class="headerlink" title="&#x516D;&#x3001;&#x6269;&#x5C55;&#x9605;&#x8BFB;"></a><strong>&#x516D;&#x3001;&#x6269;&#x5C55;&#x9605;&#x8BFB;</strong></span></a></li></ol></li></ol>
-    
-    </div>
-  </aside>
 </section>
         
       </div>

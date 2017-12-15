@@ -16,13 +16,13 @@
   <title>shell 命令和流程控制（二） | Xiho’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="keywords" content="ShellLinux" />
+  <meta name="keywords" content="LinuxShell" />
   
   
   
   
   <meta name="description" content="前言Linxu shell 脚本基础这里介绍到第二篇，详细介绍shell 命令和流程控制，这部分介绍三类命令，在学习时大家应该加以比较学习。Linux shell脚本基础课程前面一篇介绍的都是语法基础的开头、注释、变量和 环境变量，这里将介绍shell命令和控制流程的第一部分，在shell脚本中可以使用三类命令，而控制流程就放在下一讲吧。">
-<meta name="keywords" content="Shell,Linux">
+<meta name="keywords" content="Linux,Shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shell 命令和流程控制（二）">
 <meta property="og:url" content="http://xuhaoblog.com/2016/09/29/linux/shell-script-02/index.html">
@@ -161,7 +161,7 @@ var themeMenus = {};
             
       <div id="content" class="outer">
         
-          <section id="main" style="float:none;"><article id="post-linux/shell-script-02" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost" >
+          <section id="main" style="float:none;"><article id="post-linux/shell-script-02"  class="article article-type-post" itemscope itemprop="blogPost" >
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -330,15 +330,6 @@ var a = new Donate({
 </article>
 
 <!-- Table of Contents -->
-
-  <aside id="sidebar">
-    <div id="toc" class="toc-article">
-    <strong class="toc-title">Contents</strong>
-    
-      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x6B63;&#x6587;" class="headerlink" title="&#x6B63;&#x6587;"></a>&#x6B63;&#x6587;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-5-Shell命令和流程控制"><span class="nav-number">3.</span> <span class="nav-text"><a href="#1-1-5-Shell&#x547D;&#x4EE4;&#x548C;&#x6D41;&#x7A0B;&#x63A7;&#x5236;" class="headerlink" title="1.1.5 Shell&#x547D;&#x4EE4;&#x548C;&#x6D41;&#x7A0B;&#x63A7;&#x5236;"></a><strong>1.1.5 Shell&#x547D;&#x4EE4;&#x548C;&#x6D41;&#x7A0B;&#x63A7;&#x5236;</strong></span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Unix-命令"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#1-Unix-&#x547D;&#x4EE4;" class="headerlink" title="1)Unix &#x547D;&#x4EE4;:"></a><strong>1)Unix &#x547D;&#x4EE4;:</strong></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-概念-管道-重定向和-backtick"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#2-&#x6982;&#x5FF5;-&#x7BA1;&#x9053;-&#x91CD;&#x5B9A;&#x5411;&#x548C;-backtick" class="headerlink" title="2) &#x6982;&#x5FF5;: &#x7BA1;&#x9053;, &#x91CD;&#x5B9A;&#x5411;&#x548C; backtick"></a><strong>2) &#x6982;&#x5FF5;: &#x7BA1;&#x9053;, &#x91CD;&#x5B9A;&#x5411;&#x548C; backtick</strong></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-流程控制"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#3-&#x6D41;&#x7A0B;&#x63A7;&#x5236;" class="headerlink" title="3) &#x6D41;&#x7A0B;&#x63A7;&#x5236;"></a><strong>3) &#x6D41;&#x7A0B;&#x63A7;&#x5236;</strong></span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-if"><span class="nav-number">3.3.1.</span> <span class="nav-text"><a href="#1-if" class="headerlink" title="1.if"></a><strong>1.if</strong></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-case"><span class="nav-number">3.3.2.</span> <span class="nav-text"><a href="#2-case" class="headerlink" title="2.case"></a><strong>2.case</strong></span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-selsect"><span class="nav-number">3.3.3.</span> <span class="nav-text"><a href="#3-selsect" class="headerlink" title="3. selsect"></a><strong>3. selsect</strong></span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多相关系列传送门："><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;" class="headerlink" title="&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;"></a>&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;</span></a></li></ol>
-    
-    </div>
-  </aside>
 </section>
         
       </div>
