@@ -70,7 +70,7 @@ var themeMenus = {};
 
   themeMenus["/archives"] = "Archives"; 
 
-  themeMenus["/categories"] = "Categories"; 
+  themeMenus["/categories"] = "Kategorien"; 
 
   themeMenus["/tags"] = "Tags"; 
 
@@ -107,7 +107,7 @@ var themeMenus = {};
                     
                       <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class="" href="/archives">Archives</a> </li>
                     
-                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class="" href="/categories">Categories</a> </li>
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class="" href="/categories">Kategorien</a> </li>
                     
                       <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class="" href="/tags">Tags</a> </li>
                     
@@ -186,12 +186,12 @@ var themeMenus = {};
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/29/linux/shell-script-02/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/8" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
+            <div class="entry-summary" style="margin-left:0;">
             前言Linxu shell 脚本基础这里介绍到第二篇，详细介绍shell 命令和流程控制，这部分介绍三类命令，在学习时大家应该加以比较学习。Linux shell脚本基础课程前面一篇介绍的都是语法基础的开头、注释、变量和 环境变量，这里将介绍shell命令和控制流程的第一部分，在shell脚本中可以使用三类命令，而控制流程就放在下一讲吧。
-正文1.1.5 Shell命令和流程控制在shell...
+正文1.1.5 Shell命令和流程控制在shell脚本中可以使用三类命令：
+1)Unix 命令:虽然在shell脚本中可以使用任意的unix命令，但是还是由一些相对更常用的命令。这些命令通常是用来进行文件和文字操作的。
+常用命令语法及功能
+1234567891011121314151617181920212223242526272829303132...
           
 
         
@@ -248,11 +248,11 @@ var themeMenus = {};
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/29/linux/shell-script-01/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/4" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
-            前言Linux shell 脚本基础我们将分几篇文章来记录，希望对我们这些初次接触Linxu shell脚本编程的初学者有帮助；Linxu shell 脚本基础学习先来介绍shell的语法，开头、注释、变量和环境，虽然不涉及到具体的东西，但是大号基础是以后学习的前提，很多时候我们拿到别人的开源库，需要编译使用，但是由于各种原因，总是编译不成功，其中就有shell 脚本，如果我们看不懂别人的脚...
+            <div class="entry-summary" style="margin-left:0;">
+            前言Linux shell 脚本基础我们将分几篇文章来记录，希望对我们这些初次接触Linxu shell脚本编程的初学者有帮助；Linxu shell 脚本基础学习先来介绍shell的语法，开头、注释、变量和环境，虽然不涉及到具体的东西，但是大号基础是以后学习的前提，很多时候我们拿到别人的开源库，需要编译使用，但是由于各种原因，总是编译不成功，其中就有shell 脚本，如果我们看不懂别人的脚本，编译出错，还查不来原因。（比如一个空格导致编译失败，你能查出原因么？）
+正文1.Linux 脚本编写基础1.1 语法的基本介绍1.1.1 开头程序必须以下面的行开始（必须放在文件的第一行）：
+1#!/bin/bash
+符号”#!”用来告诉系统它后面的参数是用来执行该文件的程序。在这个例子中我们使...
           
 
         
@@ -309,11 +309,12 @@ var themeMenus = {};
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/29/linux/vim-config/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/10" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
-            前言Learn vim and it will be your last text editor. There isn’t any better text editor that I know of. It is hard to learn, but incredible to use.学习VIM，它会是你最后的文本编辑器。没有任何好转的文本编辑器，我知道的。这是很难学，但令人难以置信的使用...
+            <div class="entry-summary" style="margin-left:0;">
+            前言Learn vim and it will be your last text editor. There isn’t any better text editor that I know of. It is hard to learn, but incredible to use.学习VIM，它会是你最后的文本编辑器。没有任何好转的文本编辑器，我知道的。这是很难学，但令人难以置信的使用。
+VI是LINUX下最老牌的编辑工具，而VIM则是VI的升级版本，LINUX系统必备啊~~
+
+摘要（以下已Ubuntu系统为例）
+VIM的安装和配置1、VIM安装既然VIM编辑器是在Linux 系统环境下运行的，那么我们首先要在Ubuntu上安装VIM；在命令行敲入“vi”后按”tab”键，可以查...
           
 
         
@@ -370,13 +371,13 @@ var themeMenus = {};
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/28/linux/cmd/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/8" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
+            <div class="entry-summary" style="margin-left:0;">
             前言Linux提供了大量的命令，利用它可以有效地完成大量的工作，如磁盘操作、文件存取、目录操作、进程管理、文件权限设定等。所以，在Linux系统上工作离不开使用系统提供的命令。要想真正理解Linux系统，就必须从Linux命令学起，通过基础的命令学习可以进一步理解Linux系统，下面就来简单总结下常用的基础操作命令。
 
-基本命令（1）指令名称：pwd1pwd 命令也是最常用最基本的命令之一，...
+基本命令（1）指令名称：pwd1pwd 命令也是最常用最基本的命令之一，用于显示用户当前所在的目录。
+（2）指令名称：cd1234cd命令不仅显示当前状态，还改变当前状态，它的用法跟dos下的cd命令基本一致。 cd ..可进入上一层目录 cd -可进入上一个进入的目录 cd ~可进入用户的home目录
+（3）指令名称：cp  使用方式：
+12cp [options] ...
           
 
         
@@ -433,12 +434,10 @@ var themeMenus = {};
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/23/ndk/jni-1/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/5" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
+            <div class="entry-summary" style="margin-left:0;">
             前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！
-JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编...
+JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。　　 
+　　开发JNI程序会受到系统环境的限制，因为用C/C++语言写出来的代码或模块，编译过程当中要依赖当前操作系统环境所提供的一些库函数，并和本地库链接在一起。而且编译后生成的二进制代码只能在本地操作...
           
 
         
@@ -495,13 +494,14 @@ JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地�
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/20/linux/xshell/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/6" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
+            <div class="entry-summary" style="margin-left:0;">
             我这里有一台电脑，装的Ubuntu系统，当我想使用时，又要去使用另外一台机器（如果没有，可以直接去阿里云整一台主机），更何况文件传输也不方便，比较麻烦，后来，看着同事用的Xshell 远程连接linux，挺方便的就折腾了一番，当然，putty，xftp是个很不错的选择。
 xshell和xftp是windows下访问ubuntu（linux）服务器的一个非常好使的工具。
-ubuntu安装ssh...
+ubuntu安装ssh服务器首先，判断Ubuntu是否安装了ssh服务：1、输入：
+1#ps -e |grep ssh
+ 如果服务已经启动，则可以同时看到“ssh-agent”和“sshd”，否则表示没有安装服务，或没有开机启动 。
+2、安装ssh服务，输入命令：
+1#sudo apt-get install opens...
           
 
         
@@ -558,13 +558,16 @@ ubuntu安装ssh...
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/12/cpp/string/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/7" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
+            <div class="entry-summary" style="margin-left:0;">
             在C语言中，动态分配内存用 malloc() 函数，释放内存用 free() 函数。如下所示：
 12int *p = (int*) malloc( sizeof(int) * 10 );  //分配10个int型的内存空间free(p);  //释放内存
-在C++中，这两个函数仍然可以使用，但是C++又新增了两个关键字，new 和 delete：new 用来动态分配内存，delete 用来释...
+在C++中，这两个函数仍然可以使用，但是C++又新增了两个关键字，new 和 delete：new 用来动态分配内存，delete 用来释放内存。
+
+用 new 和 delete 分配内存更加简单：
+12int *p = new int;  //分配1个int型的内存空间delete p;  //释放内存
+new 操作符会根据后面的数据类型来推断所需空间的大小。
+如果希望分配一组连续的数据，可以使用 new[]：
+12int *p =...
           
 
         
@@ -621,14 +624,13 @@ ubuntu安装ssh...
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/11/cpp/aduc/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/9" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
+            <div class="entry-summary" style="margin-left:0;">
             c++ 提供的string类包含了若干实用的成员函数，大大方便了字符串的增加、删除、更改、查询等操作。
 插入字符串insert（）函数可以在string字符串中置顶的位置插入另一个字符串，它的原型为：
 1string&amp; insert (size_t pos, const string&amp; str);
-看这个插入的格式我们就能猜想到，pos表示要插入的下标；str表示要插入的字符...
+看这个插入的格式我们就能猜想到，pos表示要插入的下标；str表示要插入的字符串，它可以是string变量，也可以是C风格的字符串。
+看下面的代码：
+123456789101112131415#include &lt;iostream&gt;#include &lt;string&gt;using namespace std;void main()&#123;	string ...
           
 
         
@@ -685,14 +687,11 @@ ubuntu安装ssh...
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/11/cpp/string/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/5" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
+            <div class="entry-summary" style="margin-left:0;">
             C++ 增强了对字符串的支持，除了可以使用c中的字符串，还可以使用内置的数据类型string，string类处理字符串会翻遍很多，完全可以代替C语言中的char 数组和char 指针。
 使用sting类需要包含头文件&lt; sting &gt;, 下面我们就来介绍怎么使用。
 string 的几种用法：
-123456789101112131415161718#include &lt;iost...
+123456789101112131415161718#include &lt;iostream&gt;#include &lt;string&gt;using namespace std;void main()&#123;	string s1;	string s2 = "c plus plus";	string s3 = s2;	string s4(5, 's');	cout &lt...
           
 
         
@@ -749,12 +748,10 @@ string 的几种用法：
         
 
           
-            <div class="entry-thumbnail">
-              <a href="/2016/09/02/sign/"><img width="250" height="175" src="http://lorempixel.com/500/350/city/9" class="attachment-thumb-featured size-thumb-featured wp-post-image" alt=""></a>
-            </div>
-            <div class="entry-summary">
+            <div class="entry-summary" style="margin-left:0;">
             资料来源于Android 官方文档：https://developer.android.com/studio/publish/app-signing.html还有些资料来源于网络。加以整理！
-公钥和私钥的概念在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，...
+公钥和私钥的概念在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要保密，而私钥是由个人自己持有，并且必须妥善保管和注意保密。 
+证书的概念数字证书则是由证书认证机构（CA）对证书申请者真实身份验证之后，用CA的根证书对申请人的一些基本信息以及申请人的公钥进行签名（相当于加盖发证书机 构的公章）后形成的一个数字文件。CA完成签发证书后，会将证书发布在CA的证书...
           
 
         
@@ -788,7 +785,7 @@ string 的几种用法：
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next</a>
+    <a class="extend prev" rel="prev" href="/">zurück</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">weiter</a>
   </nav>
 
 </section>
@@ -842,7 +839,7 @@ string 的几种用法：
     
   <div class="widget_athemes_tabs">
     <ul id="widget-tab" class="clearfix widget-tab-nav">
-      <li class="active"><a>Recent Posts</a></li>
+      <li class="active"><a>letzter Beitrag</a></li>
     </ul>
     <div class="widget">
       <ul>
@@ -926,7 +923,7 @@ string 的几种用法：
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
+    <h3 class="widget-title">Kategorien</h3>
     <div class="widget">
       <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a><span class="category-list-count">10</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a><span class="category-list-count">1</span></li></ul>
     </div>
@@ -955,7 +952,7 @@ string 的几种用法：
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
+    <h3 class="widget-title">Archiv</h3>
 
     <div class="widget">
       <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a><span class="archive-list-count">9</span></li></ul>
