@@ -1,96 +1,292 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block top_img
-  - var top_img = page.top_img || theme.top_img || config.top_img
-  if (top_img)
-    - var flag = top_img === true ? 'no-bg' : undefined
-    div#top-container(style=`background-image: url(${top_img})` class=flag)
-      include ./includes/header.pug
-      #post-info
-        #post-title= page.title || _p('no_title') 
-        #post-meta
-          if (theme.post_meta.date_type)
-            - var date_type = theme.post_meta.date_type == 'updated' ? 'updated' : 'date' 
-            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
-          if (theme.post_meta.categories && page.categories.data.length > 0)
-            if (theme.post_meta.date_type)
-              span.post-meta__separator |
-            each item, index in page.categories.data
-              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")  
-              a(href=url_for(item.path)).post-meta__categories #[=item.name]
-              if (index < page.categories.data.length - 1)
-                 i.fa.fa-angle-right(aria-hidden="true")  
-          if (theme.disqus.enable && theme.disqus.count)
-            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-              span.post-meta__separator |
-            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")  
-            a(href=url_for(page.path) + '#disqus_thread')
-              span.disqus-comment-count(data-disqus-identifier=page.path)
-          if (theme.wordcount && theme.wordcount.enable)
-            .post-meta-wordcount
-              span= _p('post.wordcount') + ': '
-              span.word-count= wordcount(page.content)
-              span.post-meta__separator |
-              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-  else
-    div#top-container.plain
-      include ./includes/header.pug
+  
+  <title>Android NDK开发（二）JNI传递参数和返回值 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言我们在使用 JNI 时最常问到的是 JAVA 和 C/C++之间如何传递数据，以及数据类型之间如何 互相映射。我们从整数等基本类型和数组、字符串等普通的对象类型开始讲述。至于如何传递任意对象，将在后面会更新。">
+<meta name="keywords" content="NDK开发,jni">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android NDK开发（二）JNI传递参数和返回值">
+<meta property="og:url" content="http://xuhaoblog.com/2016/10/06/ndk/jni-2/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="前言我们在使用 JNI 时最常问到的是 JAVA 和 C/C++之间如何传递数据，以及数据类型之间如何 互相映射。我们从整数等基本类型和数组、字符串等普通的对象类型开始讲述。至于如何传递任意对象，将在后面会更新。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20161006145447006">
+<meta property="og:image" content="http://img.blog.csdn.net/20161006153213851">
+<meta property="og:updated_time" content="2017-11-04T11:15:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android NDK开发（二）JNI传递参数和返回值">
+<meta name="twitter:description" content="前言我们在使用 JNI 时最常问到的是 JAVA 和 C/C++之间如何传递数据，以及数据类型之间如何 互相映射。我们从整数等基本类型和数组、字符串等普通的对象类型开始讲述。至于如何传递任意对象，将在后面会更新。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20161006145447006">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-block content
-  article#post(class="")
-    if (!top_img)
-      #post-title.plain= page.title || _p('no_title') 
-      #post-meta
-        if (theme.post_meta.date_type)
-          - var date_type = theme.post_meta.date_type == 'updated' ? '' : 'date' 
-          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)] 
-        if (theme.post_meta.categories && page.categories.data.length > 0)
-          if (theme.post_meta.date_type)
-            span.post-meta__separator |
-          each item, index in page.categories.data
-            i.fa.fa-inbox(aria-hidden="true")  
-            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
-            if (index < page.categories.data.length - 1)
-                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")  
-        if (theme.disqus.enable && theme.disqus.count)
-          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-            span.post-meta__separator |
-          i.fa.fa-comment-o(aria-hidden="true")  
-          a(href=url_for(page.path) + '#disqus_thread')
-            span.disqus-comment-count(data-disqus-identifier=page.path)
-        if (theme.wordcount && theme.wordcount.enable)
-          span.post-meta__separator |
-          span.post-meta-wordcount
-            span= _p('post.wordcount') + ': '
-            span.word-count= wordcount(page.content)
-            span.post-meta__separator |
-            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-    #post-content!= page.content
-    if (theme.post_copyright && theme.post_copyright.enable)
-      .post-copyright
-        .post-copyright__author
-          span.post-copyright-meta= _p('post.copyright.author') + ": "
-          span.post-copyright-info= config.author
-        .post-copyright__type
-          span.post-copyright-meta= _p('post.copyright.link') + ": "
-          span.post-copyright-info= url_for(page.permalink)
-        .post-copyright__notice
-          span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
-          span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license)
-    if (theme.post_meta.tags)
-      .post-meta__tag-list
-        each item, index in page.tags.data
-          a(href=url_for(item.path)).post-meta__tags #[=item.name]
-    if (theme.QR_code)
-      if (theme.QR_code.length > 0)
-        .post-qr-code
-          each item in theme.QR_code
-            .post-qr-code-item
-              img.post-qr-code__img(src=item.itemlist.img)
-              .post-qr-code__desc=item.itemlist.text
-    if (theme.addThis.enable)
-      .addthis_inline_share_toolbox.pull-right
-      script(src=`//s7.addthis.com/js/300/addthis_widget.js#pubid=${theme.addThis.pubid}` async)
-  include includes/pagination.pug
-  if page.comments !== false
-    include includes/comments/index.pug
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ndk/jni-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/10/06/ndk/jni-2/" class="article-date">
+  <time datetime="2016-10-06T07:28:31.000Z" itemprop="datePublished">2016-10-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NDK开发/">NDK开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android NDK开发（二）JNI传递参数和返回值
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我们在使用 JNI 时最常问到的是 JAVA 和 C/C++之间如何传递数据，以及数据类型之间如何 互相映射。我们从整数等基本类型和数组、字符串等普通的对象类型开始讲述。至于如何传递任意对象，将在后面会更新。<br><a id="more"></a></p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>继<a href="http://blog.csdn.net/u011974987/article/details/52602913" target="_blank" rel="noopener">JNI简介及调用流程</a>这篇文章，我们再来实现一个非静态的native方法。</p>
+<p>Java端：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> class JniTest &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//静态的</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">static</span> <span class="keyword">String</span> getStringFromC();</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//非静态的</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">String</span> getString2FromC(<span class="built_in">int</span> i);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> main(<span class="keyword">String</span>[] args) &#123;</span><br><span class="line">		<span class="keyword">String</span> <span class="built_in">text</span> = getStringFromC();</span><br><span class="line">		System.out.<span class="built_in">println</span>(<span class="built_in">text</span>);</span><br><span class="line">		</span><br><span class="line">		JniTest t = <span class="keyword">new</span> JniTest();</span><br><span class="line">		<span class="built_in">text</span> = t.getString2FromC(<span class="number">6</span>);</span><br><span class="line">		System.out.<span class="built_in">println</span>(<span class="built_in">text</span>);</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//加载动态库</span></span><br><span class="line">	<span class="keyword">static</span>&#123;	</span><br><span class="line">		System.loadLibrary(<span class="string">"jni_study"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<!-- more -->
+<p>在native层实现 getString2FromC 非静态方法；</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">JNIEXPORT </span><span class="keyword">jstring </span><span class="keyword">JNICALL </span><span class="keyword">Java_com_study_jni_JniTest_getString2FromC</span></span><br><span class="line"><span class="keyword">(JNIEnv </span>*env, <span class="keyword">jobject </span><span class="keyword">jobj, </span><span class="keyword">jint </span>num)&#123;</span><br><span class="line">	return (*env)-&gt;NewStringUTF(env,<span class="string">"C String2"</span>)<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由此看出，每个native函数，都至少有两个参数（JNIEnv*,jclass或者jobject)</p>
+<ul>
+<li><strong>当native方法为静态方法时：</strong><br>jclass 代表native方法所属类的class对象(JniTest.class)</li>
+<li><strong>当native方法为非静态方法时：</strong><br>jobject 代表native方法所属的对象</li>
+</ul>
+<hr>
+<h3 id="1-Java基本数据类型传递"><a href="#1-Java基本数据类型传递" class="headerlink" title="1.Java基本数据类型传递"></a><strong>1.Java基本数据类型传递</strong></h3><p>用过Java的人都知道，Java中的基本类型包括boolean，byte，char，short，int，long，float，double这样几种，如果你用这几种类型做native方法的参数，当你通过javah -jni生成.h文件的时候，只要看一下生成的.h文件，就会一清二楚，这些类型分别对应的类型是jboolean，jbyte，jchar，jshort，jint，jlong，jfloat，jdouble 。这几种类型几乎都可以当成对应的C++类型来用。</p>
+<p>Java基本数据类型与JNI数据类型的映射关系如下：</p>
+<p><img src="http://img.blog.csdn.net/20161006145447006" alt="JNI的基本数据类型"></p>
+<p>对应的java引用数据类型：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">struct _jobject<span class="comment">;</span></span><br><span class="line"></span><br><span class="line">typedef struct _jobject *<span class="keyword">jobject;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jobject </span><span class="keyword">jclass;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jobject </span><span class="keyword">jthrowable;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jobject </span><span class="keyword">jstring;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jobject </span><span class="keyword">jarray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jbooleanArray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jbyteArray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jcharArray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jshortArray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jintArray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jlongArray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jfloatArray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jdoubleArray;</span></span><br><span class="line"><span class="keyword">typedef </span><span class="keyword">jarray </span><span class="keyword">jobjectArray;</span></span><br></pre></td></tr></table></figure>
+<p>关系图：</p>
+<p><img src="http://img.blog.csdn.net/20161006153213851" alt="这里写图片描述"></p>
+<p>最终都是jobject 的结构体指针类型。</p>
+<hr>
+<h3 id="2-String参数的传递"><a href="#2-String参数的传递" class="headerlink" title="2.String参数的传递"></a><strong>2.String参数的传递</strong></h3><p>Java的String和C++的string是不能对等起来的，所以处理起来比较麻烦。先看一个例子</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Prompt</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">// native method that prints a prompt and reads a line</span></span><br><span class="line"><span class="keyword">private</span> native <span class="keyword">String</span> getLine(<span class="keyword">String</span> prompt);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> void main(<span class="keyword">String</span> args[]) &#123;</span><br><span class="line">Prompt p = <span class="keyword">new</span> <span class="type">Prompt</span>();</span><br><span class="line"><span class="keyword">String</span> input = p.getLine(<span class="string">"Type a line: "</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(<span class="string">"User typed: "</span> + input);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">System.loadLibrary(<span class="string">"Prompt"</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，我们要实现一个native方法，String getLine(String prompt);读入一个String参数，返回一个String值。通过执行javah -jni得到的头文件是这样的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _Included_Prompt</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _Included_Prompt</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="function">JNIEXPORT jstring JNICALL <span class="title">Java_Prompt_getLine</span><span class="params">(JNIEnv *env, jobject <span class="keyword">this</span>, jstring prompt)</span></span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>jstring是JNI中对应于String的类型，但是和基本类型不同的是，jstring不能直接当作C++的string用。如果你用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cout</span> &lt;&lt; prompt &lt;&lt; <span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+<p>编译器肯定会扔给你一个错误信息的。<br>其实要处理jstring有很多种方式，这里只讲一种我认为最简单的方式，看下面这个例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"Prompt.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">JNIEXPORT jstring JNICALL <span class="title">Java_Prompt_getLine</span><span class="params">(JNIEnv *env, jobject obj, jstring prompt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* str;</span><br><span class="line">str = env-&gt;GetStringUTFChars(prompt, <span class="literal">false</span>);</span><br><span class="line"><span class="keyword">if</span>(str == <span class="literal">NULL</span>) &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">NULL</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; str &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放资源</span></span><br><span class="line">env-&gt;ReleaseStringUTFChars(prompt, str);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回一个字符串</span></span><br><span class="line"><span class="keyword">char</span>* tmpstr = <span class="string">"return string succeeded"</span>;</span><br><span class="line">jstring rtstr = env-&gt;NewStringUTF(tmpstr);</span><br><span class="line"><span class="keyword">return</span> rtstr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面的列子代码中，作为参数的prompt不能直接被C++程序使用，先做了如下转换</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">str</span> = env-&gt;GetStringUTFChars(prompt, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>将jstring类型变成一个char*类型。<br>返回的时候，要生成一个jstring类型的对象，也必须通过如下方式，</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">jstring rtstr</span> = env-&gt;NewStringUTF(tmpstr);</span><br></pre></td></tr></table></figure>
+<p>这里用到的<strong>GetStringUTFChars</strong>和<strong>NewStringUTF</strong>都是JNI提供的处理String类型的函数。</p>
+<hr>
+<h3 id="3-数组类型的传递"><a href="#3-数组类型的传递" class="headerlink" title="3.数组类型的传递"></a><strong>3.数组类型的传递</strong></h3><p>和String一样，JNI为Java基本类型的数组提供了j*Array类型，比如int[]对应的就是jintArray。来看一个传递int数组的例子。</p>
+<p>java端主要代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> native <span class="keyword">void</span> <span class="title">giveArray</span><span class="params">(<span class="keyword">int</span>[] <span class="built_in">array</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span>[] <span class="built_in">array</span> = &#123;<span class="number">9</span>,<span class="number">100</span>,<span class="number">10</span>,<span class="number">37</span>,<span class="number">5</span>,<span class="number">10</span>&#125;;</span><br><span class="line">	<span class="comment">//排序</span></span><br><span class="line">t.giveArray(<span class="built_in">array</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i : <span class="built_in">array</span>) &#123;</span><br><span class="line">	System.out.println(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>C实现主要代码：<br><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> compare(<span class="keyword">int</span> *a,<span class="keyword">int</span> *b)&#123;</span><br><span class="line">	<span class="keyword">return</span> (*a) - (*b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//传入</span></span><br><span class="line">JNIEXPORT void JNICALL Java_com_study_jni_JniTest_giveArray</span><br><span class="line">(JNIEnv *<span class="keyword">env</span>, jobject jobj, jintArray arr)&#123;</span><br><span class="line">	<span class="comment">//jintArray -&gt; jint指针 -&gt; c int 数组</span></span><br><span class="line">	jint *elems = (*<span class="keyword">env</span>)-&gt;GetIntArrayElements(<span class="keyword">env</span>, arr, NULL);</span><br><span class="line">	<span class="comment">//printf("%#x,%#x\n", &amp;elems, &amp;arr);</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//数组的长度</span></span><br><span class="line">	<span class="keyword">int</span> len = (*<span class="keyword">env</span>)-&gt;GetArrayLength(<span class="keyword">env</span>, arr);</span><br><span class="line">	<span class="comment">//排序</span></span><br><span class="line">	qsort(elems, len, sizeof(jint), compare);	</span><br><span class="line"></span><br><span class="line">	<span class="comment">//同步</span></span><br><span class="line">	<span class="comment">//mode</span></span><br><span class="line">	<span class="comment">//0, Java数组进行更新，并且释放C/C++数组</span></span><br><span class="line">	<span class="comment">//JNI_ABORT, Java数组不进行更新，但是释放C/C++数组</span></span><br><span class="line">	<span class="comment">//JNI_COMMIT，Java数组进行更新，不释放C/C++数组（函数执行完，数组还是会释放）</span></span><br><span class="line">	</span><br><span class="line">	(*<span class="keyword">env</span>)-&gt;ReleaseIntArrayElements(<span class="keyword">env</span>, arr, elems, JNI_COMMIT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个代码中的<strong>GetIntArrayElements</strong>和<strong>ReleaseIntArrayElements</strong>函数就是JNI提供用于处理int数组的函数。</p>
+<p>如果用arr[i]的方式去访问jintArray类型，不用问肯定会出错。<br>JNI还提供了另一对函数<strong>GetIntArrayRegion</strong>和<strong>ReleaseIntArrayRegion</strong>访问int数组，不在这里做介绍，至于其他的类型数组，方法类似。</p>
+<hr>
+<h3 id="4-返回数组"><a href="#4-返回数组" class="headerlink" title="4.返回数组"></a><strong>4.返回数组</strong></h3><p>在JNI中，二维数组和String数组都被视为object数组，因为数组和String被视为object。最后一个示例说明如何在本地代码中创建一个字符串数组并将它返回给 Java 调用者。</p>
+<p>java端的代码：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>[] array2 = t.getArray(<span class="number">10</span>);</span><br><span class="line">System.out.<span class="built_in">println</span>(<span class="string">"------------"</span>);</span><br><span class="line"><span class="built_in">for</span> (<span class="keyword">int</span> i : array2) &#123;</span><br><span class="line">	System.out.<span class="built_in">println</span>(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数实现：<br><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//返回数组</span></span><br><span class="line">JNIEXPORT jintArray JNICALL Java_com_study_jni_JniTest_getArray(JNIEnv *<span class="keyword">env</span>, jobject jobj, jint len)&#123;</span><br><span class="line">	<span class="comment">//创建一个指定大小的数组</span></span><br><span class="line">	jintArray jint_arr = (*<span class="keyword">env</span>)-&gt;NewIntArray(<span class="keyword">env</span>, len);</span><br><span class="line">	jint *elems = (*<span class="keyword">env</span>)-&gt;GetIntArrayElements(<span class="keyword">env</span>, jint_arr, NULL);	</span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; len; i++)&#123;</span><br><span class="line">		elems[i] = i;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//同步</span></span><br><span class="line">	(*<span class="keyword">env</span>)-&gt;ReleaseIntArrayElements(<span class="keyword">env</span>, jint_arr, elems, <span class="number">0</span>);	</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> jint_arr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>jintArray jint_arr ;因为要返回值，所以需要创建一个指定大小jintArray对象。根据jintArray对象拿到jint 指针。然后，赋值，同步，这样通过参数返回就可以了。<br>下一篇将会介绍C 访问Java 属性和方法。</p>
+<blockquote>
+<p>本文由博主辛苦整理下来的笔记；<br>希望大家能够指点或提出宝贵意见，共同学习，谢谢！ </p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/10/06/ndk/jni-2/" data-id="cjb7ggovk0006f3ulorelyovb" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jni/">jni</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/10/06/ndk/jni-3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Android NDK开发（三）C访问Java属性和方法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/01/linux/shell-script-05/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Shell 脚本基础学习之函数（五）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

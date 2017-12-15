@@ -1,8 +1,671 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block content
-  include includes/recent-posts.pug
-  include includes/pagination.pug
+  
+  <title>Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android Developer">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Xiho’s Blog">
+<meta property="og:url" content="http://xuhaoblog.com/page/2/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="Android Developer">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Xiho’s Blog">
+<meta name="twitter:description" content="Android Developer">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-linux/shell-script-02" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/29/linux/shell-script-02/" class="article-date">
+  <time datetime="2016-09-29T08:06:31.000Z" itemprop="datePublished">2016-09-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Shell/">Shell</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/29/linux/shell-script-02/">Shell 命令和流程控制（二）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Linxu shell 脚本基础这里介绍到第二篇，详细介绍shell 命令和流程控制，这部分介绍三类命令，在学习时大家应该加以比较学习。<br>Linux shell脚本基础课程<a href="http://xuhaoblog.com/linux/shell-script-01.html">前面一篇</a>介绍的都是语法基础的开头、注释、变量和 环境变量，这里将介绍shell命令和控制流程的第一部分，在shell脚本中可以使用三类命令，而控制流程就放在下一讲吧。<br>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/29/linux/shell-script-02/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/29/linux/shell-script-02/" data-id="cjb7ggoyd002if3ul5opzpiau" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shell/">Shell</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-linux/shell-script-01" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/29/linux/shell-script-01/" class="article-date">
+  <time datetime="2016-09-29T05:06:31.000Z" itemprop="datePublished">2016-09-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Shell/">Shell</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/29/linux/shell-script-01/">Shell 脚本基础学习（一）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Linux shell 脚本基础我们将分几篇文章来记录，希望对我们这些初次接触Linxu shell脚本编程的初学者有帮助；<br>Linxu shell 脚本基础学习先来介绍shell的语法，开头、注释、变量和环境，虽然不涉及到具体的东西，但是大号基础是以后学习的前提，很多时候我们拿到别人的开源库，需要编译使用，但是由于各种原因，总是编译不成功，其中就有shell 脚本，如果我们看不懂别人的脚本，编译出错，还查不来原因。（比如一个空格导致编译失败，你能查出原因么？）<br>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/29/linux/shell-script-01/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/29/linux/shell-script-01/" data-id="cjb7ggoyn002tf3ul4uzu2o5p" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shell/">Shell</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-linux/vim-config" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/29/linux/vim-config/" class="article-date">
+  <time datetime="2016-09-29T04:22:31.000Z" itemprop="datePublished">2016-09-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/vim/">vim</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/29/linux/vim-config/">VIM的安装配置及使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h2><p>Learn vim and it will be your last text editor. There isn’t any better text editor that I know of. It is hard to learn, but incredible to use.<br>学习VIM，它会是你最后的文本编辑器。没有任何好转的文本编辑器，我知道的。这是很难学，但令人难以置信的使用。</p>
+<p>VI是LINUX下最老牌的编辑工具，而VIM则是VI的升级版本，LINUX系统必备啊~~</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/29/linux/vim-config/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/29/linux/vim-config/" data-id="cjb7ggoyb002ef3ul2mjeg7xq" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-linux/cmd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/28/linux/cmd/" class="article-date">
+  <time datetime="2016-09-28T04:17:31.000Z" itemprop="datePublished">2016-09-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/28/linux/cmd/">Linux 常用的一些基本命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h4><p>Linux提供了大量的命令，利用它可以有效地完成大量的工作，如磁盘操作、文件存取、目录操作、进程管理、文件权限设定等。所以，在Linux系统上工作离不开使用系统提供的命令。要想真正理解Linux系统，就必须从Linux命令学起，通过基础的命令学习可以进一步理解Linux系统，<br>下面就来简单总结下常用的基础操作命令。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/28/linux/cmd/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/28/linux/cmd/" data-id="cjb7ggoyu0032f3ulk4urm69w" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-ndk/jni-1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/23/ndk/jni-1/" class="article-date">
+  <time datetime="2016-09-23T07:28:31.000Z" itemprop="datePublished">2016-09-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/NDK开发/">NDK开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/23/ndk/jni-1/">Android NDK开发（一）JNI简介及调用流程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h3><p>前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！</p>
+<h3 id="JNI简介"><a href="#JNI简介" class="headerlink" title="JNI简介"></a><strong>JNI简介</strong></h3><p>　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。<br>　　<br>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/23/ndk/jni-1/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/23/ndk/jni-1/" data-id="cjb7ggovw000cf3ulvr2ai78w" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jni/">jni</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-linux/xshell" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/20/linux/xshell/" class="article-date">
+  <time datetime="2016-09-20T10:30:31.000Z" itemprop="datePublished">2016-09-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/20/linux/xshell/">Xshell 远程连接Linux服务器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我这里有一台电脑，装的Ubuntu系统，当我想使用时，又要去使用另外一台机器（如果没有，可以直接去阿里云整一台主机），更何况文件传输也不方便，比较麻烦，后来，看着同事用的Xshell 远程连接linux，挺方便的就折腾了一番，当然，putty，xftp是个很不错的选择。</p>
+<p>xshell和xftp是windows下访问ubuntu（linux）服务器的一个非常好使的工具。</p>
+<h4 id="ubuntu安装ssh服务器"><a href="#ubuntu安装ssh服务器" class="headerlink" title="ubuntu安装ssh服务器"></a><strong>ubuntu安装ssh服务器</strong></h4><p>首先，判断Ubuntu是否安装了ssh服务：<br>1、输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">ps -e |grep ssh</span></span><br></pre></td></tr></table></figure>
+<p> 如果服务已经启动，则可以同时看到“ssh-agent”和“sshd”，否则表示没有安装服务，或没有开机启动 。<br>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/20/linux/xshell/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/20/linux/xshell/" data-id="cjb7ggoyr002zf3ulkm6fbxfr" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-cpp/string" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/12/cpp/string/" class="article-date">
+  <time datetime="2016-09-12T06:28:31.000Z" itemprop="datePublished">2016-09-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/12/cpp/string/">C++ New和delete操作符使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在C语言中，动态分配内存用 malloc() 函数，释放内存用 free() 函数。如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = (<span class="keyword">int</span>*) <span class="built_in">malloc</span>( <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * <span class="number">10</span> );  <span class="comment">//分配10个int型的内存空间</span></span><br><span class="line"><span class="built_in">free</span>(p);  <span class="comment">//释放内存</span></span><br></pre></td></tr></table></figure>
+<p>在C++中，这两个函数仍然可以使用，但是C++又新增了两个关键字，new 和 delete：new 用来动态分配内存，delete 用来释放内存。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/12/cpp/string/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/12/cpp/string/" data-id="cjb7ggox3001df3ulvfgopnjp" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-cpp/aduc" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/11/cpp/aduc/" class="article-date">
+  <time datetime="2016-09-11T09:50:45.000Z" itemprop="datePublished">2016-09-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/11/cpp/aduc/">C++ String字符串的增删改查</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>c++ 提供的string类包含了若干实用的成员函数，大大方便了字符串的增加、删除、更改、查询等操作。</p>
+<h4 id="插入字符串"><a href="#插入字符串" class="headerlink" title="插入字符串"></a>插入字符串</h4><p>insert（）函数可以在string字符串中置顶的位置插入另一个字符串，它的原型为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="built_in">string</span>&amp; <span class="title">insert</span> <span class="params">(<span class="keyword">size_t</span> pos, <span class="keyword">const</span> <span class="built_in">string</span>&amp; str)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>看这个插入的格式我们就能猜想到，pos表示要插入的下标；str表示要插入的字符串，它可以是string变量，也可以是C风格的字符串。<br>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/11/cpp/aduc/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/11/cpp/aduc/" data-id="cjb7ggoxb001hf3ulgub5xvfa" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-cpp/string" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/11/cpp/string/" class="article-date">
+  <time datetime="2016-09-11T06:28:31.000Z" itemprop="datePublished">2016-09-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/11/cpp/string/">C++ String类和字符串的访问和拼接操作</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>C++ 增强了对字符串的支持，除了可以使用c中的字符串，还可以使用内置的数据类型string，string类处理字符串会翻遍很多，完全可以代替C语言中的char 数组和char 指针。</p>
+<p>使用sting类需要包含头文件&lt; sting &gt;, 下面我们就来介绍怎么使用。</p>
+<p><strong>string 的几种用法：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">string</span> s1;</span><br><span class="line">	<span class="built_in">string</span> s2 = <span class="string">"c plus plus"</span>;</span><br><span class="line">	<span class="built_in">string</span> s3 = s2;</span><br><span class="line">	<span class="function"><span class="built_in">string</span> <span class="title">s4</span><span class="params">(<span class="number">5</span>, <span class="string">'s'</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; s1 &lt;&lt; s2 &lt;&lt; s3 &lt;&lt; s4 &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">c <span class="keyword">plus</span> plusc <span class="keyword">plus</span> plussssss</span><br><span class="line">请按任意键继续. . .</span><br></pre></td></tr></table></figure>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/11/cpp/string/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/11/cpp/string/" data-id="cjb7ggoxf001lf3ulo4v24g2w" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-sign" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/02/sign/" class="article-date">
+  <time datetime="2016-09-02T09:08:06.000Z" itemprop="datePublished">2016-09-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/02/sign/">Android中签名、证书、公钥密钥的概念及使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>资料来源于Android 官方文档：<br><a href="https://developer.android.com/studio/publish/app-signing.html" target="_blank" rel="noopener">https://developer.android.com/studio/publish/app-signing.html</a><br>还有些资料来源于网络。加以整理！</p>
+<h2 id="公钥和私钥的概念"><a href="#公钥和私钥的概念" class="headerlink" title="公钥和私钥的概念"></a><strong>公钥和私钥的概念</strong></h2><p>在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要保密，而私钥是由个人自己持有，并且必须妥善保管和注意保密。<br>
+        
+          <p class="article-more-link">
+            <a href="/2016/09/02/sign/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/02/sign/" data-id="cjb7ggoyx0036f3ulehq19gvf" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/公钥/">公钥</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/私钥/">私钥</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; zurück</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">weiter &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
 
 
 
+  </div>
+</body>
+</html>

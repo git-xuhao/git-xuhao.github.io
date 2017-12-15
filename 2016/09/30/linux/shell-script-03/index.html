@@ -1,96 +1,307 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block top_img
-  - var top_img = page.top_img || theme.top_img || config.top_img
-  if (top_img)
-    - var flag = top_img === true ? 'no-bg' : undefined
-    div#top-container(style=`background-image: url(${top_img})` class=flag)
-      include ./includes/header.pug
-      #post-info
-        #post-title= page.title || _p('no_title') 
-        #post-meta
-          if (theme.post_meta.date_type)
-            - var date_type = theme.post_meta.date_type == 'updated' ? 'updated' : 'date' 
-            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
-          if (theme.post_meta.categories && page.categories.data.length > 0)
-            if (theme.post_meta.date_type)
-              span.post-meta__separator |
-            each item, index in page.categories.data
-              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")  
-              a(href=url_for(item.path)).post-meta__categories #[=item.name]
-              if (index < page.categories.data.length - 1)
-                 i.fa.fa-angle-right(aria-hidden="true")  
-          if (theme.disqus.enable && theme.disqus.count)
-            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-              span.post-meta__separator |
-            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")  
-            a(href=url_for(page.path) + '#disqus_thread')
-              span.disqus-comment-count(data-disqus-identifier=page.path)
-          if (theme.wordcount && theme.wordcount.enable)
-            .post-meta-wordcount
-              span= _p('post.wordcount') + ': '
-              span.word-count= wordcount(page.content)
-              span.post-meta__separator |
-              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-  else
-    div#top-container.plain
-      include ./includes/header.pug
+  
+  <title>Shell 流程控制Loop和引号（三） | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言Linux shell 脚本基础学习第三篇；上一篇Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。">
+<meta name="keywords" content="Linux,Shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell 流程控制Loop和引号（三）">
+<meta property="og:url" content="http://xuhaoblog.com/2016/09/30/linux/shell-script-03/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="前言Linux shell 脚本基础学习第三篇；上一篇Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20160930140550992">
+<meta property="og:updated_time" content="2017-11-04T11:19:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Shell 流程控制Loop和引号（三）">
+<meta name="twitter:description" content="前言Linux shell 脚本基础学习第三篇；上一篇Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160930140550992">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-block content
-  article#post(class="")
-    if (!top_img)
-      #post-title.plain= page.title || _p('no_title') 
-      #post-meta
-        if (theme.post_meta.date_type)
-          - var date_type = theme.post_meta.date_type == 'updated' ? '' : 'date' 
-          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)] 
-        if (theme.post_meta.categories && page.categories.data.length > 0)
-          if (theme.post_meta.date_type)
-            span.post-meta__separator |
-          each item, index in page.categories.data
-            i.fa.fa-inbox(aria-hidden="true")  
-            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
-            if (index < page.categories.data.length - 1)
-                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")  
-        if (theme.disqus.enable && theme.disqus.count)
-          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-            span.post-meta__separator |
-          i.fa.fa-comment-o(aria-hidden="true")  
-          a(href=url_for(page.path) + '#disqus_thread')
-            span.disqus-comment-count(data-disqus-identifier=page.path)
-        if (theme.wordcount && theme.wordcount.enable)
-          span.post-meta__separator |
-          span.post-meta-wordcount
-            span= _p('post.wordcount') + ': '
-            span.word-count= wordcount(page.content)
-            span.post-meta__separator |
-            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-    #post-content!= page.content
-    if (theme.post_copyright && theme.post_copyright.enable)
-      .post-copyright
-        .post-copyright__author
-          span.post-copyright-meta= _p('post.copyright.author') + ": "
-          span.post-copyright-info= config.author
-        .post-copyright__type
-          span.post-copyright-meta= _p('post.copyright.link') + ": "
-          span.post-copyright-info= url_for(page.permalink)
-        .post-copyright__notice
-          span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
-          span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license)
-    if (theme.post_meta.tags)
-      .post-meta__tag-list
-        each item, index in page.tags.data
-          a(href=url_for(item.path)).post-meta__tags #[=item.name]
-    if (theme.QR_code)
-      if (theme.QR_code.length > 0)
-        .post-qr-code
-          each item in theme.QR_code
-            .post-qr-code-item
-              img.post-qr-code__img(src=item.itemlist.img)
-              .post-qr-code__desc=item.itemlist.text
-    if (theme.addThis.enable)
-      .addthis_inline_share_toolbox.pull-right
-      script(src=`//s7.addthis.com/js/300/addthis_widget.js#pubid=${theme.addThis.pubid}` async)
-  include includes/pagination.pug
-  if page.comments !== false
-    include includes/comments/index.pug
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-linux/shell-script-03" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/30/linux/shell-script-03/" class="article-date">
+  <time datetime="2016-09-30T03:06:31.000Z" itemprop="datePublished">2016-09-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Shell/">Shell</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Shell 流程控制Loop和引号（三）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Linux shell 脚本基础学习第三篇；<br><a href="http://xuhaoblog.com/linux/shell-script-02.html">上一篇</a>Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。<br><a id="more"></a></p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><a href="http://xuhaoblog.com/linux/shell-script-02.html">继上篇之后</a></p>
+<h4 id="4、loop"><a href="#4、loop" class="headerlink" title="4、loop"></a><strong>4、loop</strong></h4><p>loop 表达式：</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="params">...</span>; <span class="keyword">do</span></span><br><span class="line"><span class="params">...</span></span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>while- loop 将运行一直到表达式测试为真。<br>（will run while the expression that we test for is true.）</p>
+<p>关键字“break”用来跳出循环。而关键字“continue”用来不执行余下的部分而直接太偶倒下一个循环。</p>
+<p>for-loop 表达式查看一个字符串列表（字符串用空格分隔）然后将其赋给一个变量：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> <span class="built_in">..</span><span class="built_in">..</span>; <span class="keyword">do</span></span><br><span class="line"><span class="built_in">..</span><span class="built_in">..</span></span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<!-- more -->
+<p>在下面的例子中，将分别打印ABC到屏幕上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="keyword">for</span> var <span class="keyword">in</span> A B C ; <span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"var is <span class="variable">$var</span>"</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>下面是一个更为有用的脚本<strong>showrpm</strong>，其功能是打印一些RPM包的统计信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="comment"># list a content summary of a number of RPM packages</span></span><br><span class="line"><span class="comment"># USAGE: showrpm rpmfile1 rpmfile2 ...	</span></span><br><span class="line"><span class="comment"># EXAMPLE: showrpm /cdrom/RedHat/RPMS/*.rpm</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> rpmpackage <span class="keyword">in</span> $*; <span class="keyword">do</span></span><br><span class="line"><span class="keyword">if</span> [ -r <span class="string">"<span class="variable">$rpmpackage</span>"</span> ];<span class="keyword">then</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"=============== <span class="variable">$rpmpackage</span> =============="</span></span><br><span class="line">rpm -qi -p <span class="variable">$rpmpackage</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"ERROR: cannot read file <span class="variable">$rpmpackage</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>这里出现了第二个特殊的变量$*，该变量包含了所有输入的命令行参数值。<br>如果您运行</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">showrpm openssh<span class="selector-class">.rpm</span> w3m<span class="selector-class">.rpm</span> webgrep.rpm</span><br></pre></td></tr></table></figure>
+<p><strong>此时 $* 包含了 3 个字符串，即openssh.rpm, w3m.rpm and webgrep.rpm</strong></p>
+<hr>
+<h4 id="5、引号"><a href="#5、引号" class="headerlink" title="5、引号"></a><strong>5、引号</strong></h4><p>在想程序传递任何参数之前，程序会扩展通配符和变量。这里所谓的扩展的意思是程序会把通配符（比如*）替换成合适的文件名，它变量替换成变量值。为了防止程序做这种替换，您可以使用引号。</p>
+<p><font color="blue" size="4"><strong>下面是shell引用类型:</strong></font></p>
+<ul>
+<li>“”  双引号</li>
+<li>‘’   单引号</li>
+<li>`    反引号</li>
+<li>\    反斜线</li>
+</ul>
+<h5 id="5-1、双引号"><a href="#5-1、双引号" class="headerlink" title="5.1、双引号"></a><strong>5.1、双引号</strong></h5><p>使用双引号，可引用除了字符$、`、\外的任意字符或字符串。<br>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">STR=<span class="string">"My name is xuhao"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"<span class="variable">$STR</span>"</span></span><br></pre></td></tr></table></figure></p>
+<p>输出：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">My <span class="built_in">name</span> <span class="keyword">is</span> xuhao</span><br></pre></td></tr></table></figure>
+<p>也可以去掉双引号：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$STR</span></span><br></pre></td></tr></table></figure>
+<p>执行脚本输出的结果还是一样的。</p>
+<p><font color="red">双引号可以使具有特殊含义的词失去其原本的意义，如下：</font></p>
+<p><img src="http://img.blog.csdn.net/20160930140550992" alt="这里写图片描述"></p>
+<p>特殊含义的cal,执行的是显示出2016年 12月的日历。</p>
+<p>但是我们将cal 命令复制给一个变量，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CAL=<span class="string">"cal"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$CAL</span></span><br></pre></td></tr></table></figure>
+<p>最后输出cal<br>这里，双引号使cal 命令失去了原有的显示日历的功能；在这里双引号类似于转义字符。</p>
+<h5 id="5-2、单引号"><a href="#5-2、单引号" class="headerlink" title="5.2、单引号"></a><strong>5.2、单引号</strong></h5><p>　　单引号与双引号类似，不同的是shell 会忽略任何引用值，即屏蔽的单引号内的特殊字符的原本含义。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo ‘<span class="keyword">my</span> <span class="built_in">name</span> <span class="keyword">is</span> $LOGNAME’</span><br><span class="line">其结果为：</span><br><span class="line"><span class="keyword">my</span> <span class="built_in">name</span> <span class="keyword">is</span> $LOGNAME</span><br></pre></td></tr></table></figure>
+<h5 id="5-3、单引号和双引号的区别"><a href="#5-3、单引号和双引号的区别" class="headerlink" title="5.3、单引号和双引号的区别"></a><strong>5.3、单引号和双引号的区别</strong></h5><p>单引号‘’：取消除单引号以外的任何字符的特殊含义。<br>如：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">`echo ‘<span class="keyword">my</span> <span class="built_in">name</span> <span class="keyword">is</span> $<span class="built_in">name</span>`’</span><br></pre></td></tr></table></figure>
+<p>其结果为：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">my</span> <span class="built_in">name</span> <span class="keyword">is</span> $<span class="built_in">name</span></span><br><span class="line">此时$只作为一个普通字符使用了。 </span><br><span class="line">双引号“”：取消除双引号、$号以及_号以外的所有字符的特殊含义</span><br></pre></td></tr></table></figure>
+<p>单引号是强引用，引号里的值是什么，变量的值就是什么；</p>
+<p>双引号是弱引用，引号里的值若再包含变量，那在赋值的时候，所有这些变量就被立即替换了。</p>
+<h5 id="5-4、反引号"><a href="#5-4、反引号" class="headerlink" title="5.4、反引号"></a><strong>5.4、反引号</strong></h5><p>反引号（`）用于设置系统命令输出到变量，shell认为反引号中的内容是一个系统命令，<br>所以将会执行之：</p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo `date`</span><br><span class="line"><span class="symbol">Mon Dec 24 16:06:</span><span class="number">55</span> CST <span class="number">2012</span></span><br></pre></td></tr></table></figure>
+<p>这和直接输入date命令是一样的：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">date</span></span><br><span class="line"><span class="selector-tag">Mon</span> <span class="selector-tag">Dec</span> 24 16<span class="selector-pseudo">:07</span><span class="selector-pseudo">:12</span> <span class="selector-tag">CST</span> 2012</span><br></pre></td></tr></table></figure>
+<p>若输入一个非系统命令，则shell不认识此命令，将会报错：<br><figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> `<span class="built_in">DATE</span>`</span><br><span class="line">ksh: <span class="built_in">DATE</span>: <span class="built_in">not</span> found</span><br></pre></td></tr></table></figure></p>
+<h5 id="5-5、反斜杠"><a href="#5-5、反斜杠" class="headerlink" title="5.5、反斜杠"></a><strong>5.5、反斜杠</strong></h5><p>反斜杠起的作用是将一些特殊字符按原样输出，这些特殊字符有：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">、*、`、+、^、&amp;、|、<span class="string">"、?。</span></span></span><br></pre></td></tr></table></figure>
+<p>例如：echo *<br>将当前目录下的文件名和目录名都列出来。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> \*</span><br><span class="line">*</span><br></pre></td></tr></table></figure>
+<p>而使用反斜杠转义之后，就输出了星号。</p>
+<hr>
+<h2 id="更多相关系列传送门："><a href="#更多相关系列传送门：" class="headerlink" title="更多相关系列传送门："></a>更多相关系列传送门：</h2><p><strong>【个人博客】shel 脚本系列</strong></p>
+<ul>
+<li><a href="http://xuhaoblog.com/linux/shell-script-01.html">【Linux 系统编程】shell 脚本基础学习（一）</a></li>
+<li><a href="http://xuhaoblog.com/linux/shell-script-02.html">【Linux 系统编程】shell 命令和流程控制（二）</a></li>
+<li><a href="http://xuhaoblog.com/linux/shell-script-03.html">【Linux 系统编程】shell 流程控制loop和引号（三）</a></li>
+<li><a href="http://xuhaoblog.com/linux/shell-script-04.html">【Linux 系统编程】shell 输入/输出重定向（四）</a></li>
+<li><a href="http://xuhaoblog.com/linux/shell-script-05.html">【Linux 系统编程】shell 脚本基础学习之函数（五）</a></li>
+</ul>
+<blockquote>
+<p>本文由博主辛苦整理下来的笔记；<br>希望大家能够指点或提出宝贵意见，共同学习，谢谢！ </p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/30/linux/shell-script-03/" data-id="cjb7ggoyi002lf3ulswa361dd" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shell/">Shell</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/10/01/linux/shell-script-04/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Shell 输入/输出重定向（四）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/29/linux/shell-script-02/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Shell 命令和流程控制（二）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

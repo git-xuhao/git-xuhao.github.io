@@ -1,96 +1,300 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block top_img
-  - var top_img = page.top_img || theme.top_img || config.top_img
-  if (top_img)
-    - var flag = top_img === true ? 'no-bg' : undefined
-    div#top-container(style=`background-image: url(${top_img})` class=flag)
-      include ./includes/header.pug
-      #post-info
-        #post-title= page.title || _p('no_title') 
-        #post-meta
-          if (theme.post_meta.date_type)
-            - var date_type = theme.post_meta.date_type == 'updated' ? 'updated' : 'date' 
-            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
-          if (theme.post_meta.categories && page.categories.data.length > 0)
-            if (theme.post_meta.date_type)
-              span.post-meta__separator |
-            each item, index in page.categories.data
-              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")  
-              a(href=url_for(item.path)).post-meta__categories #[=item.name]
-              if (index < page.categories.data.length - 1)
-                 i.fa.fa-angle-right(aria-hidden="true")  
-          if (theme.disqus.enable && theme.disqus.count)
-            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-              span.post-meta__separator |
-            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")  
-            a(href=url_for(page.path) + '#disqus_thread')
-              span.disqus-comment-count(data-disqus-identifier=page.path)
-          if (theme.wordcount && theme.wordcount.enable)
-            .post-meta-wordcount
-              span= _p('post.wordcount') + ': '
-              span.word-count= wordcount(page.content)
-              span.post-meta__separator |
-              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-  else
-    div#top-container.plain
-      include ./includes/header.pug
+  
+  <title>Android 切换系统语言源码分析（上） | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述：以前了解Android的多语言实现很简单，可以在不同的语言环境下使用不同的资源，就做好相应的语言适配就好，但是一直没有实际使用过。 最近公司的项目要用到多国语言切换，并且还是和手机上系统设置里面的语言切换功能一样，于是就上网查了下资料。一般都是在应用类实现多国语言切换，这个是很简单。而我想切换整个系统的语言。由于谷歌没有把系统设置里面的接口给开放出来，所以就只好去查看它的源码了~">
+<meta name="keywords" content="Android,语言切换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 切换系统语言源码分析（上）">
+<meta property="og:url" content="http://xuhaoblog.com/2016/04/12/android-change-language_01/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="概述：以前了解Android的多语言实现很简单，可以在不同的语言环境下使用不同的资源，就做好相应的语言适配就好，但是一直没有实际使用过。 最近公司的项目要用到多国语言切换，并且还是和手机上系统设置里面的语言切换功能一样，于是就上网查了下资料。一般都是在应用类实现多国语言切换，这个是很简单。而我想切换整个系统的语言。由于谷歌没有把系统设置里面的接口给开放出来，所以就只好去查看它的源码了~">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-04T10:58:31.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 切换系统语言源码分析（上）">
+<meta name="twitter:description" content="概述：以前了解Android的多语言实现很简单，可以在不同的语言环境下使用不同的资源，就做好相应的语言适配就好，但是一直没有实际使用过。 最近公司的项目要用到多国语言切换，并且还是和手机上系统设置里面的语言切换功能一样，于是就上网查了下资料。一般都是在应用类实现多国语言切换，这个是很简单。而我想切换整个系统的语言。由于谷歌没有把系统设置里面的接口给开放出来，所以就只好去查看它的源码了~">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-block content
-  article#post(class="")
-    if (!top_img)
-      #post-title.plain= page.title || _p('no_title') 
-      #post-meta
-        if (theme.post_meta.date_type)
-          - var date_type = theme.post_meta.date_type == 'updated' ? '' : 'date' 
-          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)] 
-        if (theme.post_meta.categories && page.categories.data.length > 0)
-          if (theme.post_meta.date_type)
-            span.post-meta__separator |
-          each item, index in page.categories.data
-            i.fa.fa-inbox(aria-hidden="true")  
-            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
-            if (index < page.categories.data.length - 1)
-                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")  
-        if (theme.disqus.enable && theme.disqus.count)
-          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-            span.post-meta__separator |
-          i.fa.fa-comment-o(aria-hidden="true")  
-          a(href=url_for(page.path) + '#disqus_thread')
-            span.disqus-comment-count(data-disqus-identifier=page.path)
-        if (theme.wordcount && theme.wordcount.enable)
-          span.post-meta__separator |
-          span.post-meta-wordcount
-            span= _p('post.wordcount') + ': '
-            span.word-count= wordcount(page.content)
-            span.post-meta__separator |
-            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-    #post-content!= page.content
-    if (theme.post_copyright && theme.post_copyright.enable)
-      .post-copyright
-        .post-copyright__author
-          span.post-copyright-meta= _p('post.copyright.author') + ": "
-          span.post-copyright-info= config.author
-        .post-copyright__type
-          span.post-copyright-meta= _p('post.copyright.link') + ": "
-          span.post-copyright-info= url_for(page.permalink)
-        .post-copyright__notice
-          span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
-          span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license)
-    if (theme.post_meta.tags)
-      .post-meta__tag-list
-        each item, index in page.tags.data
-          a(href=url_for(item.path)).post-meta__tags #[=item.name]
-    if (theme.QR_code)
-      if (theme.QR_code.length > 0)
-        .post-qr-code
-          each item in theme.QR_code
-            .post-qr-code-item
-              img.post-qr-code__img(src=item.itemlist.img)
-              .post-qr-code__desc=item.itemlist.text
-    if (theme.addThis.enable)
-      .addthis_inline_share_toolbox.pull-right
-      script(src=`//s7.addthis.com/js/300/addthis_widget.js#pubid=${theme.addThis.pubid}` async)
-  include includes/pagination.pug
-  if page.comments !== false
-    include includes/comments/index.pug
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android-change-language_01" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/12/android-change-language_01/" class="article-date">
+  <time datetime="2016-04-12T04:05:24.000Z" itemprop="datePublished">2016-04-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android 切换系统语言源码分析（上）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="概述："><a href="#概述：" class="headerlink" title="概述："></a><strong>概述：</strong></h2><p>以前了解Android的多语言实现很简单，可以在不同的语言环境下使用不同的资源，就做好相应的语言适配就好，但是一直没有实际使用过。 最近公司的项目要用到多国语言切换，并且还是和手机上系统设置里面的语言切换功能一样，于是就上网查了下资料。一般都是在应用类实现多国语言切换，这个是很简单。而我想切换整个系统的语言。由于谷歌没有把系统设置里面的接口给开放出来，所以就只好去查看它的源码了~<br><a id="more"></a></p>
+<ul>
+<li>android语言切换是在：</li>
+</ul>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">packages<span class="regexp">/apps/</span>Settings<span class="regexp">/com/</span>android<span class="regexp">/settings/</span>LocalePicker.java</span><br></pre></td></tr></table></figure>
+<p>的updateLocale()函数中调用，<br>源码如下：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * Requests the system to update the system locale. Note that the system looks halted  for a while during the Locale migration, so the caller need to take care of it. </span></span><br><span class="line"><span class="comment">  */</span>  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> updateLocale(Locale locale) &#123;  </span><br><span class="line">        <span class="built_in">try</span> &#123;  </span><br><span class="line">            IActivityManager am = ActivityManagerNative.getDefault();  </span><br><span class="line">            Configuration <span class="built_in">config</span> = am.getConfiguration();  </span><br><span class="line">  </span><br><span class="line">            <span class="built_in">config</span>.locale = locale;  </span><br><span class="line">  </span><br><span class="line">            <span class="comment">// indicate this isn't some passing default - the user wants this remembered  </span></span><br><span class="line">            <span class="built_in">config</span>.userSetLocale = true;  </span><br><span class="line">  </span><br><span class="line">            am.updateConfiguration(<span class="built_in">config</span>);  </span><br><span class="line">            <span class="comment">// Trigger the dirty bit for the Settings Provider.  </span></span><br><span class="line">            BackupManager.dataChanged(<span class="string">"com.android.providers.settings"</span>);  </span><br><span class="line">        &#125; <span class="built_in">catch</span> (RemoteException e) &#123;  </span><br><span class="line">            <span class="comment">// Intentionally left blank  </span></span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>从注释可以看出, 只要本地local改变就会调用该函数. 查看ActivityManagerNative的getDefault()可以看到, 该函数返回的是远程服务对象ActivityManagerServices.java在本地的一个代理.  最终调用的是ActivityManagerService.java中的updateConfiguration()函数. </li>
+</ul>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">updateConfiguration</span><span class="params">(Configuration values)</span> </span>&#123;  </span><br><span class="line">        enforceCallingPermission(android.Manifest.permission.CHANGE_CONFIGURATION,  </span><br><span class="line">                <span class="string">"updateConfiguration()"</span>);  </span><br><span class="line">  </span><br><span class="line">        <span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;  </span><br><span class="line">            <span class="keyword">if</span> (values == <span class="keyword">null</span> &amp;&amp; mWindowManager != <span class="keyword">null</span>) &#123;  </span><br><span class="line">                <span class="comment">// sentinel: fetch the current configuration from the window manager  </span></span><br><span class="line">                values = mWindowManager.computeNewConfiguration();  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            <span class="keyword">if</span> (mWindowManager != <span class="keyword">null</span>) &#123;  </span><br><span class="line">                mProcessList.applyDisplaySize(mWindowManager);  </span><br><span class="line">            &#125;  </span><br><span class="line">  </span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">long</span> origId = Binder.clearCallingIdentity();  </span><br><span class="line">            <span class="keyword">if</span> (values != <span class="keyword">null</span>) &#123;  </span><br><span class="line">                Settings.System.clearConfiguration(values);  </span><br><span class="line">            &#125;  </span><br><span class="line">            updateConfigurationLocked(values, <span class="keyword">null</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);  </span><br><span class="line">            Binder.restoreCallingIdentity(origId);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>该函数, 首先进行的是权限的校验. 然后调用updateConfigurationLocked()函数. </li>
+</ul>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment">     * Do either or both things: (1) change the current configuration, and (2) </span></span><br><span class="line"><span class="comment">     * make sure the given activity is running with the (now) current </span></span><br><span class="line"><span class="comment">     * configuration.  Returns true if the activity has been left running, or </span></span><br><span class="line"><span class="comment">     * false if &lt;var&gt;starting&lt;/var&gt; is being destroyed to match the new </span></span><br><span class="line"><span class="comment">     * configuration. </span></span><br><span class="line"><span class="comment">     * @param persistent TODO </span></span><br><span class="line"><span class="comment">     */</span>  </span><br><span class="line">    <span class="keyword">public</span> boolean updateConfigurationLocked(Configuration values,  </span><br><span class="line">            ActivityRecord starting, boolean persistent, boolean initLocale) &#123;  </span><br><span class="line">        int changes = <span class="number">0</span>;  </span><br><span class="line">          </span><br><span class="line">        boolean kept = <span class="literal">true</span>;  </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">if</span> (values != <span class="literal">null</span>) &#123;  </span><br><span class="line">            Configuration <span class="keyword">new</span><span class="type">Config</span> = <span class="keyword">new</span> <span class="type">Configuration</span>(mConfiguration);  </span><br><span class="line">            changes = <span class="keyword">new</span><span class="type">Config</span>.updateFrom(values);  </span><br><span class="line">            <span class="keyword">if</span> (changes != <span class="number">0</span>) &#123;  </span><br><span class="line">                <span class="keyword">if</span> (DEBUG_SWITCH || DEBUG_CONFIGURATION) &#123;  </span><br><span class="line">                    Slog.i(TAG, <span class="string">"Updating configuration to: "</span> + values);  </span><br><span class="line">                &#125;  </span><br><span class="line">                  </span><br><span class="line">                EventLog.writeEvent(EventLogTags.CONFIGURATION_CHANGED, changes);  </span><br><span class="line">  </span><br><span class="line">                <span class="keyword">if</span> (values.locale != <span class="literal">null</span> &amp;&amp; !initLocale) &#123;  </span><br><span class="line">                    saveLocaleLocked(values.locale,   </span><br><span class="line">                                     !values.locale.equals(mConfiguration.locale),  </span><br><span class="line">                                     values.userSetLocale, values.simSetLocale);  </span><br><span class="line">                &#125;  </span><br><span class="line">  </span><br><span class="line">                  </span><br><span class="line">                mConfigurationSeq++;  </span><br><span class="line">                <span class="keyword">if</span> (mConfigurationSeq &lt;= <span class="number">0</span>) &#123;  </span><br><span class="line">                    mConfigurationSeq = <span class="number">1</span>;  </span><br><span class="line">                &#125;  </span><br><span class="line">                <span class="keyword">new</span><span class="type">Config</span>.seq = mConfigurationSeq;  </span><br><span class="line">                mConfiguration = <span class="keyword">new</span><span class="type">Config</span>;  </span><br><span class="line">                Slog.i(TAG, <span class="string">"Config changed: "</span> + <span class="keyword">new</span><span class="type">Config</span>);  </span><br><span class="line">  </span><br><span class="line">                final Configuration configCopy = <span class="keyword">new</span> <span class="type">Configuration</span>(mConfiguration);  </span><br><span class="line">  </span><br><span class="line">                AttributeCache ac = AttributeCache.instance();  </span><br><span class="line">                <span class="keyword">if</span> (ac != <span class="literal">null</span>) &#123;  </span><br><span class="line">                    ac.updateConfiguration(configCopy);  </span><br><span class="line">                &#125;  </span><br><span class="line">  </span><br><span class="line">                <span class="comment">// Make sure all resources in our process are updated  </span></span><br><span class="line">                <span class="comment">// right now, so that anyone who is going to retrieve  </span></span><br><span class="line">                <span class="comment">// resource values after we return will be sure to get  </span></span><br><span class="line">                <span class="comment">// the new ones.  This is especially important during  </span></span><br><span class="line">                <span class="comment">// boot, where the first config change needs to guarantee  </span></span><br><span class="line">                <span class="comment">// all resources have that config before following boot  </span></span><br><span class="line">                <span class="comment">// code is executed.  </span></span><br><span class="line">                mSystemThread.applyConfigurationToResources(configCopy);  </span><br><span class="line">  </span><br><span class="line">                <span class="keyword">if</span> (persistent &amp;&amp; Settings.System.hasInterestingConfigurationChanges(changes)) &#123;  </span><br><span class="line">                    Message msg = mHandler.obtainMessage(UPDATE_CONFIGURATION_MSG);  </span><br><span class="line">                    msg.obj = <span class="keyword">new</span> <span class="type">Configuration</span>(configCopy);  </span><br><span class="line">                    mHandler.sendMessage(msg);  </span><br><span class="line">                &#125;  </span><br><span class="line">          </span><br><span class="line">                <span class="keyword">for</span> (int i=mLruProcesses.size()<span class="number">-1</span>; i&gt;=<span class="number">0</span>; i--) &#123;  </span><br><span class="line">                    ProcessRecord app = mLruProcesses.<span class="keyword">get</span>(i);  </span><br><span class="line">                    <span class="keyword">try</span> &#123;  </span><br><span class="line">                        <span class="keyword">if</span> (app.thread != <span class="literal">null</span>) &#123;  </span><br><span class="line">                            <span class="keyword">if</span> (DEBUG_CONFIGURATION) Slog.v(TAG, <span class="string">"Sending to proc "</span>  </span><br><span class="line">                                    + app.processName + <span class="string">" new config "</span> + mConfiguration);  </span><br><span class="line">                            app.thread.scheduleConfigurationChanged(configCopy);  </span><br><span class="line">                        &#125;  </span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;  </span><br><span class="line">                    &#125;  </span><br><span class="line">                &#125;  </span><br><span class="line">                Intent intent = <span class="keyword">new</span> <span class="type">Intent</span>(Intent.ACTION_CONFIGURATION_CHANGED);  </span><br><span class="line">                intent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY  </span><br><span class="line">                        | Intent.FLAG_RECEIVER_REPLACE_PENDING);  </span><br><span class="line">                broadcastIntentLocked(<span class="literal">null</span>, <span class="literal">null</span>, intent, <span class="literal">null</span>, <span class="literal">null</span>, <span class="number">0</span>, <span class="literal">null</span>, <span class="literal">null</span>,  </span><br><span class="line">                        <span class="literal">null</span>, <span class="literal">false</span>, <span class="literal">false</span>, MY_PID, Process.SYSTEM_UID);  </span><br><span class="line">                <span class="keyword">if</span> ((changes&amp;ActivityInfo.CONFIG_LOCALE) != <span class="number">0</span>) &#123;  </span><br><span class="line">                    broadcastIntentLocked(<span class="literal">null</span>, <span class="literal">null</span>,  </span><br><span class="line">                            <span class="keyword">new</span> <span class="type">Intent</span>(Intent.ACTION_LOCALE_CHANGED),  </span><br><span class="line">                            <span class="literal">null</span>, <span class="literal">null</span>, <span class="number">0</span>, <span class="literal">null</span>, <span class="literal">null</span>,  </span><br><span class="line">                            <span class="literal">null</span>, <span class="literal">false</span>, <span class="literal">false</span>, MY_PID, Process.SYSTEM_UID);  </span><br><span class="line">                &#125;  </span><br><span class="line">                  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">if</span> (changes != <span class="number">0</span> &amp;&amp; starting == <span class="literal">null</span>) &#123;  </span><br><span class="line">            <span class="comment">// If the configuration changed, and the caller is not already  </span></span><br><span class="line">            <span class="comment">// in the process of starting an activity, then find the top  </span></span><br><span class="line">            <span class="comment">// activity to check if its configuration needs to change.  </span></span><br><span class="line">            starting = mMainStack.topRunningActivityLocked(<span class="literal">null</span>);  </span><br><span class="line">        &#125;  </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">if</span> (starting != <span class="literal">null</span>) &#123;  </span><br><span class="line">            kept = mMainStack.ensureActivityConfigurationLocked(starting, changes);  </span><br><span class="line">            <span class="comment">// And we need to make sure at this point that all other activities  </span></span><br><span class="line">            <span class="comment">// are made visible with the correct configuration.  </span></span><br><span class="line">            mMainStack.ensureActivitiesVisibleLocked(starting, changes);  </span><br><span class="line">        &#125;  </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">if</span> (values != <span class="literal">null</span> &amp;&amp; mWindowManager != <span class="literal">null</span>) &#123;  </span><br><span class="line">            mWindowManager.setNewConfiguration(mConfiguration);  </span><br><span class="line">        &#125;  </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">return</span> kept;  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>整个语言切换就在这个函数中完成. 咋一看似乎没感觉到该函数做了哪些事情. 我们首先来看注释: Do either or both things: (1) change the current configuration, and (2)<br>make sure the given activity is running with the (now) current. configuration大概意思是: 这个函数做了两件事情. (1). 改变当前的configuration. 意思就是让改变的configuration更新到当前configuration. (2) 确保所有正在运行的activity都能更新改变后的configuration.(这点是关键.) . 我们按照这个思路看看android是如何更新configuration. 查看代码 , 首先看到 这个函数首先判断values是否为空, 这里values肯定不为空的, 然后changes = newConfig.updateFrom(values); 我们看看updateFrom做了什么操作。</li>
+</ul>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment">     * Copy the fields from delta into this Configuration object, keeping </span></span><br><span class="line"><span class="comment">     * track of which ones have changed.  Any undefined fields in </span></span><br><span class="line"><span class="comment">     * &lt;var&gt;delta&lt;/var&gt; are ignored and not copied in to the current </span></span><br><span class="line"><span class="comment">     * Configuration. </span></span><br><span class="line"><span class="comment">     * @return Returns a bit mask of the changed fields, as per </span></span><br><span class="line"><span class="comment">     * &#123;@link #diff&#125;. </span></span><br><span class="line"><span class="comment">     */</span>  </span><br><span class="line">    <span class="keyword">public</span> int updateFrom(Configuration delta) &#123;  </span><br><span class="line">        int changed = <span class="number">0</span>;  </span><br><span class="line">        <span class="params">...</span>  </span><br><span class="line">        <span class="keyword">if</span> (delta.<span class="built_in">locale</span> != <span class="built_in">null</span>   &amp;&amp; (<span class="built_in">locale</span> == <span class="built_in">null</span> || !<span class="built_in">locale</span>.<span class="keyword">equals</span>(delta.<span class="built_in">locale</span>))) &#123;  </span><br><span class="line">            changed |= ActivityInfo.CONFIG_LOCALE;  </span><br><span class="line">            <span class="built_in">locale</span> = delta.<span class="built_in">locale</span> != <span class="built_in">null</span>   ? (<span class="built_in">Locale</span>) delta.<span class="built_in">locale</span>.clone() : <span class="built_in">null</span>;  </span><br><span class="line">            textLayoutDirection = LocaleUtil.getLayoutDirectionFromLocale(<span class="built_in">locale</span>);  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">if</span> (delta.userSetLocale &amp;&amp; (!userSetLocale || ((changed &amp; ActivityInfo.CONFIG_LOCALE) != <span class="number">0</span>)))  </span><br><span class="line">        &#123;  </span><br><span class="line">            userSetLocale = <span class="literal">true</span>;  </span><br><span class="line">            changed |= ActivityInfo.CONFIG_LOCALE;  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="params">...</span>  </span><br><span class="line">        <span class="keyword">return</span> changed;  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>因为语言改变了, 那么 (!locale.equals(delta.locale)) 是true. changed 大于0, 然后return changed. 回到ActivityManagerService.java的updateConfigurationLocked函数, 因为changed不为0 , 所以走if这个流程.  继续看代码。</li>
+</ul>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">for (<span class="name">int</span> i=mLruProcesses.size()<span class="number">-1</span><span class="comment">; i&gt;=0; i--) &#123;  </span></span><br><span class="line">                  ProcessRecord app = mLruProcesses.get(<span class="name">i</span>)<span class="comment">;  </span></span><br><span class="line">                  try &#123;  </span><br><span class="line">                      if (<span class="name">app</span>.thread != null) &#123;  </span><br><span class="line">                          if (<span class="name">DEBUG_CONFIGURATION</span>) Slog.v(<span class="name">TAG</span>, <span class="string">"Sending to proc "</span>  </span><br><span class="line">                                  + app.processName + <span class="string">" new config "</span> + mConfiguration)<span class="comment">;  </span></span><br><span class="line">                          app.thread.scheduleConfigurationChanged(<span class="name">configCopy</span>)<span class="comment">;  </span></span><br><span class="line">                      &#125;  </span><br><span class="line">                  &#125; catch (<span class="name">Exception</span> e) &#123;  </span><br><span class="line">                  &#125;  </span><br><span class="line">              &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先看到的是mLurProcesses 是ArrayList<processrecord>类型.  LRU : Least Recently Used保存所有运行过的进程.  ProcessRecord进程类, 一个apk文件运行时会对应一个进程. app.thread. 此处的thread代表的是ApplicationThreadNative.java类型.  然后调用其scheduleConfigurationChanged();  查看该函数。</processrecord></li>
+</ul>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">public</span> final void scheduleConfigurationChanged(<span class="type">Configuration</span> config)  </span><br><span class="line">           throws <span class="type">RemoteException</span> &#123;  </span><br><span class="line">       <span class="type">Parcel</span> <span class="class"><span class="keyword">data</span> = <span class="type">Parcel</span>.obtain();  </span></span><br><span class="line">       <span class="class"><span class="keyword">data</span>.writeInterfaceToken(<span class="type">IApplicationThread</span>.<span class="title">descriptor</span>);  </span></span><br><span class="line">       config.writeToParcel(<span class="class"><span class="keyword">data</span>, 0);  </span></span><br><span class="line">       mRemote.transact(<span class="type">SCHEDULE_CONFIGURATION_CHANGED_TRANSACTION</span>, <span class="class"><span class="keyword">data</span>, null,  </span></span><br><span class="line">               <span class="type">IBinder</span>.<span class="type">FLAG_ONEWAY</span>);  </span><br><span class="line">       <span class="class"><span class="keyword">data</span>.recycle();  </span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>又是通过binder调用, 所以 , binder在android中是一个很重要的概念. 此处远程调用的是ActivityThread.java中的私有内部内ApplicationThread。</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ApplicationThread</span> <span class="keyword">extends</span> <span class="title">ApplicationThreadNative</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">private</span> static <span class="keyword">final</span> <span class="type">String</span> <span class="type">HEAP_COLUMN</span> = <span class="string">"%13s %8s %8s %8s %8s %8s %8s"</span>;  </span><br><span class="line">        <span class="keyword">private</span> static <span class="keyword">final</span> <span class="type">String</span> <span class="type">ONE_COUNT_COLUMN</span> = <span class="string">"%21s %8d"</span>;  </span><br><span class="line">        <span class="keyword">private</span> static <span class="keyword">final</span> <span class="type">String</span> <span class="type">TWO_COUNT_COLUMNS</span> = <span class="string">"%21s %8d %21s %8d"</span>;  </span><br><span class="line">        <span class="keyword">private</span> static <span class="keyword">final</span> <span class="type">String</span> <span class="type">TWO_COUNT_COLUMNS_DB</span> = <span class="string">"%21s %8d %21s %8d"</span>;  </span><br><span class="line">        <span class="keyword">private</span> static <span class="keyword">final</span> <span class="type">String</span> <span class="type">DB_INFO_FORMAT</span> = <span class="string">"  %8s %8s %14s %14s  %s"</span>;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">        ...  </span><br><span class="line">        public void scheduleConfigurationChanged(<span class="type">Configuration</span> config) &#123;  </span><br><span class="line">            updatePendingConfiguration(config);  </span><br><span class="line">            queueOrSendMessage(<span class="type">H</span>.<span class="type">CONFIGURATION_CHANGED</span>, config);  </span><br><span class="line">        &#125;  </span><br><span class="line">        ...  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>而ApplicationThread中的handler的CONFIGURATION_CHANGED是调用handleConfigurationChanged()。</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">final void handleConfigurationChanged(Configuration config, CompatibilityInfo compat) &#123;  </span><br><span class="line"> </span><br><span class="line">      ArrayList&lt;ComponentCallbacks2&gt; callbacks = <span class="literal">null</span>;  </span><br><span class="line"> </span><br><span class="line">   <span class="built_in">..</span>.         <span class="built_in">..</span>.  </span><br><span class="line">      applyConfigurationToResourcesLocked(config, compat);  </span><br><span class="line">        </span><br><span class="line">      <span class="built_in">..</span>.  </span><br><span class="line">        </span><br><span class="line">      callbacks = collectComponentCallbacksLocked(<span class="literal">false</span>, config);  </span><br><span class="line">      <span class="built_in">..</span>.  </span><br><span class="line">        </span><br><span class="line">      <span class="keyword">if</span> (callbacks != <span class="literal">null</span>) &#123;  </span><br><span class="line">          final int N = callbacks.size();  </span><br><span class="line">          <span class="keyword">for</span> (int <span class="attribute">i</span>=0; i&lt;N; i++) &#123;  </span><br><span class="line">              performConfigurationChanged(callbacks.<span class="builtin-name">get</span>(i), config);  </span><br><span class="line">          &#125;  </span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这个函数首先是调用applyConfigurationToResourcesLocked(). 看函数名大概可以猜想到: 将configuration应用到resources.这里configuration改变的是local 本地语言. 那而resources资源包含语言包吗？</li>
+</ul>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">final boolean applyConfigurationToResourcesLocked(Configuration config,  </span><br><span class="line">           CompatibilityInfo compat) &#123;  </span><br><span class="line">         </span><br><span class="line">       int <span class="attr">changes</span> = mResConfiguration.updateFrom(config);  </span><br><span class="line">       DisplayMetrics <span class="attr">dm</span> = getDisplayMetricsLocked(<span class="literal">null</span>, <span class="literal">true</span>);  </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">       <span class="keyword">if</span> (compat != <span class="literal">null</span> &amp;&amp; (<span class="attr">mResCompatibilityInfo</span> == <span class="literal">null</span> ||  </span><br><span class="line">               !mResCompatibilityInfo.equals(compat))) &#123;  </span><br><span class="line">           <span class="attr">mResCompatibilityInfo</span> = compat;  </span><br><span class="line">           changes |= ActivityInfo.CONFIG_SCREEN_LAYOUT  </span><br><span class="line">                   | ActivityInfo.CONFIG_SCREEN_SIZE  </span><br><span class="line">                   | ActivityInfo.CONFIG_SMALLEST_SCREEN_SIZE;  </span><br><span class="line">       &#125;  </span><br><span class="line"> </span><br><span class="line">       ...  </span><br><span class="line"> </span><br><span class="line">       Resources.updateSystemConfiguration(config, dm, compat);  </span><br><span class="line"> </span><br><span class="line">       ...  </span><br><span class="line">         </span><br><span class="line">       Iterator&lt;WeakReference&lt;Resources&gt;&gt; <span class="attr">it</span> =  </span><br><span class="line">           mActiveResources.values().iterator();  </span><br><span class="line">       while (it.hasNext()) &#123;  </span><br><span class="line">           WeakReference&lt;Resources&gt; <span class="attr">v</span> = it.next();  </span><br><span class="line">           Resources <span class="attr">r</span> = v.get();  </span><br><span class="line">           <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;  </span><br><span class="line">               <span class="keyword">if</span> (DEBUG_CONFIGURATION) Slog.v(TAG, <span class="string">"Changing resources "</span>  </span><br><span class="line">                       + r + <span class="string">" config to: "</span> + config);  </span><br><span class="line">               r.updateConfiguration(config, dm, compat);  </span><br><span class="line">               //Slog.i(TAG, <span class="string">"Updated app resources "</span> + v.getKey()  </span><br><span class="line">               //        + <span class="string">" "</span> + r + <span class="string">": "</span> + r.getConfiguration());  </span><br><span class="line">           &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">               //Slog.i(TAG, <span class="string">"Removing old resources "</span> + v.getKey());  </span><br><span class="line">               it.remove();  </span><br><span class="line">           &#125;  </span><br><span class="line">       &#125;  </span><br><span class="line">         </span><br><span class="line">       return changes != <span class="number">0</span>;  </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Resources.updateSystemConfiguration()清除一部分系统资源, 并且将config更新到Resources, 而Resources包含了一个AssetManager对象, 该对象的核心实现是在AssetManager.cpp中完成的. 然后循环清空mActivityResources资源. 再回到handleConfigurationChanged()函数, 执行完updateSystemConfiguration后, 会循环该进程的所有activity:</li>
+</ul>
+<p>if (callbacks != null) {</p>
+<pre><code>    final int N = callbacks.size();
+    for (int i=0; i&lt;N; i++) {
+        performConfigurationChanged(callbacks.get(i), config);
+    }
+}
+</code></pre><p>再来看performConfigurationChanged的实现:</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">void</span> performConfigurationChanged(  </span><br><span class="line">            ComponentCallbacks2 cb, Configuration config) &#123;  </span><br><span class="line">        <span class="comment">// Only for Activity objects, check that they actually call up to their  </span></span><br><span class="line">        <span class="comment">// superclass implementation.  ComponentCallbacks2 is an interface, so  </span></span><br><span class="line">        <span class="comment">// we check the runtime type and act accordingly.  </span></span><br><span class="line">        Activity activity = (cb <span class="keyword">instanceof</span> Activity) ? (Activity) cb : <span class="keyword">null</span>;  </span><br><span class="line">        <span class="keyword">if</span> (activity != <span class="keyword">null</span>) &#123;  </span><br><span class="line">            activity.mCalled = <span class="keyword">false</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">  </span><br><span class="line">        <span class="keyword">boolean</span> shouldChangeConfig = <span class="keyword">false</span>;  </span><br><span class="line">        <span class="keyword">if</span> ((activity == <span class="keyword">null</span>) || (activity.mCurrentConfig == <span class="keyword">null</span>)) &#123;  </span><br><span class="line">            shouldChangeConfig = <span class="keyword">true</span>;  </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;  </span><br><span class="line">  </span><br><span class="line">            <span class="comment">// If the new config is the same as the config this Activity  </span></span><br><span class="line">            <span class="comment">// is already running with then don't bother calling  </span></span><br><span class="line">            <span class="comment">// onConfigurationChanged  </span></span><br><span class="line">            <span class="keyword">int</span> diff = activity.mCurrentConfig.diff(config);  </span><br><span class="line">            <span class="keyword">if</span> (diff != <span class="number">0</span>) &#123;  </span><br><span class="line">                <span class="comment">// If this activity doesn't handle any of the config changes  </span></span><br><span class="line">                <span class="comment">// then don't bother calling onConfigurationChanged as we're  </span></span><br><span class="line">                <span class="comment">// going to destroy it.  </span></span><br><span class="line">                <span class="keyword">if</span> ((~activity.mActivityInfo.getRealConfigChanged() &amp; diff) == <span class="number">0</span>) &#123;  </span><br><span class="line">                    shouldChangeConfig = <span class="keyword">true</span>;  </span><br><span class="line">                &#125;  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">  </span><br><span class="line">        <span class="keyword">if</span> (DEBUG_CONFIGURATION) Slog.v(TAG, <span class="string">"Config callback "</span> + cb  </span><br><span class="line">                + <span class="string">": shouldChangeConfig="</span> + shouldChangeConfig);  </span><br><span class="line">        <span class="keyword">if</span> (shouldChangeConfig) &#123;  </span><br><span class="line">            cb.onConfigurationChanged(config);  </span><br><span class="line">  </span><br><span class="line">            <span class="keyword">if</span> (activity != <span class="keyword">null</span>) &#123;  </span><br><span class="line">                <span class="keyword">if</span> (!activity.mCalled) &#123;  </span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> SuperNotCalledException(  </span><br><span class="line">                            <span class="string">"Activity "</span> + activity.getLocalClassName() +  </span><br><span class="line">                        <span class="string">" did not call through to super.onConfigurationChanged()"</span>);  </span><br><span class="line">                &#125;  </span><br><span class="line">                activity.mConfigChangeFlags = <span class="number">0</span>;  </span><br><span class="line">                activity.mCurrentConfig = <span class="keyword">new</span> Configuration(config);  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>该函数判断configuration是否改变, 如果改变那么shouldChangeConfig为true. 然后调用activity的onConfigurationChange(config);</li>
+</ul>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment">    * Called by the system when the device configuration changes while your </span></span><br><span class="line"><span class="comment">    * activity is running.  Note that this will &lt;em&gt;only&lt;/em&gt; be called if </span></span><br><span class="line"><span class="comment">    * you have selected configurations you would like to handle with the </span></span><br><span class="line"><span class="comment">    * &#123;@link android.R.attr#configChanges&#125; attribute in your manifest.  If </span></span><br><span class="line"><span class="comment">    * any configuration change occurs that is not selected to be reported </span></span><br><span class="line"><span class="comment">    * by that attribute, then instead of reporting it the system will stop </span></span><br><span class="line"><span class="comment">    * and restart the activity (to have it launched with the new </span></span><br><span class="line"><span class="comment">    * configuration). </span></span><br><span class="line"><span class="comment">    *  </span></span><br><span class="line"><span class="comment">    * &lt;p&gt;At the time that this function has been called, your Resources </span></span><br><span class="line"><span class="comment">    * object will have been updated to return resource values matching the </span></span><br><span class="line"><span class="comment">    * new configuration. </span></span><br><span class="line"><span class="comment">    *  </span></span><br><span class="line"><span class="comment">    * @param newConfig The new device configuration. </span></span><br><span class="line"><span class="comment">    */</span>  </span><br><span class="line">   <span class="keyword">public</span> void onConfigurationChanged(Configuration <span class="keyword">new</span><span class="type">Config</span>) &#123;  </span><br><span class="line">       mCalled = <span class="literal">true</span>;  </span><br><span class="line">  </span><br><span class="line">       mFragments.dispatchConfigurationChanged(<span class="keyword">new</span><span class="type">Config</span>);  </span><br><span class="line">  </span><br><span class="line">       <span class="keyword">if</span> (mWindow != <span class="literal">null</span>) &#123;  </span><br><span class="line">           <span class="comment">// Pass the configuration changed event to the window  </span></span><br><span class="line">           mWindow.onConfigurationChanged(<span class="keyword">new</span><span class="type">Config</span>);  </span><br><span class="line">       &#125;  </span><br><span class="line">  </span><br><span class="line">       <span class="keyword">if</span> (mActionBar != <span class="literal">null</span>) &#123;  </span><br><span class="line">           <span class="comment">// Do this last; the action bar will need to access  </span></span><br><span class="line">           <span class="comment">// view changes from above.  </span></span><br><span class="line">           mActionBar.onConfigurationChanged(<span class="keyword">new</span><span class="type">Config</span>);  </span><br><span class="line">       &#125;  </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看注释, 大概意思是:  如果你的activity运行 , 设备信息有改变(即configuration改变)时由系统调用. 如果你在manifest.xml中配置了configChnages属性则表示有你自己来处理configuration change. 否则就重启当前这个activity.  而重启之前, 旧的resources已经被清空, 那么就会装载新的资源, 整个过程就完成了语言切换后 , 能够让所有app使用新的语言。</li>
+<li>上面这些就是对Android 系统里面的语言切换进行了源码分析，就先分析到这里；有些东西我也不是很看懂，能力有限~ </li>
+<li>明天我们再来分析怎么来实现Android 系统语言切换的功能。 <a href="http://blog.csdn.net/u011974987/article/details/50801770" target="_blank" rel="noopener"> Android 切换系统语言功能实现</a>！</li>
+<li>O(∩_∩)O~  打哈欠了睡觉了~</li>
+</ul>
+<blockquote>
+<p>转载请标明出处：  <a href="http://blog.csdn.net/u011974987/article/details/50793343" target="_blank" rel="noopener">http://blog.csdn.net/u011974987/article/details/50793343</a> </p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/04/12/android-change-language_01/" data-id="cjb7ggowk000rf3ul220c2374" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/12/android-retrofit/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Android 网络请求库Retrofit简单使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/12/android-change-language_02/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Android 切换系统语言功能实现（下）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

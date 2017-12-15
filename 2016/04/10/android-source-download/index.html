@@ -1,96 +1,279 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block top_img
-  - var top_img = page.top_img || theme.top_img || config.top_img
-  if (top_img)
-    - var flag = top_img === true ? 'no-bg' : undefined
-    div#top-container(style=`background-image: url(${top_img})` class=flag)
-      include ./includes/header.pug
-      #post-info
-        #post-title= page.title || _p('no_title') 
-        #post-meta
-          if (theme.post_meta.date_type)
-            - var date_type = theme.post_meta.date_type == 'updated' ? 'updated' : 'date' 
-            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
-          if (theme.post_meta.categories && page.categories.data.length > 0)
-            if (theme.post_meta.date_type)
-              span.post-meta__separator |
-            each item, index in page.categories.data
-              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")  
-              a(href=url_for(item.path)).post-meta__categories #[=item.name]
-              if (index < page.categories.data.length - 1)
-                 i.fa.fa-angle-right(aria-hidden="true")  
-          if (theme.disqus.enable && theme.disqus.count)
-            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-              span.post-meta__separator |
-            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")  
-            a(href=url_for(page.path) + '#disqus_thread')
-              span.disqus-comment-count(data-disqus-identifier=page.path)
-          if (theme.wordcount && theme.wordcount.enable)
-            .post-meta-wordcount
-              span= _p('post.wordcount') + ': '
-              span.word-count= wordcount(page.content)
-              span.post-meta__separator |
-              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-  else
-    div#top-container.plain
-      include ./includes/header.pug
+  
+  <title>Ubuntu 15.10 下载Android5.1代码环境搭建 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述：作为一个Android开发者，想要自己提升一个阶段，想深入了解 Android 相关的知识，Activity 是工作流程是怎样的？ View 是怎样绘制的？ 怎样修改一些系统相关的应用？等等，就得要深入Android 源代码~所以就要先获取Android源码： 准备工作： 装一个Ubuntu系统（http://www.ubuntu.com/download/desktop）电脑的内存最好有">
+<meta name="keywords" content="Ubuntu,Android源码下载,Android环境搭建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu 15.10 下载Android5.1代码环境搭建">
+<meta property="og:url" content="http://xuhaoblog.com/2016/04/10/android-source-download/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="概述：作为一个Android开发者，想要自己提升一个阶段，想深入了解 Android 相关的知识，Activity 是工作流程是怎样的？ View 是怎样绘制的？ 怎样修改一些系统相关的应用？等等，就得要深入Android 源代码~所以就要先获取Android源码： 准备工作： 装一个Ubuntu系统（http://www.ubuntu.com/download/desktop）电脑的内存最好有">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20160325114724525">
+<meta property="og:updated_time" content="2017-11-04T11:06:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu 15.10 下载Android5.1代码环境搭建">
+<meta name="twitter:description" content="概述：作为一个Android开发者，想要自己提升一个阶段，想深入了解 Android 相关的知识，Activity 是工作流程是怎样的？ View 是怎样绘制的？ 怎样修改一些系统相关的应用？等等，就得要深入Android 源代码~所以就要先获取Android源码： 准备工作： 装一个Ubuntu系统（http://www.ubuntu.com/download/desktop）电脑的内存最好有">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160325114724525">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-block content
-  article#post(class="")
-    if (!top_img)
-      #post-title.plain= page.title || _p('no_title') 
-      #post-meta
-        if (theme.post_meta.date_type)
-          - var date_type = theme.post_meta.date_type == 'updated' ? '' : 'date' 
-          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)] 
-        if (theme.post_meta.categories && page.categories.data.length > 0)
-          if (theme.post_meta.date_type)
-            span.post-meta__separator |
-          each item, index in page.categories.data
-            i.fa.fa-inbox(aria-hidden="true")  
-            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
-            if (index < page.categories.data.length - 1)
-                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")  
-        if (theme.disqus.enable && theme.disqus.count)
-          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-            span.post-meta__separator |
-          i.fa.fa-comment-o(aria-hidden="true")  
-          a(href=url_for(page.path) + '#disqus_thread')
-            span.disqus-comment-count(data-disqus-identifier=page.path)
-        if (theme.wordcount && theme.wordcount.enable)
-          span.post-meta__separator |
-          span.post-meta-wordcount
-            span= _p('post.wordcount') + ': '
-            span.word-count= wordcount(page.content)
-            span.post-meta__separator |
-            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-    #post-content!= page.content
-    if (theme.post_copyright && theme.post_copyright.enable)
-      .post-copyright
-        .post-copyright__author
-          span.post-copyright-meta= _p('post.copyright.author') + ": "
-          span.post-copyright-info= config.author
-        .post-copyright__type
-          span.post-copyright-meta= _p('post.copyright.link') + ": "
-          span.post-copyright-info= url_for(page.permalink)
-        .post-copyright__notice
-          span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
-          span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license)
-    if (theme.post_meta.tags)
-      .post-meta__tag-list
-        each item, index in page.tags.data
-          a(href=url_for(item.path)).post-meta__tags #[=item.name]
-    if (theme.QR_code)
-      if (theme.QR_code.length > 0)
-        .post-qr-code
-          each item in theme.QR_code
-            .post-qr-code-item
-              img.post-qr-code__img(src=item.itemlist.img)
-              .post-qr-code__desc=item.itemlist.text
-    if (theme.addThis.enable)
-      .addthis_inline_share_toolbox.pull-right
-      script(src=`//s7.addthis.com/js/300/addthis_widget.js#pubid=${theme.addThis.pubid}` async)
-  include includes/pagination.pug
-  if page.comments !== false
-    include includes/comments/index.pug
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-android-source-download" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/10/android-source-download/" class="article-date">
+  <time datetime="2016-04-10T02:05:36.000Z" itemprop="datePublished">2016-04-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Ubuntu/">Ubuntu</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ubuntu 15.10 下载Android5.1代码环境搭建
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="概述："><a href="#概述：" class="headerlink" title="概述："></a><strong>概述：</strong></h2><p>作为一个Android开发者，想要自己提升一个阶段，想深入了解 Android 相关的知识，Activity 是工作流程是怎样的？ View 是怎样绘制的？ 怎样修改一些系统相关的应用？等等，就得要深入Android 源代码~所以就要先获取Android源码：</p>
+<h3 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h3><ol>
+<li>装一个Ubuntu系统（<a href="http://www.ubuntu.com/download/desktop）电脑的内存最好有" target="_blank" rel="noopener">http://www.ubuntu.com/download/desktop）电脑的内存最好有</a> 8 G，因为编译 Android 源码很吃电脑内存，特别是在 4.4 以后的版本，电脑内存大点，比较保险，编译一次源码要好几个小时，要因为内存原因，太让人郁闷了。<br>ps:( ubuntu装完后把系统软件全都更新一下)</li>
+<li><p>一个翻墙vpn（<a href="https://www.trueyt.com/）" target="_blank" rel="noopener">https://www.trueyt.com/）</a></p>
+<a id="more"></a>
+</li>
+</ol>
+<h3 id="编译环境的部署："><a href="#编译环境的部署：" class="headerlink" title="编译环境的部署："></a>编译环境的部署：</h3><p>   访问： <a href="http://source.android.com/source/initializing.html" target="_blank" rel="noopener">http://source.android.com/source/initializing.html</a></p>
+<h2 id="1、-Installing-the-JDK"><a href="#1、-Installing-the-JDK" class="headerlink" title="1、 Installing the JDK"></a><strong>1、 Installing the JDK</strong></h2><p>Android 5.0 编译需要 Open Java7 版本<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-<span class="builtin-name">get</span> update</span><br><span class="line">$ sudo apt-<span class="builtin-name">get</span> install openjdk-7-jdk</span><br></pre></td></tr></table></figure></p>
+<p>Android 4.4 编译需要 Sun Java6 版本</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo<span class="built_in"> add-apt-repository </span>ppa:webupd8team/java</span><br><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install oracle-java6-set-default</span><br></pre></td></tr></table></figure>
+<p>切换 Java 的方法 (上面 2 个根据你的需要安装)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo update-alternatives --config java</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo update-alternatives --config javac</span></span><br></pre></td></tr></table></figure>
+<h2 id="2、-Installing-required-packages"><a href="#2、-Installing-required-packages" class="headerlink" title="2、   Installing required packages"></a><strong>2、   Installing required packages</strong></h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-<span class="built_in">get</span> install bison g++-multilib git gperf libxml2-utils <span class="keyword">make</span> <span class="keyword">python</span>-networkx zlib1g-de<span class="variable">v:i386</span> zip</span><br><span class="line">$ sudo apt-<span class="built_in">get</span> install git gnupg flex bison gperf build-essential zip curl libc6-dev libncurses5-de<span class="variable">v:i386</span> x11proto-core-dev libx11-de<span class="variable">v:i386</span> libreadline6-de<span class="variable">v:i386</span> libgl1-mesa-glx:i386 libgl1-mesa-dev g++-multilib mingw32 tofrodos <span class="keyword">python</span>-markdown libxml2-utils xsltproc zlib1g-de<span class="variable">v:i386</span></span><br><span class="line">$ sudo <span class="keyword">ln</span> -s /usr/lib/i386-linux-gnu/mesa/libGL.<span class="keyword">so</span>.<span class="number">1</span> /usr/lib/i386-linux-gnu/libGL.<span class="keyword">so</span></span><br></pre></td></tr></table></figure>
+<p><strong> Notes！！不同的 Ubuntu 版本可能不能，安装这些编译工具可能不成功，也不用管，在你编译的时候，可能会出错，根据错误日志去解决就行了。</strong></p>
+<p>配置 USB 访问 (下面的都可能需要翻墙了)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wget -S -O - http://source.android.com/<span class="built_in">source</span>/51-android.rules | sed <span class="string">"s/&lt;username&gt;/<span class="variable">$USER</span>/"</span> |sudo tee &gt;/dev/null /etc/udev/rules.d/51-android.rules; </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sudo udevadm control --reload-rules</span></span><br></pre></td></tr></table></figure>
+<p>安装 repo ， repo 是 git 的管理工具</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir ~/bin</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> PATH=~/bin:<span class="variable">$PATH</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> curl https://storage.googleapis.com/git-repo-downloads/repo &gt; ~/bin/repo</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> chmod a+x ~/bin/repo</span></span><br></pre></td></tr></table></figure>
+<h3 id="下载源代码"><a href="#下载源代码" class="headerlink" title="下载源代码"></a>下载源代码</h3><p>（我这边添加的是内置服务器，从我们自己的服务器下载的代码很快，一般一个小时左右就下载完了！）</p>
+<ul>
+<li>建立一个目录来存放 Android 源码</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mkdir android_source_5.0</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> android_source_5.0</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始化下载</li>
+</ul>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ repo init -u https://<span class="keyword">android.googlesource.com/platform/manifest </span>-<span class="keyword">b </span></span><br><span class="line">你要同步的源码(<span class="keyword">android-5.0.1_r1)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>在初始化时，可能要配置下git的emai 信息：</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git<span class="built_in"> config </span>--global user.email <span class="string">"you@example.com"</span></span><br><span class="line">$ git<span class="built_in"> config </span>--global user.name <span class="string">"Your Name"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Downloading the Android Source Tree同步源码</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> repo sync</span></span><br></pre></td></tr></table></figure>
+<p>这个命令如果代理断了需要重新执行这个命令同步代码(也可以写一个shell 脚本)</p>
+<p>当控制台显示 successful的时候恭喜你代码同步成功了~控制台显示如下：</p>
+<h3 id="编译源代码"><a href="#编译源代码" class="headerlink" title="编译源代码"></a>编译源代码</h3><p>进入到你DownLoad 源码的目录下，执行以下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> android_source_5.0</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">source</span> build/envsetup.sh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> choosecombo release aosp_flo eng</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> make -j4</span></span><br></pre></td></tr></table></figure>
+<p>编译的时间是漫长的，中间还可能出错，所以我们需要随时陪同，中间还可能需要解错，当你看见屏幕的最下面出现 Successful 的时候，恭喜你，源码已经编译成功。如下图：<br><img src="http://img.blog.csdn.net/20160325114724525" alt="这里写图片描述"></p>
+<blockquote>
+<p>转载请注明出处：<a href="http://blog.csdn.net/u011974987/article/details/50978291" target="_blank" rel="noopener">http://blog.csdn.net/u011974987/article/details/50978291</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/04/10/android-source-download/" data-id="cjb7ggoyz0039f3ulaw6ody66" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/10/change-gun-make-code/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Ubuntu 更改 Gun Make 版本
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

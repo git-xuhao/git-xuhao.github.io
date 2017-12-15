@@ -1,96 +1,303 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block top_img
-  - var top_img = page.top_img || theme.top_img || config.top_img
-  if (top_img)
-    - var flag = top_img === true ? 'no-bg' : undefined
-    div#top-container(style=`background-image: url(${top_img})` class=flag)
-      include ./includes/header.pug
-      #post-info
-        #post-title= page.title || _p('no_title') 
-        #post-meta
-          if (theme.post_meta.date_type)
-            - var date_type = theme.post_meta.date_type == 'updated' ? 'updated' : 'date' 
-            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
-          if (theme.post_meta.categories && page.categories.data.length > 0)
-            if (theme.post_meta.date_type)
-              span.post-meta__separator |
-            each item, index in page.categories.data
-              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")  
-              a(href=url_for(item.path)).post-meta__categories #[=item.name]
-              if (index < page.categories.data.length - 1)
-                 i.fa.fa-angle-right(aria-hidden="true")  
-          if (theme.disqus.enable && theme.disqus.count)
-            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-              span.post-meta__separator |
-            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")  
-            a(href=url_for(page.path) + '#disqus_thread')
-              span.disqus-comment-count(data-disqus-identifier=page.path)
-          if (theme.wordcount && theme.wordcount.enable)
-            .post-meta-wordcount
-              span= _p('post.wordcount') + ': '
-              span.word-count= wordcount(page.content)
-              span.post-meta__separator |
-              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-  else
-    div#top-container.plain
-      include ./includes/header.pug
+  
+  <title>Android 中线程池的分析 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="介绍new Thread的弊端及Java四种线程池的使用，对Android同样适用。 1、new Thread的弊端执行一个异步任务你还只是如下new Thread吗？ 123456789new Thread(new Runnable() &amp;#123;     @Override    public void run() &amp;#123;        // TODO Auto-generated m">
+<meta name="keywords" content="Android,线程池,java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 中线程池的分析">
+<meta property="og:url" content="http://xuhaoblog.com/2016/04/15/Android 中线程池的分析/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="介绍new Thread的弊端及Java四种线程池的使用，对Android同样适用。 1、new Thread的弊端执行一个异步任务你还只是如下new Thread吗？ 123456789new Thread(new Runnable() &amp;#123;     @Override    public void run() &amp;#123;        // TODO Auto-generated m">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-04T10:57:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 中线程池的分析">
+<meta name="twitter:description" content="介绍new Thread的弊端及Java四种线程池的使用，对Android同样适用。 1、new Thread的弊端执行一个异步任务你还只是如下new Thread吗？ 123456789new Thread(new Runnable() &amp;#123;     @Override    public void run() &amp;#123;        // TODO Auto-generated m">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-block content
-  article#post(class="")
-    if (!top_img)
-      #post-title.plain= page.title || _p('no_title') 
-      #post-meta
-        if (theme.post_meta.date_type)
-          - var date_type = theme.post_meta.date_type == 'updated' ? '' : 'date' 
-          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)] 
-        if (theme.post_meta.categories && page.categories.data.length > 0)
-          if (theme.post_meta.date_type)
-            span.post-meta__separator |
-          each item, index in page.categories.data
-            i.fa.fa-inbox(aria-hidden="true")  
-            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
-            if (index < page.categories.data.length - 1)
-                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")  
-        if (theme.disqus.enable && theme.disqus.count)
-          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-            span.post-meta__separator |
-          i.fa.fa-comment-o(aria-hidden="true")  
-          a(href=url_for(page.path) + '#disqus_thread')
-            span.disqus-comment-count(data-disqus-identifier=page.path)
-        if (theme.wordcount && theme.wordcount.enable)
-          span.post-meta__separator |
-          span.post-meta-wordcount
-            span= _p('post.wordcount') + ': '
-            span.word-count= wordcount(page.content)
-            span.post-meta__separator |
-            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-    #post-content!= page.content
-    if (theme.post_copyright && theme.post_copyright.enable)
-      .post-copyright
-        .post-copyright__author
-          span.post-copyright-meta= _p('post.copyright.author') + ": "
-          span.post-copyright-info= config.author
-        .post-copyright__type
-          span.post-copyright-meta= _p('post.copyright.link') + ": "
-          span.post-copyright-info= url_for(page.permalink)
-        .post-copyright__notice
-          span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
-          span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license)
-    if (theme.post_meta.tags)
-      .post-meta__tag-list
-        each item, index in page.tags.data
-          a(href=url_for(item.path)).post-meta__tags #[=item.name]
-    if (theme.QR_code)
-      if (theme.QR_code.length > 0)
-        .post-qr-code
-          each item in theme.QR_code
-            .post-qr-code-item
-              img.post-qr-code__img(src=item.itemlist.img)
-              .post-qr-code__desc=item.itemlist.text
-    if (theme.addThis.enable)
-      .addthis_inline_share_toolbox.pull-right
-      script(src=`//s7.addthis.com/js/300/addthis_widget.js#pubid=${theme.addThis.pubid}` async)
-  include includes/pagination.pug
-  if page.comments !== false
-    include includes/comments/index.pug
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android 中线程池的分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/15/Android 中线程池的分析/" class="article-date">
+  <time datetime="2016-04-15T08:25:24.000Z" itemprop="datePublished">2016-04-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java基础/">Java基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android 中线程池的分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>介绍new Thread的弊端及Java四种线程池的使用，对Android同样适用。</strong></p>
+<h3 id="1、new-Thread的弊端"><a href="#1、new-Thread的弊端" class="headerlink" title="1、new Thread的弊端"></a><strong>1、new Thread的弊端</strong></h3><p>执行一个异步任务你还只是如下new Thread吗？</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">).start();</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p><strong>那你就out太多了，new Thread的弊端如下：</strong></p>
+<p>a. 每次new Thread新建对象性能差。<br>b. 线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。<br>c. 缺乏更多功能，如定时执行、定期执行、线程中断。</p>
+<p><strong>相比new Thread，Java提供的四种线程池的好处在于：</strong></p>
+<p>a. 重用存在的线程，减少对象创建、消亡的开销，性能佳。<br>b. 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。<br>c. 提供定时执行、定期执行、单线程、并发数控制等功能。</p>
+<h3 id="2、Java-线程池"><a href="#2、Java-线程池" class="headerlink" title="2、Java 线程池"></a><strong>2、Java 线程池</strong></h3><p>Java通过Executors提供四种线程池，分别为：</p>
+<ul>
+<li>newCachedThreadPool创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。</li>
+<li>newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。</li>
+<li>newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行。</li>
+<li>newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。</li>
+</ul>
+<h3 id="1-newCachedThreadPool："><a href="#1-newCachedThreadPool：" class="headerlink" title="(1)newCachedThreadPool："></a><strong>(1)newCachedThreadPool：</strong></h3><p>创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。示例代码如下：</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService cachedThreadPool = Executors.newCachedThreadPool();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> <span class="keyword">index</span> = i;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Thread.sleep(<span class="keyword">index</span> * <span class="number">1000</span>);</span><br><span class="line">    &#125; </span><br><span class="line">        <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">cachedThreadPool.execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> </span><br><span class="line">@Override</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> run() &#123;</span><br><span class="line">    System.out.println(<span class="keyword">index</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>线程池为无限大，当执行第二个任务时第一个任务已经完成，会复用执行第一个任务的线程，而不用每次新建线程。</p>
+<h3 id="2-newFixedThreadPool："><a href="#2-newFixedThreadPool：" class="headerlink" title="(2)newFixedThreadPool："></a><strong>(2)newFixedThreadPool：</strong></h3><p>创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。示例代码如下：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService fixedThreadPool = Executors.newFixedThreadPool(<span class="number">3</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> index = i;</span><br><span class="line"></span><br><span class="line">    fixedThreadPool.execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    System.out.println(index);</span><br><span class="line">    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">    e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因为线程池大小为3，每个任务输出index后sleep 2秒，所以每两秒打印3个数字。</p>
+<p>定长线程池的大小最好根据系统资源进行设置。如Runtime.getRuntime().availableProcessors()。可参考PreloadDataCache。</p>
+<h3 id="3-newScheduledThreadPool："><a href="#3-newScheduledThreadPool：" class="headerlink" title="(3)newScheduledThreadPool："></a><strong>(3)newScheduledThreadPool：</strong></h3><p>创建一个定长线程池，支持定时及周期性任务执行。延迟执行示例代码如下：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ScheduledExecutorService </span><span class="keyword">scheduledThreadPool </span>= Executors.newScheduledThreadPool(<span class="number">5</span>)<span class="comment">;</span></span><br><span class="line"> <span class="keyword">scheduledThreadPool.schedule(new </span>Runnable() &#123;</span><br><span class="line"> </span><br><span class="line">@Override</span><br><span class="line">public void run() &#123;</span><br><span class="line">    System.out.println(<span class="string">"delay 3 seconds"</span>)<span class="comment">;</span></span><br><span class="line">&#125;</span><br><span class="line">&#125;, <span class="number">3</span>, TimeUnit.SECONDS)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>表示延迟3秒执行。</p>
+<p>定期执行示例代码如下：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">scheduledThreadPool.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> </span><br><span class="line">@Override</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="built_in">run</span>() &#123;</span><br><span class="line">    System.out.<span class="built_in">println</span>(<span class="string">"delay 1 seconds, and excute every 3 seconds"</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;, <span class="number">1</span>, <span class="number">3</span>, TimeUnit.SECONDS);</span><br></pre></td></tr></table></figure>
+<p>表示延迟1秒后每3秒执行一次。</p>
+<p>ScheduledExecutorService比Timer更安全，功能更强大</p>
+<h3 id="4-newSingleThreadExecutor："><a href="#4-newSingleThreadExecutor：" class="headerlink" title="(4)newSingleThreadExecutor："></a><strong>(4)newSingleThreadExecutor：</strong></h3><p>创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。示例代码如下：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> index = i;</span><br><span class="line">singleThreadExecutor.execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        System.out.println(index);</span><br><span class="line">    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">    e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果依次输出，相当于顺序执行各个任务。</p>
+<p>现行大多数GUI程序都是单线程的。Android中单线程可用于数据库操作，文件操作，应用批量安装，应用批量删除等不适合并发但可能IO阻塞性及影响UI线程响应的操作。</p>
+<h3 id="线程池的作用："><a href="#线程池的作用：" class="headerlink" title="线程池的作用："></a><strong>线程池的作用：</strong></h3><p>线程池作用就是限制系统中执行线程的数量。<br>     根 据系统的环境情况，可以自动或手动设置线程数量，达到运行的最佳效果；少了浪费了系统资源，多了造成系统拥挤效率不高。用线程池控制线程数量，其他线程排 队等候。一个任务执行完毕，再从队列的中取最前面的任务开始执行。若队列中没有等待进程，线程池的这一资源处于等待。当一个新任务需要运行时，如果线程池 中有等待的工作线程，就可以开始运行了；否则进入等待队列。</p>
+<h3 id="为什么要用线程池"><a href="#为什么要用线程池" class="headerlink" title="为什么要用线程池:"></a><strong>为什么要用线程池:</strong></h3><p>1.减少了创建和销毁线程的次数，每个工作线程都可以被重复利用，可执行多个任务。</p>
+<p>2.可以根据系统的承受能力，调整线程池中工作线线程的数目，防止因为消耗过多的内存，而把服务器累趴下(每个线程需要大约1MB内存，线程开的越多，消耗的内存也就越大，最后死机)。</p>
+<p>Java里面线程池的顶级接口是Executor，但是严格意义上讲Executor并不是一个线程池，而只是一个执行线程的工具。真正的线程池接口是ExecutorService。</p>
+<p><strong>比较重要的几个类：</strong></p>
+<p>ExecutorService：               真正的线程池接口。</p>
+<p>ScheduledExecutorService：      能和Timer/TimerTask类似，解决那些需要任务重复执行的问题。</p>
+<p>ThreadPoolExecutor：            ExecutorService的默认实现。</p>
+<p>ScheduledThreadPoolExecutor：   继承ThreadPoolExecutor的ScheduledExecutorService接口实现，周期性任务调度的类实现。</p>
+<p>要配置一个线程池是比较复杂的，尤其是对于线程池的原理不是很清楚的情况下，很有可能配置的线程池不是较优的，因此在Executors类里面提供了一些静态工厂，生成一些常用的线程池。</p>
+<h3 id="1-newSingleThreadExecutor"><a href="#1-newSingleThreadExecutor" class="headerlink" title="1.newSingleThreadExecutor"></a><strong>1.newSingleThreadExecutor</strong></h3><p>创建一个单线程的线程池。这个线程池只有一个线程在工作，也就是相当于单线程串行执行所有任务。如果这个唯一的线程因为异常结束，那么会有一个新的线程来替代它。此线程池保证所有任务的执行顺序按照任务的提交顺序执行。</p>
+<h3 id="2-newFixedThreadPool"><a href="#2-newFixedThreadPool" class="headerlink" title="2.newFixedThreadPool"></a><strong>2.newFixedThreadPool</strong></h3><p>创建固定大小的线程池。每次提交一个任务就创建一个线程，直到线程达到线程池的最大大小。线程池的大小一旦达到最大值就会保持不变，如果某个线程因为执行异常而结束，那么线程池会补充一个新线程。</p>
+<h3 id="3-newCachedThreadPool"><a href="#3-newCachedThreadPool" class="headerlink" title="3.newCachedThreadPool"></a><strong>3.newCachedThreadPool</strong></h3><p>创建一个可缓存的线程池。如果线程池的大小超过了处理任务所需要的线程，</p>
+<p>那么就会回收部分空闲（60秒不执行任务）的线程，当任务数增加时，此线程池又可以智能的添加新线程来处理任务。此线程池不会对线程池大小做限制，线程池大小完全依赖于操作系统（或者说JVM）能够创建的最大线程大小。</p>
+<h3 id="4-newScheduledThreadPool"><a href="#4-newScheduledThreadPool" class="headerlink" title="4.newScheduledThreadPool"></a><strong>4.newScheduledThreadPool</strong></h3><p>创建一个大小无限的线程池。此线程池支持定时以及周期性执行任务的需求。</p>
+<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a><strong>实例代码</strong></h3><h3 id="一、固定大小的线程池，newFixedThreadPool："><a href="#一、固定大小的线程池，newFixedThreadPool：" class="headerlink" title="一、固定大小的线程池，newFixedThreadPool："></a><strong>一、固定大小的线程池，newFixedThreadPool：</strong></h3><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> app.executors;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;  </span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;  </span><br><span class="line">  </span><br><span class="line"><span class="comment">/** </span></span><br><span class="line"><span class="comment"> * Java线程：线程池 </span></span><br><span class="line"><span class="comment"> *  </span></span><br><span class="line"><span class="comment"> * @author xiho</span></span><br><span class="line"><span class="comment"> */</span>  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> void main(<span class="keyword">String</span>[] args) &#123;  </span><br><span class="line">        <span class="comment">// 创建一个可重用固定线程数的线程池  </span></span><br><span class="line">        ExecutorService pool = Executors.<span class="keyword">new</span><span class="type">FixedThreadPool</span>(<span class="number">2</span>);  </span><br><span class="line">        <span class="comment">// 创建线程  </span></span><br><span class="line">        Thread t1 = <span class="keyword">new</span> <span class="type">MyThread</span>();  </span><br><span class="line">        Thread t2 = <span class="keyword">new</span> <span class="type">MyThread</span>();  </span><br><span class="line">        Thread t3 = <span class="keyword">new</span> <span class="type">MyThread</span>();  </span><br><span class="line">        Thread t4 = <span class="keyword">new</span> <span class="type">MyThread</span>();  </span><br><span class="line">        Thread t5 = <span class="keyword">new</span> <span class="type">MyThread</span>();  </span><br><span class="line">        <span class="comment">// 将线程放入池中进行执行  </span></span><br><span class="line">        pool.execute(t1);  </span><br><span class="line">        pool.execute(t2);  </span><br><span class="line">        pool.execute(t3);  </span><br><span class="line">        pool.execute(t4);  </span><br><span class="line">        pool.execute(t5);  </span><br><span class="line">        <span class="comment">// 关闭线程池  </span></span><br><span class="line">        pool.shutdown();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword"><span class="keyword">extends</span> <span class="type">Thread</span></span> </span>&#123;  </span><br><span class="line">    @Override  </span><br><span class="line">    <span class="keyword">public</span> void run() &#123;  </span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">"正在执行。。。"</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果：</strong></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-3</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-4</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-2</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-5</span>正在执行。。。</span><br></pre></td></tr></table></figure>
+<p>改变ExecutorService pool = Executors.newFixedThreadPool(5)中的参数：ExecutorService pool = Executors.newFixedThreadPool(2)，输出结果是：</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-2</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-2</span>正在执行。。。</span><br></pre></td></tr></table></figure>
+<p>从以上结果可以看出，newFixedThreadPool的参数指定了可以运行的线程的最大数目，超过这个数目的线程加进去以后，不会运行。其次，加入线程池的线程属于托管状态，线程的运行不受加入顺序的影响。</p>
+<h3 id="二、单任务线程池，newSingleThreadExecutor："><a href="#二、单任务线程池，newSingleThreadExecutor：" class="headerlink" title="二、单任务线程池，newSingleThreadExecutor："></a><strong>二、单任务线程池，newSingleThreadExecutor：</strong></h3><p>仅仅是把上述代码中的ExecutorService pool = Executors.newFixedThreadPool(2)改为ExecutorService pool = Executors.newSingleThreadExecutor();<br><strong>输出结果：</strong></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。</span><br></pre></td></tr></table></figure>
+<p>可以看出，每次调用execute方法，其实最后都是调用了thread-1的run方法。</p>
+<h3 id="三、可变尺寸的线程池，newCachedThreadPool："><a href="#三、可变尺寸的线程池，newCachedThreadPool：" class="headerlink" title="三、可变尺寸的线程池，newCachedThreadPool："></a><strong>三、可变尺寸的线程池，newCachedThreadPool：</strong></h3><p>与上面的类似，只是改动下pool的创建方式：ExecutorService pool = Executors.newCachedThreadPool();</p>
+<p><strong>输出结果：</strong></p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pool<span class="number">-1</span>-thread<span class="number">-1</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-2</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-4</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-3</span>正在执行。。。  </span><br><span class="line">pool<span class="number">-1</span>-thread<span class="number">-5</span>正在执行。。。</span><br></pre></td></tr></table></figure>
+<p>这种方式的特点是：可根据需要创建新线程的线程池，但是在以前构造的线程可用时将重用它们。</p>
+<h3 id="四、延迟连接池，newScheduledThreadPool："><a href="#四、延迟连接池，newScheduledThreadPool：" class="headerlink" title="四、延迟连接池，newScheduledThreadPool："></a><strong>四、延迟连接池，newScheduledThreadPool：</strong></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestScheduledThreadPoolExecutor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        ScheduledThreadPoolExecutor exec = <span class="keyword">new</span> ScheduledThreadPoolExecutor(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        exec.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;<span class="comment">//每隔一段时间就触发异常</span></span><br><span class="line"></span><br><span class="line">                      <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">                      <span class="function">publicvoid <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">                           <span class="comment">//throw new RuntimeException();</span></span><br><span class="line"></span><br><span class="line">                           System.out.println(<span class="string">"================"</span>);</span><br><span class="line"></span><br><span class="line">                      &#125;</span><br><span class="line"></span><br><span class="line">                  &#125;, <span class="number">1000</span>, <span class="number">5000</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">        exec.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;<span class="comment">//每隔一段时间打印系统时间，证明两者是互不影响的</span></span><br><span class="line"></span><br><span class="line">                      <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">                      <span class="function">publicvoid <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">                           System.out.println(System.nanoTime());</span><br><span class="line"></span><br><span class="line">                      &#125;</span><br><span class="line"></span><br><span class="line">                  &#125;, <span class="number">1000</span>, <span class="number">2000</span>, TimeUnit.MILLISECONDS);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>输出结果：</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">================</span><br><span class="line"></span><br><span class="line"><span class="number">8384644549516</span></span><br><span class="line"></span><br><span class="line"><span class="number">8386643829034</span></span><br><span class="line"></span><br><span class="line"><span class="number">8388643830710</span></span><br><span class="line"></span><br><span class="line">================</span><br><span class="line"></span><br><span class="line"><span class="number">8390643851383</span></span><br><span class="line"></span><br><span class="line"><span class="number">8392643879319</span></span><br><span class="line"></span><br><span class="line"><span class="number">8400643939383</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>转载请标注原地址：<a href="http://blog.csdn.net/u011974987/article/details/51027795" target="_blank" rel="noopener">http://blog.csdn.net/u011974987/article/details/51027795</a></p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/04/15/Android 中线程池的分析/" data-id="cjb7ggowa000jf3ul9v4wrcv0" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线程池/">线程池</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/04/18/android-spacingtextview/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Android TextView 实现文字间距
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/12/android-retrofit/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Android 网络请求库Retrofit简单使用</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

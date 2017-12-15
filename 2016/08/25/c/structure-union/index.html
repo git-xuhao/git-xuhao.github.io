@@ -1,96 +1,312 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block top_img
-  - var top_img = page.top_img || theme.top_img || config.top_img
-  if (top_img)
-    - var flag = top_img === true ? 'no-bg' : undefined
-    div#top-container(style=`background-image: url(${top_img})` class=flag)
-      include ./includes/header.pug
-      #post-info
-        #post-title= page.title || _p('no_title') 
-        #post-meta
-          if (theme.post_meta.date_type)
-            - var date_type = theme.post_meta.date_type == 'updated' ? 'updated' : 'date' 
-            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
-          if (theme.post_meta.categories && page.categories.data.length > 0)
-            if (theme.post_meta.date_type)
-              span.post-meta__separator |
-            each item, index in page.categories.data
-              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")  
-              a(href=url_for(item.path)).post-meta__categories #[=item.name]
-              if (index < page.categories.data.length - 1)
-                 i.fa.fa-angle-right(aria-hidden="true")  
-          if (theme.disqus.enable && theme.disqus.count)
-            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-              span.post-meta__separator |
-            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")  
-            a(href=url_for(page.path) + '#disqus_thread')
-              span.disqus-comment-count(data-disqus-identifier=page.path)
-          if (theme.wordcount && theme.wordcount.enable)
-            .post-meta-wordcount
-              span= _p('post.wordcount') + ': '
-              span.word-count= wordcount(page.content)
-              span.post-meta__separator |
-              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-  else
-    div#top-container.plain
-      include ./includes/header.pug
+  
+  <title>C语言（六）结构体和联合体 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="结构体在C语言中，可以使用结构体（Struct）来存放一组不同类型的数据。结构体的定义形式为： 123struct 结构体名&amp;#123;    结构体所包含的变量或数组&amp;#125;; 结构体是一种集合，它里面包含了多个变量或数组，它们的类型可以相同，也可以不同，每个这样的变量或数组都称为结构体的成员（Member）。请看下面的一个栗子： 1234567struct stu&amp;#123;    cha">
+<meta name="keywords" content="C&#x2F;C++,编程语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言（六）结构体和联合体">
+<meta property="og:url" content="http://xuhaoblog.com/2016/08/25/c/structure-union/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="结构体在C语言中，可以使用结构体（Struct）来存放一组不同类型的数据。结构体的定义形式为： 123struct 结构体名&amp;#123;    结构体所包含的变量或数组&amp;#125;; 结构体是一种集合，它里面包含了多个变量或数组，它们的类型可以相同，也可以不同，每个这样的变量或数组都称为结构体的成员（Member）。请看下面的一个栗子： 1234567struct stu&amp;#123;    cha">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-04T11:02:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C语言（六）结构体和联合体">
+<meta name="twitter:description" content="结构体在C语言中，可以使用结构体（Struct）来存放一组不同类型的数据。结构体的定义形式为： 123struct 结构体名&amp;#123;    结构体所包含的变量或数组&amp;#125;; 结构体是一种集合，它里面包含了多个变量或数组，它们的类型可以相同，也可以不同，每个这样的变量或数组都称为结构体的成员（Member）。请看下面的一个栗子： 1234567struct stu&amp;#123;    cha">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-block content
-  article#post(class="")
-    if (!top_img)
-      #post-title.plain= page.title || _p('no_title') 
-      #post-meta
-        if (theme.post_meta.date_type)
-          - var date_type = theme.post_meta.date_type == 'updated' ? '' : 'date' 
-          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)] 
-        if (theme.post_meta.categories && page.categories.data.length > 0)
-          if (theme.post_meta.date_type)
-            span.post-meta__separator |
-          each item, index in page.categories.data
-            i.fa.fa-inbox(aria-hidden="true")  
-            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
-            if (index < page.categories.data.length - 1)
-                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")  
-        if (theme.disqus.enable && theme.disqus.count)
-          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-            span.post-meta__separator |
-          i.fa.fa-comment-o(aria-hidden="true")  
-          a(href=url_for(page.path) + '#disqus_thread')
-            span.disqus-comment-count(data-disqus-identifier=page.path)
-        if (theme.wordcount && theme.wordcount.enable)
-          span.post-meta__separator |
-          span.post-meta-wordcount
-            span= _p('post.wordcount') + ': '
-            span.word-count= wordcount(page.content)
-            span.post-meta__separator |
-            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-    #post-content!= page.content
-    if (theme.post_copyright && theme.post_copyright.enable)
-      .post-copyright
-        .post-copyright__author
-          span.post-copyright-meta= _p('post.copyright.author') + ": "
-          span.post-copyright-info= config.author
-        .post-copyright__type
-          span.post-copyright-meta= _p('post.copyright.link') + ": "
-          span.post-copyright-info= url_for(page.permalink)
-        .post-copyright__notice
-          span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
-          span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license)
-    if (theme.post_meta.tags)
-      .post-meta__tag-list
-        each item, index in page.tags.data
-          a(href=url_for(item.path)).post-meta__tags #[=item.name]
-    if (theme.QR_code)
-      if (theme.QR_code.length > 0)
-        .post-qr-code
-          each item in theme.QR_code
-            .post-qr-code-item
-              img.post-qr-code__img(src=item.itemlist.img)
-              .post-qr-code__desc=item.itemlist.text
-    if (theme.addThis.enable)
-      .addthis_inline_share_toolbox.pull-right
-      script(src=`//s7.addthis.com/js/300/addthis_widget.js#pubid=${theme.addThis.pubid}` async)
-  include includes/pagination.pug
-  if page.comments !== false
-    include includes/comments/index.pug
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-c/structure-union" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/25/c/structure-union/" class="article-date">
+  <time datetime="2016-08-24T16:18:26.000Z" itemprop="datePublished">2016-08-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      C语言（六）结构体和联合体
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a><strong>结构体</strong></h3><p>在C语言中，可以使用结构体（Struct）来存放一组不同类型的数据。结构体的定义形式为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> 结构体名&#123;</span></span><br><span class="line">    结构体所包含的变量或数组</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>结构体是一种集合，它里面包含了多个变量或数组，它们的类型可以相同，也可以不同，每个这样的变量或数组都称为结构体的成员（Member）。请看下面的一个栗子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> *name;  <span class="comment">//姓名</span></span><br><span class="line">    <span class="keyword">int</span> num;  <span class="comment">//学号</span></span><br><span class="line">    <span class="keyword">int</span> age;  <span class="comment">//年龄</span></span><br><span class="line">    <span class="keyword">char</span> group;  <span class="comment">//所在学习小组</span></span><br><span class="line">    <span class="keyword">float</span> score;  <span class="comment">//成绩</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>stu 为结构体名，它包含了 5 个成员，分别是 name、num、age、group、score。结构体成员的定义方式与变量和数组的定义方式相同，只是不能初始化。</p>
+<blockquote>
+<p>注意大括号后面的分号“；”不能少哦~</p>
+</blockquote>
+<p>结构体也是一种数据类型，它由我们自己来定义，可以包含多个其他类型的数据。<br>像int、float、char 等是由C语言本身提供的数据类型，不能再进行分拆，我们称之为基本数据类型；而结构体可以包含多个基本类型的数据，也可以包含其他的结构体。</p>
+<h4 id="结构体变量"><a href="#结构体变量" class="headerlink" title="结构体变量"></a><strong>结构体变量</strong></h4><p>既然结构体是一种数据类型，那么就可以用它来定义变量。例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu1</span>, <span class="title">stu2</span>;</span></span><br></pre></td></tr></table></figure>
+<p>定义了两个变量 stu1 和 stu2，它们都是 stu 类型，都由 5 个成员组成。注意关键字struct不能少。</p>
+<p>还可以在定义结构体的同时定义结构体变量：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> *name;  <span class="comment">//姓名</span></span><br><span class="line">    <span class="keyword">int</span> num;  <span class="comment">//学号</span></span><br><span class="line">    <span class="keyword">int</span> age;  <span class="comment">//年龄</span></span><br><span class="line">    <span class="keyword">char</span> group;  <span class="comment">//所在学习小组</span></span><br><span class="line">    <span class="keyword">float</span> score;  <span class="comment">//成绩</span></span><br><span class="line">&#125; stu1, stu2;</span><br></pre></td></tr></table></figure>
+<p>如果只需要 stu1、stu2 两个变量，后面不需要再使用结构体名定义其他变量，那么在定义时也可以不给出结构体名，如下所示：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span>&#123;</span>  <span class="comment">//没有写 stu</span></span><br><span class="line">    <span class="keyword">char</span> *name;  <span class="comment">//姓名</span></span><br><span class="line">    <span class="keyword">int</span> num;  <span class="comment">//学号</span></span><br><span class="line">    <span class="keyword">int</span> age;  <span class="comment">//年龄</span></span><br><span class="line">    <span class="keyword">char</span> group;  <span class="comment">//所在学习小组</span></span><br><span class="line">    <span class="keyword">float</span> score;  <span class="comment">//成绩</span></span><br><span class="line">&#125; stu1, stu2;</span><br></pre></td></tr></table></figure>
+<p>这样的写法很简单，但是因为没有结构体名，后面就没法用该结构体定义新的变量了。</p>
+<p>理论上讲结构体的各个成员在内存中是连续存储的，和数组非常类似，例如上面的结构体变量 stu1、stu2 的内存分布如下图所示，共占用 4+4+4+1+4 = 17 个字节。但是在编译器的具体实现中，各个成员之间可能会存在空隙，C语言中，结构体大小的内存分配，参考于这片文章：<a href="http://blog.csdn.net/zhangjay/article/details/6408907" target="_blank" rel="noopener">C语言中结构体大小计算即存储分配</a></p>
+<p>这里我在做下总结：</p>
+<p>   运算符sizeof可以计算出给定类型的大小，对于32位系统来说，sizeof(char) = 1; sizeof(int) = 4。基本数据类型的大小很好计算，我们来看一下如何计算构造数据类型的大小。</p>
+<p>　　C语言中的构造数据类型有三种：数组、结构体和共用体。</p>
+<p>　　数组是相同类型的元素的集合，只要会计算单个元素的大小，整个数组所占空间等于基础元素大小乘上元素的个数。</p>
+<p>　　结构体中的成员可以是不同的数据类型，成员按照定义时的顺序依次存储在连续的内存空间。和数组不一样的是，结构体的大小不是所有成员大小简单的相加，需要考虑到系统在存储结构体变量时的地址对齐问题。看下面这样的一个结构体：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="class"><span class="keyword">struct</span> <span class="title">stu1</span></span></span><br><span class="line"><span class="class">　　&#123;</span></span><br><span class="line">　　<span class="keyword">int</span> i;</span><br><span class="line">　　<span class="keyword">char</span> c;</span><br><span class="line">　　<span class="keyword">int</span> j;</span><br><span class="line">　　&#125;；</span><br></pre></td></tr></table></figure>
+<p>　　先介绍一个相关的概念——偏移量。偏移量指的是结构体变量中成员的地址和结构体变量地址 的差。结构体大小等于最后一个成员的偏移量加上最后一个成员的大小。显然，结构体变量中第一个成员的地址就是结构体变量的首地址。因此，第一个成员i的偏 移量为0。第二个成员c的偏移量是第一个成员的偏移量加上第一个成员的大小（0+4）,其值为4；第三个成员j的偏移量是第二个成员的偏移量加上第二个成 员的大小（4+1）,其值为5。</p>
+<p>　　实际上，由于存储变量时地址对齐的要求，编译器在编译程序时会遵循两条原则：一、结构体变量中成员的偏移量必须是成员大小的整数倍（0被认为是任何数的整数倍） 二、结构体大小必须是所有成员大小的整数倍。</p>
+<p>　　对照第一条，上面的例子中前两个成员的偏移量都满足要求，但第三个成员的偏移量为5，并不是自身(int)大小的整数倍。编译器在处理时会在第二个成员后面补上3个空字节，使得第三个成员的偏移量变成8。</p>
+<p>　　对照第二条，结构体大小等于最后一个成员的偏移量加上其大小，上面的例子中计算出来的大小为12，满足要求。</p>
+<p>　　再看一个满足第一条，不满足第二条的情况：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="class"><span class="keyword">struct</span> <span class="title">stu2</span></span></span><br><span class="line"><span class="class">　　&#123;</span></span><br><span class="line">　　<span class="keyword">int</span> k;</span><br><span class="line">　　<span class="keyword">short</span> t;</span><br><span class="line">　　&#125;；</span><br></pre></td></tr></table></figure>
+<p>　　成员k的偏移量为0；成员t的偏移量为4，都不需要调整。但计算出来的大小为6，显然不 是成员k大小的整数倍。因此，编译器会在成员t后面补上2个字节，使得结构体的大小变成8从而满足第二个要求。由此可见，大家在定义结构体类型时需要考虑 到字节对齐的情况，不同的顺序会影响到结构体的大小。对比下面两种定义顺序</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="class"><span class="keyword">struct</span> <span class="title">stu3</span></span></span><br><span class="line"><span class="class">　　&#123;</span></span><br><span class="line">　　<span class="keyword">char</span> c1;</span><br><span class="line">　　<span class="keyword">int</span> i;</span><br><span class="line">　　<span class="keyword">char</span> c2;</span><br><span class="line">　　&#125;</span><br><span class="line"></span><br><span class="line">　　<span class="class"><span class="keyword">struct</span> <span class="title">stu4</span></span></span><br><span class="line"><span class="class">　　&#123;</span></span><br><span class="line">　　<span class="keyword">char</span> c1;</span><br><span class="line">　　<span class="keyword">char</span> c2;</span><br><span class="line">　　<span class="keyword">int</span> i;</span><br><span class="line">　　&#125;</span><br></pre></td></tr></table></figure>
+<p>　　虽然结构体stu3和stu4中成员都一样，但sizeof(struct stu3)的值为12而sizeof(struct stu4)的值为8。</p>
+<p>　　如果结构体中的成员又是另外一种结构体类型时应该怎么计算呢？只需把其展开即可。但有一点需要注意，展开后的结构体的第一个成员的偏移量应当是被展开的结构体中最大的成员的整数倍。看下面的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">　　<span class="class"><span class="keyword">struct</span> <span class="title">stu5</span></span></span><br><span class="line"><span class="class">　　&#123;</span></span><br><span class="line">　　<span class="keyword">short</span> i;</span><br><span class="line">　　</span><br><span class="line">　　<span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">　　  <span class="keyword">char</span> c;</span><br><span class="line">　　  <span class="keyword">int</span> j;</span><br><span class="line">　　&#125; ss;</span><br><span class="line">　</span><br><span class="line">　　<span class="keyword">int</span> k;</span><br><span class="line">　　&#125;</span><br></pre></td></tr></table></figure>
+<p>　　结构体stu5的成员ss.c的偏移量应该是4，而不是2。整个结构体大小应该是16。</p>
+<p>　　如何给结构体变量分配空间由编译器决定，以上情况针对的是Linux下的GCC。其他平台的C编译器可能会有不同的处理，看到这里估计还是有些同学不太明白，多看几遍，领悟领悟，就好啦！</p>
+<h4 id="成员的获取和赋值"><a href="#成员的获取和赋值" class="headerlink" title="成员的获取和赋值"></a><strong>成员的获取和赋值</strong></h4><p>结构体和数组类似，也是一组数据的集合，整体使用没有太大的意义。数组使用下标[ ]获取单个元素，结构体使用点号.获取单个成员。获取结构体成员的一般格式为：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">结构体变量名.成员名<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<p>通过上面的格式就可以获取成员的值，和给成员赋值，看下面的栗子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">        <span class="keyword">char</span> *name;  <span class="comment">//姓名</span></span><br><span class="line">        <span class="keyword">int</span> num;  <span class="comment">//学号</span></span><br><span class="line">        <span class="keyword">int</span> age;  <span class="comment">//年龄</span></span><br><span class="line">        <span class="keyword">char</span> group;  <span class="comment">//所在小组</span></span><br><span class="line">        <span class="keyword">float</span> score;  <span class="comment">//成绩</span></span><br><span class="line">    &#125; stu1;</span><br><span class="line">    <span class="comment">//给结构体成员赋值</span></span><br><span class="line">    stu1.name = <span class="string">"haozi"</span>;</span><br><span class="line">    stu1.num = <span class="number">12</span>;</span><br><span class="line">    stu1.age = <span class="number">18</span>;</span><br><span class="line">    stu1.group = <span class="string">'A'</span>;</span><br><span class="line">    stu1.score = <span class="number">136.5</span>;</span><br><span class="line">    <span class="comment">//读取结构体成员的值</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s的学号是%d，年龄是%d，在%c组，今年的成绩是%.1f！\n"</span>, stu1.name, stu1.num, stu1.age, stu1.group, stu1.score);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>运行结果：</strong><br>haozi的学号是12，年龄是18，在A组，今年的成绩是136.5！<br>除了这种方式赋值外，还可以在定义的时候赋值：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> *name;  <span class="comment">//姓名</span></span><br><span class="line">    <span class="keyword">int</span> num;  <span class="comment">//学号</span></span><br><span class="line">    <span class="keyword">int</span> age;  <span class="comment">//年龄</span></span><br><span class="line">    <span class="keyword">char</span> group;  <span class="comment">//所在小组</span></span><br><span class="line">    <span class="keyword">float</span> score;  <span class="comment">//成绩</span></span><br><span class="line">&#125; stu1, stu2 = &#123; <span class="string">"haozi"</span>, <span class="number">12</span>, <span class="number">18</span>, <span class="string">'A'</span>, <span class="number">136.5</span> &#125;;</span><br></pre></td></tr></table></figure>
+<p>不过整体赋值仅限于定义结构体变量的时候，在使用过程中只能对成员逐一赋值，这和数组的赋值非常类似。</p>
+<h4 id="结构体与指针"><a href="#结构体与指针" class="headerlink" title="结构体与指针"></a><strong>结构体与指针</strong></h4><p>指针也可以指向一个结构体，定义的形式一般为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> 结构体名 *变量名;</span></span><br></pre></td></tr></table></figure>
+<p>看例子：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Man</span>&#123;</span></span><br><span class="line">	<span class="keyword">char</span> name[<span class="number">20</span>];</span><br><span class="line">	<span class="keyword">int</span> age;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">Man</span> <span class="title">m1</span> = &#123;</span><span class="string">"Jack"</span>,<span class="number">30</span>&#125;;</span><br><span class="line">	<span class="comment">//结构体指针</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">Man</span> *<span class="title">p</span> = &amp;<span class="title">m1</span>;</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%s,%d\n"</span>, m1.name, m1.age);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%s,%d\n"</span>,(*p).name,(*p).age);</span><br><span class="line">	<span class="comment">//“-&gt;”（箭头）是“(*p).”简写形式</span></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%s,%d\n"</span>, p-&gt;name, p-&gt;age);</span><br><span class="line">	<span class="comment">//(*env)-&gt;</span></span><br><span class="line"></span><br><span class="line">	system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>编译出的结果是：</p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Jack,</span><span class="number">30</span></span><br><span class="line"><span class="built_in">Jack,</span><span class="number">30</span></span><br><span class="line"><span class="built_in">Jack,</span><span class="number">30</span></span><br><span class="line">请按任意键继续. . .</span><br></pre></td></tr></table></figure>
+<p>  上面代码：printf(“%s,%d\n”, m1.name, m1.age);还可以换成： printf(“%s,%d\n”, （*p）.name, m1.age);或者 printf(“%s,%d\n”, p-&gt;name, m1.age);<br>其运行结果还是一样的。</p>
+<p>获取结构体成员通过结构体指针可以获取结构体成员，一般形式为：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(*<span class="selector-tag">pointer</span>)<span class="selector-class">.memberName</span></span><br></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">pointer-&gt;</span><span class="bash">memberName</span></span><br></pre></td></tr></table></figure>
+<h3 id="联合体（共用体）"><a href="#联合体（共用体）" class="headerlink" title="联合体（共用体）"></a><strong>联合体（共用体）</strong></h3><p>结构体（Struct）是一种构造类型或复杂类型，它可以包含多个类型不同的成员。在C语言中，还有另外一种和结构体非常类似的语法，叫做共用体（Union），它的定义格式为：</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span> 共用体名&#123;</span></span><br><span class="line">    成员列表</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>共用体有时也被成为联合体；</p>
+<p>结构体和共用体的区别在于：结构体的各个成员会占用不同的内存，互相之间没有影响；而共用体的所有成员占用同一段内存，修改一个成员会影响其余所有成员。</p>
+<p>结构体占用的内存大于等于所有成员占用的内存的总和（成员之间可能会存在缝隙），共用体占用的内存等于最长的成员占用的内存。共用体使用了内存覆盖技术，同一时刻只能保存一个成员的值，如果对新的成员赋值，就会把原来成员的值覆盖掉。</p>
+<p>共用体也是一种自定义类型，可以通过它来创建变量，例如：</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">data</span>&#123;</span></span><br><span class="line">    int n;</span><br><span class="line">    char ch;</span><br><span class="line">    double f;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">data</span> <span class="title">a</span>, <span class="title">b</span>, <span class="title">c</span>;</span></span><br></pre></td></tr></table></figure>
+<p>上面是先定义共用体，再创建变量，也可以在定义共用体的同时创建变量：</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">data</span>&#123;</span></span><br><span class="line">    int n;</span><br><span class="line">    char ch;</span><br><span class="line">    double f;</span><br><span class="line">&#125; a, b, c;</span><br></pre></td></tr></table></figure>
+<p>共用体 data 中，成员 f 占用的内存最多，为 8 个字节，所以 data 类型的变量（也就是 a、b、c）也占用 8 个字节的内存，请看下面的栗子：</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#include&lt;stdio.h&gt;  </span></span><br><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">var</span>&#123;  </span></span><br><span class="line">        long j;  </span><br><span class="line">        int i;  </span><br><span class="line">&#125;;  </span><br><span class="line">main()&#123;  </span><br><span class="line">        <span class="class"><span class="keyword">union</span> <span class="title">var</span> <span class="title">v</span>;</span>  </span><br><span class="line">        v.j = <span class="number">5</span>;  </span><br><span class="line">        printf(<span class="string">"v.j is %d\n"</span>,v.i);  </span><br><span class="line">        v.i = <span class="number">6</span>;  <span class="regexp">//</span>最后一次赋值有效</span><br><span class="line">        printf(<span class="string">"now v.j is %ld! the address is %p\n"</span>,v.j,&amp;v.j);  </span><br><span class="line">        </span><br><span class="line">        printf(<span class="string">"now v.i is %d! the address is %p\n"</span>,v.i,&amp;v.i);  </span><br><span class="line"></span><br><span class="line">		system(<span class="string">"pause"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译并运行结果：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">v.j is 5  </span><br><span class="line">now v.j is 6! the<span class="built_in"> address </span>is 0xbfad1e2c  </span><br><span class="line">now v.i is 6! the<span class="built_in"> address </span>is 0xbfad1e2c</span><br></pre></td></tr></table></figure>
+<p>这段代码不但验证了共用体的长度，还说明共用体成员之间会相互影响，修改一个成员的值会影响其他成员。</p>
+<p>CSDN</p>
+<h3 id="更多系列相关文章传送门："><a href="#更多系列相关文章传送门：" class="headerlink" title="更多系列相关文章传送门："></a>更多系列相关文章传送门：</h3><p><a href="http://blog.csdn.net/u011974987/article/details/52138798" target="_blank" rel="noopener">C语言（一）基本数据类型</a><br><a href="http://blog.csdn.net/u011974987/article/details/52142794" target="_blank" rel="noopener">C语言（二）有符号数和无符号数的理解</a><br><a href="http://blog.csdn.net/u011974987/article/details/52200178" target="_blank" rel="noopener">C语言（三）字符串处理函数</a><br><a href="http://blog.csdn.net/u011974987/article/details/52270018" target="_blank" rel="noopener">C语言（四）指针概念的理解</a><br><a href="http://blog.csdn.net/u011974987/article/details/52290724" target="_blank" rel="noopener">C语言（五）内存的分配与释放</a><br><a href="http://blog.csdn.net/u011974987/article/details/52305364" target="_blank" rel="noopener">C语言（六）结构体和联合体</a><br><a href="http://blog.csdn.net/u011974987/article/details/52354074" target="_blank" rel="noopener">C语言（七）文件的相关操作</a></p>
+<blockquote>
+<p>学习理解并整理下来的笔记。<br>希望大家能够指点或提出宝贵意见，谢谢！一起学习。 </p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/08/25/c/structure-union/" data-id="cjb7ggoy20025f3ulb7kerhpd" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/29/c/c-file-operation/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          C语言（七）文件的相关操作
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/23/c/memory_allocation/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">C语言（五）内存分配与释放</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

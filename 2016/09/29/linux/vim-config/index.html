@@ -1,96 +1,265 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block top_img
-  - var top_img = page.top_img || theme.top_img || config.top_img
-  if (top_img)
-    - var flag = top_img === true ? 'no-bg' : undefined
-    div#top-container(style=`background-image: url(${top_img})` class=flag)
-      include ./includes/header.pug
-      #post-info
-        #post-title= page.title || _p('no_title') 
-        #post-meta
-          if (theme.post_meta.date_type)
-            - var date_type = theme.post_meta.date_type == 'updated' ? 'updated' : 'date' 
-            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
-          if (theme.post_meta.categories && page.categories.data.length > 0)
-            if (theme.post_meta.date_type)
-              span.post-meta__separator |
-            each item, index in page.categories.data
-              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")  
-              a(href=url_for(item.path)).post-meta__categories #[=item.name]
-              if (index < page.categories.data.length - 1)
-                 i.fa.fa-angle-right(aria-hidden="true")  
-          if (theme.disqus.enable && theme.disqus.count)
-            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-              span.post-meta__separator |
-            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")  
-            a(href=url_for(page.path) + '#disqus_thread')
-              span.disqus-comment-count(data-disqus-identifier=page.path)
-          if (theme.wordcount && theme.wordcount.enable)
-            .post-meta-wordcount
-              span= _p('post.wordcount') + ': '
-              span.word-count= wordcount(page.content)
-              span.post-meta__separator |
-              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-  else
-    div#top-container.plain
-      include ./includes/header.pug
+  
+  <title>VIM的安装配置及使用 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言Learn vim and it will be your last text editor. There isn’t any better text editor that I know of. It is hard to learn, but incredible to use.学习VIM，它会是你最后的文本编辑器。没有任何好转的文本编辑器，我知道的。这是很难学，但令人难以置信的使用。 V">
+<meta name="keywords" content="vim,Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VIM的安装配置及使用">
+<meta property="og:url" content="http://xuhaoblog.com/2016/09/29/linux/vim-config/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="前言Learn vim and it will be your last text editor. There isn’t any better text editor that I know of. It is hard to learn, but incredible to use.学习VIM，它会是你最后的文本编辑器。没有任何好转的文本编辑器，我知道的。这是很难学，但令人难以置信的使用。 V">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929104119636">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929105720795">
+<meta property="og:image" content="http://img.blog.csdn.net/20160929110041781">
+<meta property="og:updated_time" content="2017-11-04T11:21:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VIM的安装配置及使用">
+<meta name="twitter:description" content="前言Learn vim and it will be your last text editor. There isn’t any better text editor that I know of. It is hard to learn, but incredible to use.学习VIM，它会是你最后的文本编辑器。没有任何好转的文本编辑器，我知道的。这是很难学，但令人难以置信的使用。 V">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160929104119636">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-block content
-  article#post(class="")
-    if (!top_img)
-      #post-title.plain= page.title || _p('no_title') 
-      #post-meta
-        if (theme.post_meta.date_type)
-          - var date_type = theme.post_meta.date_type == 'updated' ? '' : 'date' 
-          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)] 
-        if (theme.post_meta.categories && page.categories.data.length > 0)
-          if (theme.post_meta.date_type)
-            span.post-meta__separator |
-          each item, index in page.categories.data
-            i.fa.fa-inbox(aria-hidden="true")  
-            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
-            if (index < page.categories.data.length - 1)
-                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")  
-        if (theme.disqus.enable && theme.disqus.count)
-          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-            span.post-meta__separator |
-          i.fa.fa-comment-o(aria-hidden="true")  
-          a(href=url_for(page.path) + '#disqus_thread')
-            span.disqus-comment-count(data-disqus-identifier=page.path)
-        if (theme.wordcount && theme.wordcount.enable)
-          span.post-meta__separator |
-          span.post-meta-wordcount
-            span= _p('post.wordcount') + ': '
-            span.word-count= wordcount(page.content)
-            span.post-meta__separator |
-            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-    #post-content!= page.content
-    if (theme.post_copyright && theme.post_copyright.enable)
-      .post-copyright
-        .post-copyright__author
-          span.post-copyright-meta= _p('post.copyright.author') + ": "
-          span.post-copyright-info= config.author
-        .post-copyright__type
-          span.post-copyright-meta= _p('post.copyright.link') + ": "
-          span.post-copyright-info= url_for(page.permalink)
-        .post-copyright__notice
-          span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
-          span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license)
-    if (theme.post_meta.tags)
-      .post-meta__tag-list
-        each item, index in page.tags.data
-          a(href=url_for(item.path)).post-meta__tags #[=item.name]
-    if (theme.QR_code)
-      if (theme.QR_code.length > 0)
-        .post-qr-code
-          each item in theme.QR_code
-            .post-qr-code-item
-              img.post-qr-code__img(src=item.itemlist.img)
-              .post-qr-code__desc=item.itemlist.text
-    if (theme.addThis.enable)
-      .addthis_inline_share_toolbox.pull-right
-      script(src=`//s7.addthis.com/js/300/addthis_widget.js#pubid=${theme.addThis.pubid}` async)
-  include includes/pagination.pug
-  if page.comments !== false
-    include includes/comments/index.pug
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-linux/vim-config" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/09/29/linux/vim-config/" class="article-date">
+  <time datetime="2016-09-29T04:22:31.000Z" itemprop="datePublished">2016-09-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/vim/">vim</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      VIM的安装配置及使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h2><p>Learn vim and it will be your last text editor. There isn’t any better text editor that I know of. It is hard to learn, but incredible to use.<br>学习VIM，它会是你最后的文本编辑器。没有任何好转的文本编辑器，我知道的。这是很难学，但令人难以置信的使用。</p>
+<p>VI是LINUX下最老牌的编辑工具，而VIM则是VI的升级版本，LINUX系统必备啊~~</p>
+<a id="more"></a>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a><strong>摘要</strong></h2><p><strong>（以下已Ubuntu系统为例）</strong></p>
+<h4 id="VIM的安装和配置"><a href="#VIM的安装和配置" class="headerlink" title="VIM的安装和配置"></a><strong>VIM的安装和配置</strong></h4><h5 id="1、VIM安装"><a href="#1、VIM安装" class="headerlink" title="1、VIM安装"></a><strong>1、VIM安装</strong></h5><p>既然VIM编辑器是在Linux 系统环境下运行的，那么我们首先要在Ubuntu上安装VIM；<br>在命令行敲入“vi”后按”tab”键，可以查看到目前系统中有没有安装Vim，如果没有的话就只会显示vi和vim.tiny。如下图(我是已经安装了的）</p>
+<p><img src="http://img.blog.csdn.net/20160929104119636" alt="这里写图片描述"></p>
+<p>如果没有安装VIM，普通用户下输入命令：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="builtin-name">get</span> install vim-gtk</span><br></pre></td></tr></table></figure>
+<p>然后按照提示，输入“y”后，回车，之后不要进行任何操作，等待安装完成。安装完成后，在命令行输入vi，按“tab”键。如上图，说明vim已经安装成功~</p>
+<h5 id="2、VIM配置"><a href="#2、VIM配置" class="headerlink" title="2、VIM配置"></a><strong>2、VIM配置</strong></h5><p>刚安装的VIM，默认的配置可能不是很好使用，这就需要我们去配置VIM，在命令下，输入命令：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="keyword">vim</span> /etc/<span class="keyword">vim</span>/vimrc</span><br></pre></td></tr></table></figure>
+<p>必须加上sudo，否则你是没有权限编辑vimrc的。</p>
+<p>在这个文件中，会有这么一句：<br><strong>syntax on</strong><br>意思是语法高亮，如果您的被注释掉了，请“让它出来”，就如下图所示：</p>
+<p><img src="http://img.blog.csdn.net/20160929105720795" alt="这里写图片描述"></p>
+<p>接着我们在VIM配置文件的最后一行，加入以下配置，会使我们方便很多。</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> nu                           // 在左侧行号</span><br><span class="line"><span class="keyword">set</span> <span class="comment">tabstop</span>                  //<span class="comment">tab</span> 长度设置为<span class="comment"> 4</span></span><br><span class="line"><span class="keyword">set</span> <span class="comment">nobackup</span>               //覆盖文件时不备份</span><br><span class="line"><span class="keyword">set</span> <span class="comment">cursorline</span>               //突出显示当前行</span><br><span class="line"><span class="keyword">set</span> <span class="comment">ruler</span>                       //在右下角显示光标位置的状态行</span><br><span class="line"><span class="keyword">set</span> <span class="comment">autoindent</span>             //自动缩进</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.blog.csdn.net/20160929110041781" alt="这里写图片描述"></p>
+<p>保存之后，配置完毕。<br>上面的配置，其实是非常简单的，比如一些配色方案等，小编并没有写入，如果您还有其他需求的话，建议多查些资料。</p>
+<hr>
+<h4 id="VIM常用的基本命令"><a href="#VIM常用的基本命令" class="headerlink" title="VIM常用的基本命令"></a><strong>VIM常用的基本命令</strong></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">1. vim #在命令行中输入vim,进入vim编辑器 </span><br><span class="line"></span><br><span class="line">2. i #按一下i键,下端显示 --INSERT-- </span><br><span class="line"><span class="meta">	#</span><span class="bash">插入命令,在vim中可能任意字符都有作用 </span></span><br><span class="line"></span><br><span class="line">3. Esc </span><br><span class="line"><span class="meta">#</span><span class="bash">退出i(插入)命令进行其它命令使用</span></span><br><span class="line"></span><br><span class="line">4. :r filename </span><br><span class="line"><span class="meta">#</span><span class="bash">读入一个文件内容,并写入到当前编辑器中 </span></span><br><span class="line"></span><br><span class="line">5. :w newfilename </span><br><span class="line"><span class="meta">#</span><span class="bash">将该编辑器中的内容写入到一个新文件中 </span></span><br><span class="line"></span><br><span class="line">6. :w </span><br><span class="line"><span class="meta">#</span><span class="bash">在编辑的过程中保存文件,相当于word中的ctrl+s </span></span><br><span class="line"></span><br><span class="line">7. :! command </span><br><span class="line">暂时离开 vi 到指令列模式下执行 command 的显示结果！例如 :!ls </span><br><span class="line"><span class="meta">#</span><span class="bash">在编辑过程中执行shell命令ls </span></span><br><span class="line"></span><br><span class="line">8. :sh </span><br><span class="line"><span class="meta">#</span><span class="bash">进入shell命令行,执行完命令后ctrl+d退出重新进入vim编辑继续编辑 在shell命令下，执行ctral+l完成清屏 </span></span><br><span class="line"></span><br><span class="line">9. :wq </span><br><span class="line"><span class="meta">#</span><span class="bash">保存文件并退出 </span></span><br><span class="line"></span><br><span class="line">10. ZZ </span><br><span class="line"><span class="meta">#</span><span class="bash">保存文件并退出,同上一个命令,注意大写 </span></span><br><span class="line"></span><br><span class="line">11. :q! </span><br><span class="line"><span class="meta">#</span><span class="bash">强制退出,不保存 </span></span><br><span class="line"></span><br><span class="line">12. :set number或者：set nu </span><br><span class="line"><span class="meta">#</span><span class="bash">使编辑中的文件显示行号 </span></span><br><span class="line"></span><br><span class="line">13. :set nonumber或者：set nonu  </span><br><span class="line"><span class="meta">#</span><span class="bash">与上一条命令相反,不显示行号 </span></span><br><span class="line"></span><br><span class="line">14. :help i </span><br><span class="line"><span class="meta">#</span><span class="bash">查看插入命令帮助 </span></span><br><span class="line"></span><br><span class="line">15. u  </span><br><span class="line"><span class="meta">#</span><span class="bash">撤消上一步操作 </span></span><br><span class="line"></span><br><span class="line">16. /Fedora </span><br><span class="line"><span class="meta">#</span><span class="bash">查找Fedora字符 </span></span><br><span class="line"></span><br><span class="line">17. :s /Fedora/Redhat </span><br><span class="line"><span class="meta">#</span><span class="bash">将Fedora字符替换为Redhat(只替换在光标所在的行) </span></span><br><span class="line"></span><br><span class="line">18. dw #删除单词 </span><br><span class="line">    dd #删除行 </span><br><span class="line"></span><br><span class="line">19. o </span><br><span class="line"><span class="meta">#</span><span class="bash">打开空白一行 </span></span><br><span class="line"></span><br><span class="line">20. vim + filename </span><br><span class="line"><span class="meta">#</span><span class="bash">进行文件最后一行进行编辑 </span></span><br><span class="line"></span><br><span class="line">21. vim +n filename </span><br><span class="line"><span class="meta">#</span><span class="bash">进入文件第n行进行编辑 </span></span><br><span class="line"></span><br><span class="line">22. :1,.s/redhat/fedora </span><br><span class="line"><span class="meta">#</span><span class="bash">.号表示当前行,即光标所在行 </span></span><br><span class="line"><span class="meta">#</span><span class="bash">将第1行到当前行(.)第一次出现的redhat字符代替为fedora </span></span><br><span class="line"></span><br><span class="line">23. :1,.s/redhat/fedora/g </span><br><span class="line"><span class="meta">#</span><span class="bash">将第1行到当前行(.)所有出现的redhat字符代替为fedora,g 全局标志 </span></span><br><span class="line"></span><br><span class="line">24. :1,$s/redhat/fedora/g </span><br><span class="line"><span class="meta">#</span><span class="bash">$表示最后一行 </span></span><br><span class="line"><span class="meta">#</span><span class="bash">将第1行到最后一行所有出现的redhat字符代替为fedora </span></span><br><span class="line"></span><br><span class="line">25. :%s/redhat/fedora/g #同上一个命令 </span><br><span class="line"></span><br><span class="line">26. :%s/\/fedora/g </span><br><span class="line"><span class="meta">#</span><span class="bash">将第1行到最后一行所有出现的redhat字代替为fedora <span class="comment">#字,而不是字符</span></span></span><br><span class="line"></span><br><span class="line">27. :f </span><br><span class="line"><span class="meta">#</span><span class="bash">显示文件内容,状态等等 <span class="comment">#同ctrl+g命令 </span></span></span><br><span class="line"></span><br><span class="line">28. :e! </span><br><span class="line"><span class="meta">#</span><span class="bash">当前文件,返回到上次保存 :e file </span></span><br><span class="line"><span class="meta">#</span><span class="bash">切换编辑文件 </span></span><br><span class="line"></span><br><span class="line">29. :n </span><br><span class="line"><span class="meta">#</span><span class="bash">当编辑时有多个文件(比如vim file1 file2)时切换到下一个文件,与:e file 结合使用</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>学习理解并整理下来的笔记;<br>希望大家能够指点或提出宝贵意见,共同学习，谢谢！ </p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/09/29/linux/vim-config/" data-id="cjb7ggoyb002ef3ul2mjeg7xq" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vim/">vim</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/29/linux/shell-script-01/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Shell 脚本基础学习（一）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/28/linux/cmd/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Linux 常用的一些基本命令</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,96 +1,280 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
 
-block top_img
-  - var top_img = page.top_img || theme.top_img || config.top_img
-  if (top_img)
-    - var flag = top_img === true ? 'no-bg' : undefined
-    div#top-container(style=`background-image: url(${top_img})` class=flag)
-      include ./includes/header.pug
-      #post-info
-        #post-title= page.title || _p('no_title') 
-        #post-meta
-          if (theme.post_meta.date_type)
-            - var date_type = theme.post_meta.date_type == 'updated' ? 'updated' : 'date' 
-            time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)]
-          if (theme.post_meta.categories && page.categories.data.length > 0)
-            if (theme.post_meta.date_type)
-              span.post-meta__separator |
-            each item, index in page.categories.data
-              i.fa.fa-inbox.post-meta__icon(aria-hidden="true")  
-              a(href=url_for(item.path)).post-meta__categories #[=item.name]
-              if (index < page.categories.data.length - 1)
-                 i.fa.fa-angle-right(aria-hidden="true")  
-          if (theme.disqus.enable && theme.disqus.count)
-            if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-              span.post-meta__separator |
-            i.fa.fa-comment-o.post-meta__icon(aria-hidden="true")  
-            a(href=url_for(page.path) + '#disqus_thread')
-              span.disqus-comment-count(data-disqus-identifier=page.path)
-          if (theme.wordcount && theme.wordcount.enable)
-            .post-meta-wordcount
-              span= _p('post.wordcount') + ': '
-              span.word-count= wordcount(page.content)
-              span.post-meta__separator |
-              span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-  else
-    div#top-container.plain
-      include ./includes/header.pug
+  
+  <title>C语言（五）内存分配与释放 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="首先我们来科普一下： 什么是堆？说到堆，又忍不住说到了栈！什么是 栈？1、什么是堆：堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。2、什么是栈：栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈">
+<meta name="keywords" content="C&#x2F;C++,编程语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言（五）内存分配与释放">
+<meta property="og:url" content="http://xuhaoblog.com/2016/08/23/c/memory_allocation/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="首先我们来科普一下： 什么是堆？说到堆，又忍不住说到了栈！什么是 栈？1、什么是堆：堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。2、什么是栈：栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-04T11:02:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C语言（五）内存分配与释放">
+<meta name="twitter:description" content="首先我们来科普一下： 什么是堆？说到堆，又忍不住说到了栈！什么是 栈？1、什么是堆：堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。2、什么是栈：栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
 
-block content
-  article#post(class="")
-    if (!top_img)
-      #post-title.plain= page.title || _p('no_title') 
-      #post-meta
-        if (theme.post_meta.date_type)
-          - var date_type = theme.post_meta.date_type == 'updated' ? '' : 'date' 
-          time.post-meta__date #[i.fa.fa-calendar(aria-hidden="true")] #[=date(page[date_type], config.date_format)] 
-        if (theme.post_meta.categories && page.categories.data.length > 0)
-          if (theme.post_meta.date_type)
-            span.post-meta__separator |
-          each item, index in page.categories.data
-            i.fa.fa-inbox(aria-hidden="true")  
-            a(href=url_for(item.path)).post-meta__categories  #[=item.name]
-            if (index < page.categories.data.length - 1)
-                i.fa.fa-angle-right.post-meta__separator(aria-hidden="true")  
-        if (theme.disqus.enable && theme.disqus.count)
-          if (theme.post_meta.date_type || theme.post_meta.categories && page.categories.data.length > 0)
-            span.post-meta__separator |
-          i.fa.fa-comment-o(aria-hidden="true")  
-          a(href=url_for(page.path) + '#disqus_thread')
-            span.disqus-comment-count(data-disqus-identifier=page.path)
-        if (theme.wordcount && theme.wordcount.enable)
-          span.post-meta__separator |
-          span.post-meta-wordcount
-            span= _p('post.wordcount') + ': '
-            span.word-count= wordcount(page.content)
-            span.post-meta__separator |
-            span= _p('post.min2read', min2read(page.content, {cn: 350, en: 160}))
-    #post-content!= page.content
-    if (theme.post_copyright && theme.post_copyright.enable)
-      .post-copyright
-        .post-copyright__author
-          span.post-copyright-meta= _p('post.copyright.author') + ": "
-          span.post-copyright-info= config.author
-        .post-copyright__type
-          span.post-copyright-meta= _p('post.copyright.link') + ": "
-          span.post-copyright-info= url_for(page.permalink)
-        .post-copyright__notice
-          span.post-copyright-meta= _p('post.copyright.copyright_notice') + ": "
-          span.post-copyright-info!= _p('post.copyright.copyright_content', theme.post_copyright.license_url, theme.post_copyright.license)
-    if (theme.post_meta.tags)
-      .post-meta__tag-list
-        each item, index in page.tags.data
-          a(href=url_for(item.path)).post-meta__tags #[=item.name]
-    if (theme.QR_code)
-      if (theme.QR_code.length > 0)
-        .post-qr-code
-          each item in theme.QR_code
-            .post-qr-code-item
-              img.post-qr-code__img(src=item.itemlist.img)
-              .post-qr-code__desc=item.itemlist.text
-    if (theme.addThis.enable)
-      .addthis_inline_share_toolbox.pull-right
-      script(src=`//s7.addthis.com/js/300/addthis_widget.js#pubid=${theme.addThis.pubid}` async)
-  include includes/pagination.pug
-  if page.comments !== false
-    include includes/comments/index.pug
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Xiho’s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Suche"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xuhaoblog.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-c/memory_allocation" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/23/c/memory_allocation/" class="article-date">
+  <time datetime="2016-08-23T05:10:26.000Z" itemprop="datePublished">2016-08-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C-C/">C/C++</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      C语言（五）内存分配与释放
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先我们来科普一下：</p>
+<h2 id="什么是堆？说到堆，又忍不住说到了栈！什么是-栈？"><a href="#什么是堆？说到堆，又忍不住说到了栈！什么是-栈？" class="headerlink" title="什么是堆？说到堆，又忍不住说到了栈！什么是 栈？"></a><strong>什么是堆？说到堆，又忍不住说到了栈！什么是 栈？</strong></h2><p><strong>1、什么是堆：</strong>堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。<br><strong>2、什么是栈：</strong>栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS/ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。<br><a id="more"></a> </p>
+<h2 id="C语言程序编译的内存分配，堆与栈的区别："><a href="#C语言程序编译的内存分配，堆与栈的区别：" class="headerlink" title="C语言程序编译的内存分配，堆与栈的区别："></a><strong>C语言程序编译的内存分配，堆与栈的区别：</strong></h2><ul>
+<li>栈是由编译器自动分配释放，存放函数的参数值、局部变量的值等。操作方式类似于数据结构中的栈。<br>堆一般由程序员分配释放，若不释放，程序结束时可能由OS回收。注意这里说是可能，并非一定。再强调一次，记得要释放！</li>
+<li>栈区(stack) :<br>   //windows下，栈内存分配2M（确定的常数），超出了限制，提示stack overflow错误<br> //编译器自动分配释放，主要存放函数的参数值，局部变量值等；</li>
+<li><p>堆区(heap)：程序员手动分配释放，操作系统80%内存</p>
+</li>
+<li><p>全局区或静态区：存放全局变量和静态变量；程序结束时由系统释放，分为全局初始化区和全局未初始化区；</p>
+</li>
+<li><p>字符常量区：常量字符串放与此，程序结束时由系统释放；</p>
+</li>
+<li><p>程序代码区：存放函数体的二进制代码。</p>
+</li>
+</ul>
+<p>栗子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a=<span class="number">0</span>;        <span class="comment">//全局初始化区</span></span><br><span class="line"><span class="keyword">char</span> *p1;       <span class="comment">//全局未初始化区</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> b;          <span class="comment">//栈</span></span><br><span class="line">   <span class="keyword">char</span> s[]=<span class="string">"bb"</span>;  <span class="comment">//栈</span></span><br><span class="line">   <span class="keyword">char</span> *p2;       <span class="comment">//栈</span></span><br><span class="line">   <span class="keyword">char</span> *p3=<span class="string">"123"</span>; <span class="comment">//其中，“123\0”常量区，p3在栈区</span></span><br><span class="line">   <span class="keyword">static</span> <span class="keyword">int</span> c=<span class="number">0</span>; <span class="comment">//全局区</span></span><br><span class="line">   p1=(<span class="keyword">char</span>*)<span class="built_in">malloc</span>(<span class="number">10</span>);   <span class="comment">//10个字节区域在堆区</span></span><br><span class="line">   <span class="built_in">strcpy</span>(p1,<span class="string">"123"</span>);    <span class="comment">//"123\0"在常量区，编译器 可能 会优化为和p3的指向同一块区域</span></span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>栈内存</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">stackFun</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">1024</span>];</span><br><span class="line">	<span class="comment">//栈内存自动释放</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>堆内存</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">heapFun</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//40M内存</span></span><br><span class="line">	<span class="comment">//字节</span></span><br><span class="line">	<span class="comment">//void *任意类型的指针</span></span><br><span class="line">	<span class="keyword">int</span>* p = <span class="built_in">malloc</span>(<span class="number">1024</span> * <span class="number">1024</span> * <span class="number">10</span> * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">	<span class="comment">//释放</span></span><br><span class="line">	<span class="built_in">free</span>(p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">void</span> <span class="selector-tag">main</span>()&#123;	</span><br><span class="line">	<span class="comment">//在堆内存上，分配40M的内存</span></span><br><span class="line">	<span class="selector-tag">while</span> (<span class="number">1</span>)&#123;</span><br><span class="line">		<span class="selector-tag">Sleep</span>(<span class="number">1000</span>);	</span><br><span class="line">		<span class="selector-tag">stackFun</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="selector-tag">getchar</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建一个数组，动态指定数组的大小（在程序运行过长中，可以随意的开辟指定大小的内存，以供使用，相当于Java中的集合）<br><strong>静态内存分配</strong>，分配内存大小的是固定，问题：1.很容易超出栈内存的最大值 2.为了防止内存不够用会开辟更多的内存，容易浪费内存</p>
+<p><strong>动态内存分配</strong>，在程序运行过程中，动态指定需要使用的内存大小，手动释放，释放之后这些内存还可以被重新使用（活水）</p>
+<p><strong>函数：calloc()  分配内存空间并初始化</strong><br>calloc() 函数用来动态地分配内存空间并初始化为 0，其原型为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">calloc</span> <span class="params">(<span class="keyword">size_t</span> num, <span class="keyword">size_t</span> size)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>calloc() 在内存中动态地分配 num 个长度为 size 的连续空间，并将每一个字节都初始化为 0。所以它的结果是分配了 num*size 个字节长度的内存空间，并且每个字节的值都是0。</p>
+<p>【返回值】分配成功返回指向该内存的地址，失败则返回 NULL。</p>
+<p><strong>函数：malloc() 动态地分配内存空间</strong></p>
+<p>malloc() 函数用来动态地分配内存空间（如果你不了解动态内存分配，请查看：C语言动态内存分配及变量存储类别），其原型为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">malloc</span> <span class="params">(<span class="keyword">size_t</span> size)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>应用在程序中代码如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//静态内存分配创建数组，数组的大小是固定的</span></span><br><span class="line">	<span class="comment">//int i = 10;</span></span><br><span class="line">	<span class="comment">//int a[i];</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> len;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"输入数组的长度："</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;len);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//开辟内存，大小len*4字节</span></span><br><span class="line">	<span class="keyword">int</span>* p = <span class="built_in">malloc</span>(len * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">	<span class="comment">//p是数组的首地址，p就是数组的名称</span></span><br><span class="line">	<span class="comment">//给数组元素赋值（使用这一块刚刚开辟出来的内存区域）</span></span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; len - <span class="number">1</span>; i++)&#123;</span><br><span class="line">		p[i] = rand() % <span class="number">100</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d,%#x\n"</span>, p[i], &amp;p[i]);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//手动释放内存 </span></span><br><span class="line">	<span class="comment">//free()释放动态分配的内存空间</span></span><br><span class="line">	<span class="built_in">free</span>(p);</span><br><span class="line"></span><br><span class="line">	getchar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>realloc 重新分配内存</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> len;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"第一次输入数组的长度："</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;len);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//int* p = malloc(len * sizeof(int));	</span></span><br><span class="line">	<span class="keyword">int</span>* p = <span class="built_in">calloc</span>(len, <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; len; i++)&#123;</span><br><span class="line">		p[i] = rand() % <span class="number">100</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d,%#x\n"</span>, p[i], &amp;p[i]);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> addLen;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"输入数组增加的长度："</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;addLen);</span><br><span class="line">	<span class="comment">//内存不够用，扩大刚刚分配的内存空间</span></span><br><span class="line">	<span class="comment">//1.原来内存的指针 2.内存扩大之后的总大小		</span></span><br><span class="line">	<span class="keyword">int</span>* p2 = <span class="built_in">realloc</span>(p, <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * (len + addLen));</span><br><span class="line">	<span class="keyword">if</span> (p2 == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"重新分配失败，世界那么大，容不下我。。。"</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="新分配内存的两种情况："><a href="#新分配内存的两种情况：" class="headerlink" title="新分配内存的两种情况："></a><strong>新分配内存的两种情况：</strong></h2><p>   //缩小，缩小的那一部分数据会丢失<br>    //扩大，（连续的）<br>    1.如果当前内存段后面有需要的内存空间，直接扩展这段内存空间，realloc返回原指针<br>    2.如果当前内存段后面的空闲字节不够，那么就使用堆中的第一个能够满足这一要求的内存块，将目前的数据复制到新的位置，并将原来的数据库释放掉，返回新的内存地址<br>    3.如果申请失败，返回NULL，原来的指针仍然有效<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接着上面的代码重新赋值</span></span><br><span class="line">	i = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"--------------------------\n"</span>);</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; len + addLen; i++)&#123;</span><br><span class="line">		p2[i] = rand() % <span class="number">200</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d,%#x\n"</span>, p2[i], &amp;p2[i]);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//手动释放内存</span></span><br><span class="line">	<span class="keyword">if</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">free</span>(p);</span><br><span class="line">		p = <span class="literal">NULL</span>;</span><br><span class="line">	&#125;	</span><br><span class="line">	<span class="keyword">if</span> (p2 != <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">free</span>(p2);</span><br><span class="line">		p2 = <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	getchar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="内存分配的几个注意细节"><a href="#内存分配的几个注意细节" class="headerlink" title="内存分配的几个注意细节"></a><strong>内存分配的几个注意细节</strong></h2><p>1.不能多次释放；<br>2.释放完之后（指针仍然有值），给指针置NULL，标志释放完成；<br>3.内存泄露（p重新赋值之后，再free，并没有真正释放内存）；</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> len;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"输入数组的长度："</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;len);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span>* p = <span class="built_in">malloc</span>(len * <span class="keyword">sizeof</span>(<span class="keyword">int</span>));		</span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; len; i++)&#123;</span><br><span class="line">		p[i] = rand() % <span class="number">100</span>;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%d,%#x\n"</span>, p[i], &amp;p[i]);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (p != <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">free</span>(p);</span><br><span class="line">		p = <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	getchar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上就是C语言中对内存的分配与释放，常用的几个函数~</p>
+<p>CSDN</p>
+<h2 id="更多系列相关文章传送门："><a href="#更多系列相关文章传送门：" class="headerlink" title="更多系列相关文章传送门："></a>更多系列相关文章传送门：</h2><p><a href="http://blog.csdn.net/u011974987/article/details/52138798" target="_blank" rel="noopener">C语言（一）基本数据类型</a><br><a href="http://blog.csdn.net/u011974987/article/details/52142794" target="_blank" rel="noopener">C语言（二）有符号数和无符号数的理解</a><br><a href="http://blog.csdn.net/u011974987/article/details/52200178" target="_blank" rel="noopener">C语言（三）字符串处理函数</a><br><a href="http://blog.csdn.net/u011974987/article/details/52270018" target="_blank" rel="noopener">C语言（四）指针概念的理解</a><br><a href="http://blog.csdn.net/u011974987/article/details/52290724" target="_blank" rel="noopener">C语言（五）内存的分配与释放</a><br><a href="http://blog.csdn.net/u011974987/article/details/52305364" target="_blank" rel="noopener">C语言（六）结构体和联合体</a><br><a href="http://blog.csdn.net/u011974987/article/details/52354074" target="_blank" rel="noopener">C语言（七）文件的相关操作</a></p>
+<blockquote>
+<p>学习理解并整理下来的笔记。<br>希望大家能够指点或提出宝贵意见，谢谢！一起学习。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xuhaoblog.com/2016/08/23/c/memory_allocation/" data-id="cjb7ggoxz0022f3ul5ngjsznd" class="article-share-link">Teilen</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程语言/">编程语言</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/25/c/structure-union/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          C语言（六）结构体和联合体
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/22/c-pointers/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">C语言（四）指针概念的理解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hexo/">Hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java基础/">Java基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK开发/">NDK开发</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/git/">git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/maven/">maven</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/vim/">vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android源码下载/">Android源码下载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android环境搭建/">Android环境搭建</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gun-Make/">Gun Make</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK开发/">NDK开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Settings/">Settings</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jni/">jni</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程语言/">编程语言</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络请求/">网络请求</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/语言切换/">语言切换</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Android源码下载/" style="font-size: 10px;">Android源码下载</a> <a href="/tags/Android环境搭建/" style="font-size: 10px;">Android环境搭建</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Gun-Make/" style="font-size: 10px;">Gun Make</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/NDK开发/" style="font-size: 14px;">NDK开发</a> <a href="/tags/Settings/" style="font-size: 10px;">Settings</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/jni/" style="font-size: 14px;">jni</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a> <a href="/tags/编程语言/" style="font-size: 18px;">编程语言</a> <a href="/tags/网络请求/" style="font-size: 10px;">网络请求</a> <a href="/tags/语言切换/" style="font-size: 12px;">语言切换</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">December 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">October 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">June 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">May 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/09/android-kotlin-mvp/">Android 开源项目 Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/24/git/not_push/">Git Commit 未Push 自动切到其他版本的解决方式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/20/Android-getdate-language/">Android 中取得当前时区和语言</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/19/ndk/jni-5/">Android NDK 开发（五）AndroidStudio 2.2 更友好的支持NDK</a>
+          </li>
+        
+          <li>
+            <a href="/2016/10/18/ndk/jni-4/">Android NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Xiho<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
