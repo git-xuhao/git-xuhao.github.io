@@ -314,54 +314,6 @@ var _hmt = _hmt || [];
         <article class="article article-summary">
     <div class="article-summary-inner">
         
-        <a href="/2016/04/12/android-change-language_01/" class="thumbnail">
-    
-    
-        <span style="background-image:url(https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/pexels-photo-707584.jpeg)" alt="Android 切换系统语言源码分析（上）" class="thumbnail-image"></span>
-    
-    
-        
-<span class="comment-counter">
-    <i class="fa fa-comments-o"></i>
-    
-</span>
-
-
-    
-</a>
-
-        
-        <div class="article-meta">
-            <div class="category">
-            <a class="article-category-link" href="/categories/Android/">Android</a>
-            </div>
-            <div class="date"><time datetime="2016-04-12T04:05:24.000Z" itemprop="datePublished">2016-04-12</time></div>
-        </div>
-        
-    
-        <h1 class="article-title" itemprop="name">
-        <a href="/2016/04/12/android-change-language_01/">Android 切换系统语言源码分析（上）</a>
-        </h1>
-    
-
-        <p class="article-excerpt">
-            概述：以前了解Android的多语言实现很简单，可以在不同的语言环境下使用不同的资源，就做好相应的语言适配就好，但是一直没有实际使用过。 最近公司的项目要用到多国语言切换，并且还是和手机上系统设置里面的语言切换功能一样，于是就上网查了下资料。一般都是在应用类实现多国语言切换，这个是很简单。而我想切换整个系统的语言。由于谷歌没有把系统设置里面的接口给开放出来，所以就只好去查看它的源码了~
-        </p>
-    </div>
-</article>
-    
-        </div>
-    
-
-    
-    
-    
-    
-        <div class="article-row">
-    
-        <article class="article article-summary">
-    <div class="article-summary-inner">
-        
         <a href="/2016/04/12/android-change-language_02/" class="thumbnail">
     
     
@@ -395,6 +347,54 @@ var _hmt = _hmt || [];
         <p class="article-excerpt">
             概述：简单介绍下这个需求的缘由，这段时间因公司业务需要，其中有一项“设置系统语言”功能，就是在使用APP的过程中，动态的去切换整个Android机器的语言，具体参照手机设置页面有语言切换功能。期初想来是很简单的事情嘛，不就是个简单的资源国际化嘛，strings.xml资源文件一整还不给OK？真正动起手来就真不是这么一回事了，国际化是没问题，但是怎样能更改所有页面的文字资源呢，这是一个问题。下面介绍下网上找的几个方案。
 一、API欺骗   烧制到手机中的android.jar包含了Android所需的各种类与方法；而供开发者使用的android.jar只是其中的一部分。API欺骗是指在应用中去模拟未公开的类和方法让应用编译通过并生成APK，然而在应用实际运行中调用的却仍是烧制到手机中真实的android.jar。
+        </p>
+    </div>
+</article>
+    
+        </div>
+    
+
+    
+    
+    
+    
+        <div class="article-row">
+    
+        <article class="article article-summary">
+    <div class="article-summary-inner">
+        
+        <a href="/2016/04/12/android-change-language_01/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/pexels-photo-707584.jpeg)" alt="Android 切换系统语言源码分析（上）" class="thumbnail-image"></span>
+    
+    
+        
+<span class="comment-counter">
+    <i class="fa fa-comments-o"></i>
+    
+</span>
+
+
+    
+</a>
+
+        
+        <div class="article-meta">
+            <div class="category">
+            <a class="article-category-link" href="/categories/Android/">Android</a>
+            </div>
+            <div class="date"><time datetime="2016-04-12T04:05:24.000Z" itemprop="datePublished">2016-04-12</time></div>
+        </div>
+        
+    
+        <h1 class="article-title" itemprop="name">
+        <a href="/2016/04/12/android-change-language_01/">Android 切换系统语言源码分析（上）</a>
+        </h1>
+    
+
+        <p class="article-excerpt">
+            概述：以前了解Android的多语言实现很简单，可以在不同的语言环境下使用不同的资源，就做好相应的语言适配就好，但是一直没有实际使用过。 最近公司的项目要用到多国语言切换，并且还是和手机上系统设置里面的语言切换功能一样，于是就上网查了下资料。一般都是在应用类实现多国语言切换，这个是很简单。而我想切换整个系统的语言。由于谷歌没有把系统设置里面的接口给开放出来，所以就只好去查看它的源码了~
         </p>
     </div>
 </article>
