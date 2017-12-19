@@ -588,7 +588,6 @@ code {
   color: rgba(255,255,255,0.8);
   font-size: 16px;
   font-weight: 600;
-  text-transform: uppercase;
   line-height: 24px;
   padding: 3px 0;
 }
@@ -621,7 +620,6 @@ code {
   border-radius: 3px;
   -webkit-box-shadow: 0 0 2px rgba(0,0,0,0.2);
   box-shadow: 0 0 2px rgba(0,0,0,0.2);
-  text-transform: uppercase;
   z-index: 1;
 }
 #sidebar .sidebar-top .social-links .social-tooltip:hover:before {
@@ -692,7 +690,6 @@ code {
   letter-spacing: 0.5px;
   line-height: 24px;
   font-weight: normal;
-  text-transform: uppercase;
 }
 .article-nav-title {
   font-size: 15px;
@@ -704,7 +701,6 @@ code {
 .widget-title {
   font-size: 15px;
   font-weight: 400;
-  text-transform: uppercase;
   margin-bottom: 6px;
 }
 .widget {
@@ -855,7 +851,6 @@ code {
 #recent-post li .item-inner a,
 #recent-post li .item-inner .item-category {
   font-size: 13px;
-  text-transform: uppercase;
 }
 #recent-post li .item-inner a a,
 #recent-post li .item-inner .item-category a {
@@ -884,7 +879,6 @@ code {
 #recent-post li .item-inner .item-date {
   color: #aaa;
   font-size: 13px;
-  text-transform: uppercase;
 }
 #recent-post li:hover .item-thumbnail {
   opacity: 0.8;
