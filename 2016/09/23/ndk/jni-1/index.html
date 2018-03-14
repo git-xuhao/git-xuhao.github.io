@@ -1,1 +1,295 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>Hexo Loading...</title><link href=/static/css/app.4c89f359b7b6846f7870cbe7154f0929.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=/static/js/manifest.a73019bf2614e9d8f4ce.js></script><script type=text/javascript src=/static/js/vendor.2df5b9938da73af6279b.js></script><script type=text/javascript src=/static/js/app.0ada4a90073757b7c4f5.js></script></body></html>
+<!DOCTYPE html>
+<html class="full-height">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>NDK开发（一）JNI简介及调用流程 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！ JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言">
+<meta name="keywords" content="NDK,JNI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NDK开发（一）JNI简介及调用流程">
+<meta property="og:url" content="https://xuhaoblog.com/2016/09/23/ndk/jni-1/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！ JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921002729113">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921004851299">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921011013003">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921011522662">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921011811821">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921012257530">
+<meta property="og:image" content="http://img.blog.csdn.net/20160921013119011">
+<meta property="og:updated_time" content="2017-12-17T15:45:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NDK开发（一）JNI简介及调用流程">
+<meta name="twitter:description" content="前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！ JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160921002729113">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+  <header id="navbar" class="overflow-hidden">
+  <div class="container">
+    <nav class="nav">
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Xiho</span>'s Blog
+            </a>
+         </div>
+        <div class="nav-center is-hidden position-relative" id="search_container">
+            <div class="nav-item full-width full-height">
+                <i class="fa fa-search has-padding" aria-hidden="true"></i>
+                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
+                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            <div id="search_result"></div>
+        </div>
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item" href="/about">
+                About
+            </a>
+            
+        </div>
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                About
+            </a>
+            
+        </div>
+    </nav>
+  </div>
+</header>
+
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 370px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: lightsteelblue;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,.8);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+<section>
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
+            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
+                <strong>NDK开发（一）JNI简介及调用流程</strong>
+            </h1>
+            
+            <div class="is-flex align-center">
+                <img class="post-avatar" src="https://cdn2.iconfinder.com/data/icons/rcons-user/32/male-shadow-circle-512.png">
+                <span style="padding:0 10px;"> <span class="sub-title">By</span> Xiho</span>
+                <span class="post-date sub-title">at: 2016-09-23</span>
+            </div>
+            
+                <div>
+                    
+                         <a class="tag is-post-tag" href="/tags/NDK/">NDK</a>
+                    
+                         <a class="tag is-post-tag" href="/tags/JNI/">JNI</a>
+                    
+                </div>
+            
+        </div>
+        <div class="content" style="overflow: auto">
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h3><p>前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！</p>
+<h3 id="JNI简介"><a href="#JNI简介" class="headerlink" title="JNI简介"></a><strong>JNI简介</strong></h3><p>　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。<br>　　<br><a id="more"></a> </p>
+<p>　　开发JNI程序会受到系统环境的限制，因为用C/C++语言写出来的代码或模块，编译过程当中要依赖当前操作系统环境所提供的一些库函数，并和本地库链接在一起。而且编译后生成的二进制代码只能在本地操作系统环境下运行，因为不同的操作系统环境，有自己的本地库和CPU指令集，而且各个平台对标准C/C++的规范和标准库函数实现方式也有所区别。这就造成使用了JNI接口的JAVA程序，不再像以前那样自由的跨平台。如果要实现跨平台，就必须将本地代码在不同的操作系统平台下编译出相应的动态库。</p>
+<p><strong>JNI的开发流程主要分为以下几个步骤：</strong></p>
+<ol>
+<li><p>编写带有native声明方法的java类；</p>
+</li>
+<li><p>用”javac”命令来编译所编写的java类；</p>
+</li>
+<li><p>使用”javah”java类的名生成扩展名为h的头文件；</p>
+</li>
+<li><p>复制jni.h和jni_md.h文件到CPP工程中;</p>
+</li>
+<li><p>实现.h头文件中声明的函数</p>
+</li>
+<li><p>生成dll动态链接库</p>
+</li>
+<li><p>配置dll文件所在目录到环境变量</p>
+</li>
+<li><p>重启Eclipse</p>
+</li>
+</ol>
+<p><font color="green"><strong>jni调用dill的流程图如下：</strong></font></p>
+<p><img src="http://img.blog.csdn.net/20160921002729113" alt="这里写图片描述"></p>
+<p>通过上面的分析，相信大家已经对jni的开发流程有一个整体的认识，接下来，我们将通过实例更进一步的了解。</p>
+<h4 id="第一步：编写带有native声明方法的java类"><a href="#第一步：编写带有native声明方法的java类" class="headerlink" title="第一步：编写带有native声明方法的java类"></a><font color="blue"><strong>第一步：编写带有native声明方法的java类</strong></font></h4><p>JniTest.java<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.study.jni;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JniTest</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">static</span> String <span class="title">getStringFromC</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="第二步：用”javac”命令来编译所编写的java类；"><a href="#第二步：用”javac”命令来编译所编写的java类；" class="headerlink" title="第二步：用”javac”命令来编译所编写的java类；"></a><font color="blue"><strong>第二步：用”javac”命令来编译所编写的java类；</strong></font></h4><p>首先我们必须得配有java环境变量，然后我们右键点击项目-&gt;properties,复制项目路径；</p>
+<p><img src="http://img.blog.csdn.net/20160921004851299" alt="这里写图片描述"></p>
+<p>然后进入dos命令，</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">C:<span class="symbol">\U</span>sers<span class="symbol">\u</span>uxuh&gt;cd E:<span class="symbol">\D</span>ocuments<span class="symbol">\1</span>1<span class="symbol">\J</span>niTest</span><br><span class="line"></span><br><span class="line">C:<span class="symbol">\U</span>sers<span class="symbol">\u</span>uxuh&gt;E:</span><br><span class="line"></span><br><span class="line">E:<span class="symbol">\D</span>ocuments<span class="symbol">\1</span>1<span class="symbol">\J</span>niTest&gt;cd src</span><br><span class="line"></span><br><span class="line">E:<span class="symbol">\D</span>ocuments<span class="symbol">\1</span>1<span class="symbol">\J</span>niTest<span class="symbol">\s</span>rc&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="第三步：使用”javah”java类的名生成-h的头文件"><a href="#第三步：使用”javah”java类的名生成-h的头文件" class="headerlink" title="第三步：使用”javah”java类的名生成.h的头文件"></a><font color="blue"><strong>第三步：使用”javah”java类的名生成.h的头文件</strong></font></h4><p>接着，复制我们的完整类名（包名+类名），执行命令：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E:\Documents\<span class="number">11</span>\JniTest\src&gt;javah com<span class="selector-class">.study</span><span class="selector-class">.jni</span><span class="selector-class">.JniTest</span></span><br></pre></td></tr></table></figure>
+<p>回到工程目录下，刷新项目，编译后的.h头文件就出现了。</p>
+<p>源码：</p>
+<p>com_study_jni_JniTest.h<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* DO NOT EDIT THIS FILE - it is machine generated */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="comment">/* Header for class com_study_jni_JniTest */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _Included_com_study_jni_JniTest</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _Included_com_study_jni_JniTest</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Class:     com_study_jni_JniTest</span></span><br><span class="line"><span class="comment"> * Method:    getStringFromC</span></span><br><span class="line"><span class="comment"> * Signature: ()Ljava/lang/String;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">JNIEXPORT jstring JNICALL Java_com_study_jni_JniTest_getStringFromC</span><br><span class="line">  (JNIEnv *, jclass);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __cplusplus</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure></p>
+<h4 id="第四步：复制jni-h和jni-md-h文件到CPP工程中"><a href="#第四步：复制jni-h和jni-md-h文件到CPP工程中" class="headerlink" title="第四步：复制jni.h和jni_md.h文件到CPP工程中"></a><font color="blue"><strong>第四步：复制jni.h和jni_md.h文件到CPP工程中</strong></font></h4><p>将要编译的文件中引入了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#inlcude<span class="meta-string">&lt;jni.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>头文件，所以我们手动导入这两个文件到CPP工程中，</p>
+<p>以我的jdk1.7.0_75为例，两个头文件的位置分别为：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jni.h    jdk1<span class="number">.7</span><span class="number">.0</span>_75/include</span><br><span class="line">jni_md.h    jdk1<span class="number">.7</span><span class="number">.0</span>_75/include/linux</span><br></pre></td></tr></table></figure></p>
+<p>将我们生成.h头文件复制到项目的代码文件目录下 ， 在解决方案中的头文件目录-&gt; 右键-&gt; 添加 -&gt; 添加现有项 。 将我们的头文件添加进来，还有jni.h和jni_md.h一起添加进来，如图：</p>
+<p><img src="http://img.blog.csdn.net/20160921011013003" alt="这里写图片描述"></p>
+<h4 id="第五步：实现-h头文件中声明的函数"><a href="#第五步：实现-h头文件中声明的函数" class="headerlink" title="第五步：实现.h头文件中声明的函数"></a><font color="blue"><strong>第五步：实现.h头文件中声明的函数</strong></font></h4><p>c代码如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"com_study_jni_JniTest.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//函数实现</span></span><br><span class="line">JNIEXPORT jstring JNICALL Java_com_study_jni_JniTest_getStringFromC</span><br><span class="line">(JNIEnv *env, jclass jcls)&#123;</span><br><span class="line">	<span class="comment">//简单的实现</span></span><br><span class="line"><span class="keyword">return</span> (*env)-&gt;NewStringUTF(env, <span class="string">"C String"</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="第六步：生成dll动态链接库"><a href="#第六步：生成dll动态链接库" class="headerlink" title="第六步：生成dll动态链接库"></a><font color="blue"><strong>第六步：生成dll动态链接库</strong></font></h4><p>我们以VS2013为例：</p>
+<p>操作步骤：</p>
+<p>选中项目 -&gt; 右键 -&gt; 属性 -&gt; 常规 -&gt; 项目默认值 -&gt; 配置类型 , 选择动态库.dll，</p>
+<p><img src="http://img.blog.csdn.net/20160921011522662" alt="这里写图片描述"></p>
+<p>如图，右上角配置管理器，根据我们所使用的平台进去配置一下：</p>
+<p><img src="http://img.blog.csdn.net/20160921011811821" alt="这里写图片描述"></p>
+<p>这里我使用64位的，所以活动解决方案平台下新建了一个x64，部署项目配置也选择x64。</p>
+<p>配置完了之后，最后生成解决方案。去项目目录下查看dll动态库。</p>
+<p><img src="http://img.blog.csdn.net/20160921012257530" alt="这里写图片描述"></p>
+<h4 id="第七步：配置dll文件所在目录到环境变量"><a href="#第七步：配置dll文件所在目录到环境变量" class="headerlink" title="第七步：配置dll文件所在目录到环境变量"></a><font color="blue"><strong>第七步：配置dll文件所在目录到环境变量</strong></font></h4><p>我们把生成dll文件的路径配置java环境变量里面，这样java 才会知道有dll动态库存在，配置完之后，重启下Eclipse。</p>
+<p>最后我们在java中调用动态库，完整代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.study.jni;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JniTest</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">static</span> String <span class="title">getStringFromC</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		System.out.println(getStringFromC());</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"><span class="comment">// 加载动态库</span></span><br><span class="line">	<span class="keyword">static</span>&#123;</span><br><span class="line">	   System.loadLibrary(<span class="string">"jni_study"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后运行一下项目控制台打印出C中返回给我们的字符串。</p>
+<p><img src="http://img.blog.csdn.net/20160921013119011" alt="这里写图片描述"></p>
+<p>好了，整个jni的调用流程已经说的非常详细了，但这只是jni入门的基础，后续会继续更新！</p>
+<blockquote>
+<p>学习理解并整理下来的笔记；<br>希望大家能够指点或提出宝贵意见，一起学习，谢谢！ </p>
+</blockquote>
+
+        </div>
+        <div class="post-reply">
+            
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYxOC84MTgy">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+            
+            
+        </div>
+    </div>
+</section>
+<script>
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+      </div>
+  </div>
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
+        <br>
+        Copyright © Xiho 2018
+        <br>
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>

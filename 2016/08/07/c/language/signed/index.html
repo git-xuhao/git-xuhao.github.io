@@ -1,1 +1,269 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>Hexo Loading...</title><link href=/static/css/app.4c89f359b7b6846f7870cbe7154f0929.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=/static/js/manifest.a73019bf2614e9d8f4ce.js></script><script type=text/javascript src=/static/js/vendor.2df5b9938da73af6279b.js></script><script type=text/javascript src=/static/js/app.0ada4a90073757b7c4f5.js></script></body></html>
+<!DOCTYPE html>
+<html class="full-height">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>C语言（二）有符号和无符号的理解 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.你自已决定是否需要有正负：就像我们必须决定某个量使用整数还是实数，使用多大的范围数一样，我们必须自已决定某个量是否需要正负。如果这个量不会有负值，那么我们可以定它为带正负的类型。 在计算机中，可以区分正负的类型，称为有符类型（signed），无正负的类型（只有正值），称为无符类型。 （unsigned）数值类型分为整型或实型，其中整型又分为无符类型或有符类型，而实型则只有符类型。 字符类型也分">
+<meta name="keywords" content="C&#x2F;C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C语言（二）有符号和无符号的理解">
+<meta property="og:url" content="https://xuhaoblog.com/2016/08/07/c/language/signed/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="1.你自已决定是否需要有正负：就像我们必须决定某个量使用整数还是实数，使用多大的范围数一样，我们必须自已决定某个量是否需要正负。如果这个量不会有负值，那么我们可以定它为带正负的类型。 在计算机中，可以区分正负的类型，称为有符类型（signed），无正负的类型（只有正值），称为无符类型。 （unsigned）数值类型分为整型或实型，其中整型又分为无符类型或有符类型，而实型则只有符类型。 字符类型也分">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://img.blog.csdn.net/20160807123518124">
+<meta property="og:image" content="http://img.blog.csdn.net/20160807123533339">
+<meta property="og:updated_time" content="2017-12-18T16:00:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C语言（二）有符号和无符号的理解">
+<meta name="twitter:description" content="1.你自已决定是否需要有正负：就像我们必须决定某个量使用整数还是实数，使用多大的范围数一样，我们必须自已决定某个量是否需要正负。如果这个量不会有负值，那么我们可以定它为带正负的类型。 在计算机中，可以区分正负的类型，称为有符类型（signed），无正负的类型（只有正值），称为无符类型。 （unsigned）数值类型分为整型或实型，其中整型又分为无符类型或有符类型，而实型则只有符类型。 字符类型也分">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160807123518124">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+  <header id="navbar" class="overflow-hidden">
+  <div class="container">
+    <nav class="nav">
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Xiho</span>'s Blog
+            </a>
+         </div>
+        <div class="nav-center is-hidden position-relative" id="search_container">
+            <div class="nav-item full-width full-height">
+                <i class="fa fa-search has-padding" aria-hidden="true"></i>
+                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
+                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            <div id="search_result"></div>
+        </div>
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item" href="/about">
+                About
+            </a>
+            
+        </div>
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                About
+            </a>
+            
+        </div>
+    </nav>
+  </div>
+</header>
+
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 370px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: lightsteelblue;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,.8);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+<section>
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
+            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
+                <strong>C语言（二）有符号和无符号的理解</strong>
+            </h1>
+            
+            <div class="is-flex align-center">
+                <img class="post-avatar" src="https://cdn2.iconfinder.com/data/icons/rcons-user/32/male-shadow-circle-512.png">
+                <span style="padding:0 10px;"> <span class="sub-title">By</span> Xiho</span>
+                <span class="post-date sub-title">at: 2016-08-07</span>
+            </div>
+            
+                <div>
+                    
+                         <a class="tag is-post-tag" href="/tags/C-C/">C/C++</a>
+                    
+                </div>
+            
+        </div>
+        <div class="content" style="overflow: auto">
+            <h3 id="1-你自已决定是否需要有正负："><a href="#1-你自已决定是否需要有正负：" class="headerlink" title="1.你自已决定是否需要有正负："></a><strong>1.你自已决定是否需要有正负：</strong></h3><p>就像我们必须决定某个量使用整数还是实数，使用多大的范围数一样，我们必须自已决定某个量是否需要正负。如果这个量不会有负值，那么我们可以定它为带正负的类型。</p>
+<p>在计算机中，可以区分正负的类型，称为有符类型（signed），无正负的类型（只有正值），称为无符类型。 （unsigned）数值类型分为整型或实型，其中整型又分为无符类型或有符类型，而实型则只有符类型。 字符类型也分为有符和无符类型。 比如有两个量，年龄和库存，我们可以定前者为无符的字符类型，后者定为有符的整数类型。</p>
+<h3 id="2-使用二制数中的最高位表示正负"><a href="#2-使用二制数中的最高位表示正负" class="headerlink" title="2.使用二制数中的最高位表示正负: "></a><strong>2.使用二制数中的最高位表示正负: </strong></h3><p>首先得知道最高位是哪一位？1个字节的类型，如字符类型，最高位是第7位，2个字节的数，最高位是第15位，4个字节的数，最高位是第31位。不同长度的数值类型，其最高位也就不同，但总是最左边的那位（如下示意）。字符类型固定是1个字节，所以最高位总是第7位。</p>
+<a id="more"></a>
+<p>(红色为最高位)  </p>
+<p><strong>单字节数：</strong> </p>
+<font color="red">1</font>1111111<br><br><strong>双字节数：</strong><br><br><font color="red">1</font>1111111 11111111<br><br><strong>四字节数：</strong><br><br><font color="red">1</font>1111111 11111111 11111111 11111111<br><br>当我们指定一个数量是无符号类型时，那么其最高位的1或0，和其它位一样，用来表示该数的大小。<br>当我们指定一个数量是无符号类型时，此时，最高数称为“符号位”。为1时，表示该数为负值，为0时表示为正值。<br><br><strong>3.无符号数和有符号数的范围区别: </strong><br><br>无符号数中，所有的位都用于直接表示该值的大小。有符号数中最高位用于表示正负，所以，当为正值时，该数的最大值就会变小。我们举一个字节的数值对比：<br><br><strong>无符号数：</strong> 11111111    值：255<br><br><img src="http://img.blog.csdn.net/20160807123518124" alt="这里写图片描述"><br><br><br><strong>有符号数：</strong> 01111111    值：127<br><br><img src="http://img.blog.csdn.net/20160807123533339" alt="这里写图片描述"><br><br>eg：（本屌实在不知道怎么用md语法来打出数学公式，2的幂次方）<br><br>同样是一个字节，无符号数的最大值是255，而有符号数的最大值是127。原因是有符号数中的最高位被挪去表示符号了。并且，我们知道，最高位的权值也是最高的（对于1字节数来说是2的7次方=128），所以仅仅少于一位，最大值一下子减半。<br><br>不过，有符号数的长处是它可以表示负数。因此，虽然它的在最大值缩水了，却在负值的方向出现了伸展。我们仍一个字节的数值对比：<br><br><font color="blue" size="4">无符号数： </font>           0 —————– 255<br><br><font color="blue" size="4">有符号数： </font>          -128 ——— 0 ———- 127<br><br>同样是一个字节，无符号的最小值是 0 ，而有符号数的最小值是-128。<br><br>所以二者能表达的不同的数值的个数都一样是256个。只不过前者表达的是0到255这256个数，后者表达的<br><br>是-128到+127这256个数。<br><br><strong>一个有符号的数据类型的最小值是如何计算出来的呢？</strong><br><br>有符号的数据类型的最大值的计算方法完全和无符号一样，只不过它少了一个最高位（见第3点）。但在负值<br>范围内，数值的计算方法不能直接使用1<em> 26 + 1</em> 25 的公式进行转换。<br><br>在计算机中，负数除为最高位为1以外，还采用补码形式进行表达。所以在计算其值前，需要对补码进行还原。 这里，先直观地看一眼补码的形式：<br><br><br>在10进制中：1 表示正1，而加上负号：-1 表示和1相对的负值。<br><br>那么，我们会很容易认为在2进制中（1个字节）： 0000 0001 表示正1，则高位为1后：1000 0001应该表示-1。<br><br>然而，事实上计算机中的规定有些相反，请看下表：<br><br>|二进制（1字节）| 十进制值   |<br>|:——: | —— |<br>|10000000 | -128   |<br>|10000001 | -127   |<br>|10000010 | -126   |<br>|10000011 | -125   |<br>|10000100 | -124   |<br>| ……  | …… |<br>|11111110 | -2     |<br>|11111111 | -1     |<br><br>首先我们看到，从-1到-128，其二进制的最高位都是1，正如我们前面说的，负数最高位为1，然后我们觉得有点奇怪了，1000 0000 并没有用来表示 0；而 1000 0001也不是拿来直观地表示-1，事实上，-1用1111 1111来表示。<br>怎么理解这个问题呢？先问一句是-1大还是-128大？<br>当然是-1大，那么，1111 1111 -1是什么呢？ 和现实中的计算结果完全一致。1111 1111 -1=1111 1110，而1111 1110 就是-2，就这样一直减下去，当见到只剩最高位用于表示符号的1意外，其他低位全为0时，就是最小的负值，在一字节中，最小的负值是1000 0000，也就是-128。<br>我们以-1位例，来看看不同字节数的整数中，如何表达-1这个数；<br><br>| 字节数 |   二进制值     |         十进制值 |<br>|:——:  | ——   |  —— |<br>|单字节数  | 11111111 | -1   |<br>|双字节数 | 11111111 11111111  |-1  |<br>|四字节数| 11111111 11111111 11111111 11111111 | -1 |<br><br>可能有些人看到这里，就已经混了，为什么呢？1111 1111 有时表示255，有时又表示-1？所以我再强调 前面说的第二点，你自己决定一个数是有符号还是无符号的，写程序时，指定一个量是有符号的，那么当这个量的二进制各位上的数都是1时，它表示的数就是-1；相反，如果事先声明这个量是无符号的， 此时它表示的就是该量允许的最大值，对于一个字节的数来说，最大值就是255。<br><br><br><br><br>我们已经知道计算机中，所有数据最终都是使用二进制数表达。 也已经学会如何将一个10进制数如何转换为二进制数。 不过，我们仍然没有学习一个负数如何用二进制表达。  比如，假设有一 int 类型的数，值为5，那么，我们知道它在计算机中表示为：<br><br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">00000000 </span><span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000101</span></span><br></pre></td></tr></table></figure><br><br>5转换成二制是101，不过int类型的数占用4字节（32位），所以前面填了一堆0。 现在想知道，-5在计算机中如何表示？ 在计算机中，负数以其正值的补码形式表达。    什么叫补码呢？这得从原码，反码说起。<br><br><br><strong>原码：</strong>一个整数，按照绝对值大小转换成的二进制数，最高为为符号位，称为原码。 红色为符号位<br><br>比如：<br><br><figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">00000000 </span><span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000101</span>  是 <span class="number">5</span>的原码。                      </span><br><span class="line"><span class="symbol">10000000 </span><span class="number">00000000</span> <span class="number">00000000</span> <span class="number">00000101</span>  是-<span class="number">5</span>的原码。</span><br></pre></td></tr></table></figure><br><br><strong>反码：</strong> 将二进制除符号位数按位取反，所得的新二进制数称为原二进制数的反码。 正数的反码为原码，负数的反码是原码符号位外按位取反。<br><br> 取反操作指：原为1，得0；原为0，得1。（1变0; 0变1）<br><br><font color="red" size="4">正数：正数的反码与原码相同。 </font><br><font color="red" size="4">负数：负数的反码，符号位为“1”，数值部分按位取反。  </font> 
+
+
+<p><strong>比如：</strong>将10000000 00000000 00000000 00000101除符号位每一位取反，<br>得11111111 11111111 11111111 11111010。   </p>
+<p>这时候我们称：11111111 11111111 11111111 11111010 是 10000000 00000000 00000000 00000101 的反码。 </p>
+<font color="black" size="4">反码是相互的， </font> 所以也可称：<br>11111111 11111111 11111111 11111010 和 10000000 00000000 00000000 00000101 互为反码。<br><br><br><strong>补码：</strong> 反码加1称为补码。  <font color="red" size="4"> （如果反码最后一位是1得话就向前加1）</font><br> 1. 正数：正数的补码和原码相同。<br> 2. 负数：按照规则来<br>也就是说，要得到一个数的补码，先得到反码，然后将反码加上1，所得数称为补码。<br> 11111111 11111111 11111111 11111010 是 10000000 00000000 00000000 00000101（-5） 的反码。<br>加1得11111111 11111111 11111111 11111011<br>所以，-5 在计算机中表达为：11111111 11111111 11111111 11111011。转换为十六<br><br>进制：0xFFFFFFFB。<br>再举一例，我们来看整数-1在计算机中如何表示。<br>假设这也是一个int类型，那么：<br><br> 1、先取-1的原码：        10000000 00000000 00000000 00000001<br> 2、除符号位取反得反码：   11111111 11111111 11111111 11111110<br> 3、加1得补码：            11111111 11111111 11111111 11111111<br><br> 可见，－1在计算机里用二进制表达就是全1。16进制为：0xFFFFFF。<br><br> <strong>计算机中带有符号数用补码表示的优点：</strong><br><br><font color="red" size="4">1、负数的补码与对应正数的补码之间的转换可以用同一种方法——求补运算完成，可以简化硬件；<br>2、可将减法变为加法，省去减法器；<br>3、无符号数及带符号数的加法运算可以用同一电路完成。 </font>
+
+<p>可得出一种心算求补的方法——从最低位开始至找到的第一个1均不变，符号位不变，这之间的各位“求反”(该方法仅用于做题）</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方法</th>
+<th>例子1</th>
+<th>列子2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1,从右边开始，找到第一个“1”</td>
+<td>10101001</td>
+<td>10101100</td>
+</tr>
+<tr>
+<td style="text-align:center">2,从这个“1”之后开始到最左边取反（不包括符号位，也就是最高位）</td>
+<td>11010111</td>
+<td>11010100</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意：（如果反码最后一位是1得话就向前加1）</strong></p>
+<p>CSDN</p>
+<h3 id="更多系列相关文章传送门："><a href="#更多系列相关文章传送门：" class="headerlink" title="更多系列相关文章传送门："></a>更多系列相关文章传送门：</h3><p><a href="http://blog.csdn.net/u011974987/article/details/52138798" target="_blank" rel="noopener">C语言（一）基本数据类型</a><br><a href="http://blog.csdn.net/u011974987/article/details/52142794" target="_blank" rel="noopener">C语言（二）有符号数和无符号数的理解</a><br><a href="http://blog.csdn.net/u011974987/article/details/52200178" target="_blank" rel="noopener">C语言（三）字符串处理函数</a><br><a href="http://blog.csdn.net/u011974987/article/details/52270018" target="_blank" rel="noopener">C语言（四）指针概念的理解</a><br><a href="http://blog.csdn.net/u011974987/article/details/52290724" target="_blank" rel="noopener">C语言（五）内存的分配与释放</a><br><a href="http://blog.csdn.net/u011974987/article/details/52305364" target="_blank" rel="noopener">C语言（六）结构体和联合体</a><br><a href="http://blog.csdn.net/u011974987/article/details/52354074" target="_blank" rel="noopener">C语言（七）文件的相关操作</a></p>
+<blockquote>
+<p>查找资料学习理解并整理下来。<br>希望大家能提出宝贵意见，一起学习。</p>
+</blockquote>
+
+        </div>
+        <div class="post-reply">
+            
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYxOC84MTgy">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+            
+            
+        </div>
+    </div>
+</section>
+<script>
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+      </div>
+  </div>
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
+        <br>
+        Copyright © Xiho 2018
+        <br>
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>

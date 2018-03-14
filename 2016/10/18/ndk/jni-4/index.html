@@ -1,1 +1,248 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>Hexo Loading...</title><link href=/static/css/app.4c89f359b7b6846f7870cbe7154f0929.css rel=stylesheet></head><body><div id=app></div><script type=text/javascript src=/static/js/manifest.a73019bf2614e9d8f4ce.js></script><script type=text/javascript src=/static/js/vendor.2df5b9938da73af6279b.js></script><script type=text/javascript src=/static/js/app.0ada4a90073757b7c4f5.js></script></body></html>
+<!DOCTYPE html>
+<html class="full-height">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+  
+  <title>NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用 | Xiho’s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言做过Java的朋友都知道，内存管理这一块是完全透明的，new一个类的实例时，只知道创建完这个类的实例后，会返回这个实例的一个引用，然后拿着这个引用去访问它的成员了（属性、方法），完全不用管JVM内部怎么实现的，如何为新建的对象申请内存，使用完之后如何释放内存，只需要知道有个垃圾回收器在处理这些事情就行了，然而，从Java虚拟机创建的对象传到C/C++代码时会产生引用，根据Java的垃圾回收机制">
+<meta name="keywords" content="NDK,JNI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用">
+<meta property="og:url" content="https://xuhaoblog.com/2016/10/18/ndk/jni-4/index.html">
+<meta property="og:site_name" content="Xiho’s Blog">
+<meta property="og:description" content="前言做过Java的朋友都知道，内存管理这一块是完全透明的，new一个类的实例时，只知道创建完这个类的实例后，会返回这个实例的一个引用，然后拿着这个引用去访问它的成员了（属性、方法），完全不用管JVM内部怎么实现的，如何为新建的对象申请内存，使用完之后如何释放内存，只需要知道有个垃圾回收器在处理这些事情就行了，然而，从Java虚拟机创建的对象传到C/C++代码时会产生引用，根据Java的垃圾回收机制">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-12-17T15:52:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用">
+<meta name="twitter:description" content="前言做过Java的朋友都知道，内存管理这一块是完全透明的，new一个类的实例时，只知道创建完这个类的实例后，会返回这个实例的一个引用，然后拿着这个引用去访问它的成员了（属性、方法），完全不用管JVM内部怎么实现的，如何为新建的对象申请内存，使用完之后如何释放内存，只需要知道有个垃圾回收器在处理这些事情就行了，然而，从Java虚拟机创建的对象传到C/C++代码时会产生引用，根据Java的垃圾回收机制">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
+</head>
+
+<body>
+  <header id="navbar" class="overflow-hidden">
+  <div class="container">
+    <nav class="nav">
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Xiho</span>'s Blog
+            </a>
+         </div>
+        <div class="nav-center is-hidden position-relative" id="search_container">
+            <div class="nav-item full-width full-height">
+                <i class="fa fa-search has-padding" aria-hidden="true"></i>
+                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
+                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            <div id="search_result"></div>
+        </div>
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item" href="/about">
+                About
+            </a>
+            
+        </div>
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                About
+            </a>
+            
+        </div>
+    </nav>
+  </div>
+</header>
+
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <!--博文页面-->
+
+<style>
+    .header-box {
+        height: 370px;
+        filter: blur(10px);
+        background-size: cover;
+        background-color: lightsteelblue;
+    }
+
+    .post-box {
+        padding: 15px;
+        padding-top: 60px;
+        min-height: 80vh;
+        margin-top: -200px;
+        border-radius: 4px;
+        background-color: rgba(255,255,255,.8);
+    }
+
+    .post-avatar {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .flow-chart {
+        text-align: center;
+    }
+
+    img[alt="post-cover"] {
+        display: none;
+    }
+</style>
+<header>
+    <div id="header_box" class="header-box"></div>
+</header>
+<section>
+    <div class="container post-box">
+        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
+            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
+                <strong>NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</strong>
+            </h1>
+            
+            <div class="is-flex align-center">
+                <img class="post-avatar" src="https://cdn2.iconfinder.com/data/icons/rcons-user/32/male-shadow-circle-512.png">
+                <span style="padding:0 10px;"> <span class="sub-title">By</span> Xiho</span>
+                <span class="post-date sub-title">at: 2016-10-18</span>
+            </div>
+            
+                <div>
+                    
+                         <a class="tag is-post-tag" href="/tags/NDK/">NDK</a>
+                    
+                         <a class="tag is-post-tag" href="/tags/JNI/">JNI</a>
+                    
+                </div>
+            
+        </div>
+        <div class="content" style="overflow: auto">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>做过Java的朋友都知道，内存管理这一块是完全透明的，new一个类的实例时，只知道创建完这个类的实例后，会返回这个实例的一个引用，然后拿着这个引用去访问它的成员了（属性、方法），完全不用管JVM内部怎么实现的，如何为新建的对象申请内存，使用完之后如何释放内存，只需要知道有个垃圾回收器在处理这些事情就行了，然而，从Java虚拟机创建的对象传到C/C++代码时会产生引用，根据Java的垃圾回收机制，只要有引用存在就不回触发该引用所指向Java对象的垃圾回收；这些引用在JNI 中分为3种：全局引用（Global Reference）、局部引用 (Local Reference)、弱全局引用 (Week Global Reference) since JDK1.2。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="三种引用的区别"><a href="#三种引用的区别" class="headerlink" title="三种引用的区别"></a><strong>三种引用的区别</strong></h3><h4 id="1、全局引用"><a href="#1、全局引用" class="headerlink" title="1、全局引用"></a><strong>1、全局引用</strong></h4><p>全局引用可以跨方法、跨线程使用，直到被开发者显式释放。类似局部引用，一个全局引用在被释放前保证引用对象不被GC回收。和局部引用不同的是，没有那么多函数能够创建全局引用。能创建全局引用的函数只有 NewGlobalRef。以下例子说明了如何使用一个全局引用。</p>
+<p>java native方法：</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">native</span> <span class="function"><span class="keyword">void</span> <span class="title">createGlobalRef</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">native</span> <span class="function">String <span class="title">getGlobalRef</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">native</span> <span class="function"><span class="keyword">void</span> <span class="title">deleteGlobalRef</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>jni实现：<br><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//全局引用</span></span><br><span class="line"><span class="comment">//共享(可以跨多个线程)，手动控制内存使用</span></span><br><span class="line">jstring global_str;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建</span></span><br><span class="line">JNIEXPORT void JNICALL Java_com_study_jni_JniTest_createGlobalRef(JNIEnv *<span class="keyword">env</span>, jobject jobj)&#123;</span><br><span class="line">	jstring obj = (*<span class="keyword">env</span>)-&gt;NewStringUTF(<span class="keyword">env</span>, <span class="string">"jni development is powerful!"</span>);</span><br><span class="line">	global_str = (*<span class="keyword">env</span>)-&gt;NewGlobalRef(<span class="keyword">env</span>, obj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获得</span></span><br><span class="line">JNIEXPORT jstring JNICALL Java_com_study_jni_JniTest_getGlobalRef(JNIEnv *<span class="keyword">env</span>, jobject jobj)&#123;</span><br><span class="line">	<span class="keyword">return</span> global_str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//释放</span></span><br><span class="line">JNIEXPORT void JNICALL Java_com_study_jni_JniTest_deleteGlobalRef(JNIEnv *<span class="keyword">env</span>, jobject jobj)&#123;</span><br><span class="line">	(*<span class="keyword">env</span>)-&gt;DeleteGlobalRef(<span class="keyword">env</span>, global_str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h4 id="2、局部引用"><a href="#2、局部引用" class="headerlink" title="2、局部引用"></a><strong>2、局部引用</strong></h4><p>一个局部引用仅在创建它的native函数及该函数调用的函数中有效。在一个native函数执行期间创建的所有局部引用将在该函数返回时被释放，创建了大量的局部引用，占用了太多的内存，而且这些局部引用跟后面的操作没有关联性。</p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//模拟：循环创建数组</span></span><br><span class="line">JNIEXPORT void JNICALL Java_com_study_jni_JniTest_localRef(JNIEnv *<span class="keyword">env</span>, jobject jobj)&#123;</span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (; i &lt; <span class="number">5</span>; i++)&#123;</span><br><span class="line">		<span class="comment">//创建Date对象</span></span><br><span class="line">		jclass cls = (*<span class="keyword">env</span>)-&gt;FindClass(<span class="keyword">env</span>, <span class="string">"java/util/Date"</span>);</span><br><span class="line">		jmethodID constructor_mid = (*<span class="keyword">env</span>)-&gt;GetMethodID(<span class="keyword">env</span>, cls, <span class="string">"&lt;init&gt;"</span>, <span class="string">"()V"</span>);</span><br><span class="line">		jobject obj = (*<span class="keyword">env</span>)-&gt;NewObject(<span class="keyword">env</span>, cls, constructor_mid);</span><br><span class="line">		<span class="comment">//此处省略一百行代码...</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">//不在使用jobject对象了</span></span><br><span class="line">		<span class="comment">//通知垃圾回收器回收这些对象</span></span><br><span class="line">		<span class="comment">//释放局部引用</span></span><br><span class="line">		(*<span class="keyword">env</span>)-&gt;DeleteLocalRef(<span class="keyword">env</span>, obj);</span><br><span class="line">		<span class="comment">//此处省略一百行代码...</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码中，省略了和我们无关紧要的代码，通过FindClass返回一个对java.util.Date对象的局部引用。</p>
+<hr>
+<h4 id="3、弱全局引用"><a href="#3、弱全局引用" class="headerlink" title="3、弱全局引用"></a><strong>3、弱全局引用</strong></h4><p>节省内存，在内存不足时可以是释放所引用的对象，可以引用一个不常用的对象，如果为NULL，临时创建，弱全局引用使用NewGlobalWeakRef创建，使用DeleteGlobalWeakRef释放。下面简称弱引用。与全局引用类似，弱引用可以跨方法、线程使用。但与全局引用很重要不同的一点是，弱引用不会阻止GC回收它引用的对象，所以在使用时需要多加小心，它所引用的对象可能是不存在的或者已经被回收。</p>
+<h5 id="1-创建弱全局引用"><a href="#1-创建弱全局引用" class="headerlink" title="1.创建弱全局引用"></a><strong>1.创建弱全局引用</strong></h5><p>用NewWeakGlobalRef函数对弱全局引用进行初始化，例如：</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jclass weakGlobalcls</span><br><span class="line">weakGlobalcls = (<span class="name">*env</span>)-&gt;NewWeakGlobalRef(<span class="name">env</span>,localclazz)<span class="comment">;</span></span><br></pre></td></tr></table></figure>
+<h5 id="2-引用的比较"><a href="#2-引用的比较" class="headerlink" title="2.引用的比较"></a><strong>2.引用的比较</strong></h5><p>给定两个引用（不管是全局、局部还是弱全局引用），我们只需要调用IsSameObject来判断它们两个是否指向相同的对象。例如：<code>（*env)-&gt;IsSameObject(env, obj1, obj2)</code><br>如果obj1和obj2指向相同的对象，则返回<strong>JNI_TRUE（或者1）</strong>，否则返回<strong>JNI_FALSE（或者0）</strong>。有一个特殊的引用需要注意：NULL，JNI中的NULL引用指向JVM中的null对象。如果obj是一个局部或全局引用，使用<code>(*env)-&gt;IsSameObject(env, obj, NULL) 或者 obj == NULL</code> 来判断obj是否指向一个null对象即可。但需要注意的是，IsSameObject用于弱全局引用与NULL比较时，返回值的意义是不同于局部引用和全局引用的。比如：</p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(JNI_FALSE == (*<span class="keyword">env</span>)-&gt;IsSameObject(<span class="keyword">env</span>,weakGlobalcls,NULL))&#123;</span><br><span class="line"><span class="comment">//TODO 对象未被回收，可以使用</span></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="comment">//TODO 对象被垃圾回收器回收，不能使用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>以上就是学习这jni 的三种引用的简单使用，相关的知识并没有深入详细的说明！O(∩_∩)O~~</p>
+<blockquote>
+<p>本文由博主辛苦整理下来的笔记；<br>希望大家能够指点或提出宝贵意见，共同学习，谢谢！ </p>
+</blockquote>
+
+        </div>
+        <div class="post-reply">
+            
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYxOC84MTgy">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+            
+            
+        </div>
+    </div>
+</section>
+<script>
+    // 获取第一张图, 用以当封面背景图
+    var img = document.querySelectorAll('img')[1]
+
+    if (img) {
+        var header_box = document.querySelector('#header_box')
+        header_box.style.backgroundImage = 'url('+ img.src +')'
+    }
+</script>
+      </div>
+  </div>
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
+        <br>
+        Copyright © Xiho 2018
+        <br>
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/search_core.js"></script>
+<script src="/js/script.js"></script>
+
+</body>
+</html>
