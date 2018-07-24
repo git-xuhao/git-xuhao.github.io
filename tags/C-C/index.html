@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html class="full-height">
 <head>
   <meta charset="utf-8">
-  
-
+  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
   
   <title>Tag: C/C++ | Xiho’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -26,356 +27,362 @@
   
     <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
   
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/common.css">
+<link rel="stylesheet" href="/css/nav.css">
+<link rel="stylesheet" href="/css/layout.css">
+  
+
 </head>
 
 <body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Xiho’s Blog</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://xuhaoblog.com"></form>
-      </div>
-    </div>
+  <header id="navbar" class="overflow-hidden">
+  <div class="container">
+    <nav class="nav">
+         <div class="nav-left">
+            <a href="/" class="nav-item" style="font-size: 20px;">
+              <span class="logo">Xiho</span>'s Blog
+            </a>
+         </div>
+        <div class="nav-center is-hidden position-relative" id="search_container">
+            <div class="nav-item full-width full-height">
+                <i class="fa fa-search has-padding" aria-hidden="true"></i>
+                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
+                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
+            </div>
+            <div id="search_result"></div>
+        </div>
+        <div class="nav-right nav-menu">
+            <a class="nav-item" id="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            
+            <a class="nav-item" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item" href="/about">
+                About
+            </a>
+            
+        </div>
+        <span class="nav-toggle" id="navMenuDropdown">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
+            
+            <a class="nav-item flex-1" href="/">
+                Home
+            </a>
+            
+            <a class="nav-item flex-1" href="/works">
+                My Works
+            </a>
+            
+            <a class="nav-item flex-1" href="/about">
+                About
+            </a>
+            
+        </div>
+    </nav>
   </div>
 </header>
-      <div class="outer">
-        <section id="main">
-  
-  
+
+  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
+      <div class="main-inner-content">
+          <style>
+    .container.tag-cate-wrap {
+        min-height: 93vh;
+    }
+
+    .category-title-inner {
+        padding-top: 50px;
+    }
+
+    strong {
+        text-transform: capitalize;
+    }
+</style>
+
+
+<div class="container tag-cate-wrap">
+    <div class="category-title-inner content has-text-centered">
+        <h1><strong style="border-top: 2px solid; border-bottom: 2px solid;">tag·C/C++</strong></h1>
+    </div>
+
     
     
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/09/12/cpp/string/">
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C++ New和delete操作符使用</strong> <small class="post-date">at: 2016-09-12</small>
+                                <br>
+                                在C语言中，动态分配内存用 malloc() 函数，释放内存用 free() 函数。如下所示：
+12int *p = (int*) malloc( sizeof(int) * 10 );  //分配10个int型的内存空间free(p);  //释放内存
+在C++中，这两个函数仍然可以使用，但是C++又新增了两个关键字，new 和 delete：new ..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
         </div>
-        <div class="archives">
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/09/12/cpp/string/" class="archive-article-date">
-  <time datetime="2016-09-12T06:28:31.000Z" itemprop="datePublished">9月 12</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/09/12/cpp/string/">C++ New和delete操作符使用</a>
-    </h1>
-  
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/09/11/cpp/aduc/">
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C++ String字符串的增删改查</strong> <small class="post-date">at: 2016-09-11</small>
+                                <br>
+                                c++ 提供的string类包含了若干实用的成员函数，大大方便了字符串的增加、删除、更改、查询等操作。
+插入字符串insert（）函数可以在string字符串中置顶的位置插入另一个字符串，它的原型为：
+1string&amp; insert (size_t pos, const string&amp; str);
+看这个插入的格式我们就能猜想到，pos表..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+    
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/09/11/cpp/string/">
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C++ String类和字符串的访问和拼接操作</strong> <small class="post-date">at: 2016-09-11</small>
+                                <br>
+                                C++ 增强了对字符串的支持，除了可以使用c中的字符串，还可以使用内置的数据类型string，string类处理字符串会翻遍很多，完全可以代替C语言中的char 数组和char 指针。
+使用sting类需要包含头文件&lt; sting &gt;, 下面我们就来介绍怎么使用。
+string 的几种用法：
+1234567891011121314151617..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+    
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/08/29/c/c-file-operation/">
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C语言（七）文件的相关操作</strong> <small class="post-date">at: 2016-08-29</small>
+                                <br>
+                                C语言文件的打开与关闭
+在C语言中，文件操作都是由库函数来完成的，我们就来总结文件的相关的操作。
+文件的打开(fopen函数)fopen() 函数用来打开一个文件，它的格式为：
+1FILE *fopen(char *filename, char *type);
+filename为文件名（包括文件路径），type为打开方式，它们都是字符串。fopen() ..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+    
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/08/25/c/structure-union/">
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C语言（六）结构体和联合体</strong> <small class="post-date">at: 2016-08-25</small>
+                                <br>
+                                结构体在C语言中，可以使用结构体（Struct）来存放一组不同类型的数据。结构体的定义形式为：
+123struct 结构体名&#123;    结构体所包含的变量或数组&#125;;
+结构体是一种集合，它里面包含了多个变量或数组，它们的类型可以相同，也可以不同，每个这样的变量或数组都称为结构体的成员（Member）。请看下面的一个栗子：
+1234567s..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+    
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/08/23/c/memory_allocation/">
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C语言（五）内存分配与释放</strong> <small class="post-date">at: 2016-08-23</small>
+                                <br>
+                                首先我们来科普一下：
+什么是堆？说到堆，又忍不住说到了栈！什么是 栈？1、什么是堆：堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。2、什么是栈：栈是线程独有的，保存其运行状态和局部自动变..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+    
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/08/22/c-pointers/">
+                    
+                    <div class="media-left">
+                        <figure class="image is-128x128">
+                            <img src="http://img.blog.csdn.net/20160821214956473" style="height: 100%; width: 100%">
+                        </figure>
+                    </div>
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C语言（四）指针概念的理解</strong> <small class="post-date">at: 2016-08-22</small>
+                                <br>
+                                前言最近真的是忙的不可开交，公司一直给安排任务，连学习和写笔记的时间都没有了，落下好几次课的笔记都没有写，所以我抽空把目前的进度给追上来，不然会越落越多。加油吧~（感觉身体都要被掏空了） 
+指针 我们通过指针，可以简化一些 C 编程任务的执行，还有一些任务，如动态内存分配，没有指针是无法执行的。所以，学习指针是很有必要的。正如您所知道的，每一个变量都有一..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
+    
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/08/13/c/language/string/">
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C语言（三）字符串处理函数</strong> <small class="post-date">at: 2016-08-13</small>
+                                <br>
+                                C语言提供了丰富的字符串处理函数，例如字符串的输入、输出、合并、修改、比较、转换、复制、搜索等，使用这些现成的函数可大大减轻编程的负担。
+用于输入输出的字符串函数，例如printf、puts、scanf、gets等，使用时应包含头文件stdio.h，使用其它字符串函数则应包含头文件string.h。
 
-    </header>
-  </div>
-</article>
-  
+1.字符串长度函数strlenstrlen 是 st..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
     
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/08/07/c/language/signed/">
+                    
+                    <div class="media-left">
+                        <figure class="image is-128x128">
+                            <img src="http://img.blog.csdn.net/20160807123518124" style="height: 100%; width: 100%">
+                        </figure>
+                    </div>
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C语言（二）有符号和无符号的理解</strong> <small class="post-date">at: 2016-08-07</small>
+                                <br>
+                                1.你自已决定是否需要有正负：就像我们必须决定某个量使用整数还是实数，使用多大的范围数一样，我们必须自已决定某个量是否需要正负。如果这个量不会有负值，那么我们可以定它为带正负的类型。
+在计算机中，可以区分正负的类型，称为有符类型（signed），无正负的类型（只有正值），称为无符类型。 （unsigned）数值类型分为整型或实型，其中整型又分为无符类型或..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/09/11/cpp/aduc/" class="archive-article-date">
-  <time datetime="2016-09-11T09:50:45.000Z" itemprop="datePublished">9月 11</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/09/11/cpp/aduc/">C++ String字符串的增删改查</a>
-    </h1>
-  
+        <div class="box">
+            <article class="media">
+                
+                <a href="/2016/08/07/c-language/">
+                    
+                    <div class="media-left">
+                        <figure class="image is-128x128">
+                            <img src="http://img.blog.csdn.net/20160806212417802" style="height: 100%; width: 100%">
+                        </figure>
+                    </div>
+                    
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>C语言（一）的基本数据类型</strong> <small class="post-date">at: 2016-08-07</small>
+                                <br>
+                                C语言helloworld
+1.声明头文件，相当于java的导包。
+12  //只有函数的声明，编译时会去找到函数的实现#include &lt;stdio.h&gt;
 
-    </header>
-  </div>
-</article>
-  
+2.写main()方法 
+123main()&#123;	 printf("hello from c\n");    //\n换行   &#125;
+3.为了观察程序执行的结果，需要调..
+                            </p>
+                            <button class="button is-info">Read</button>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        </div>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/09/11/cpp/string/" class="archive-article-date">
-  <time datetime="2016-09-11T06:28:31.000Z" itemprop="datePublished">9月 11</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/09/11/cpp/string/">C++ String类和字符串的访问和拼接操作</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/08/29/c/c-file-operation/" class="archive-article-date">
-  <time datetime="2016-08-29T09:12:26.000Z" itemprop="datePublished">8月 29</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/29/c/c-file-operation/">C语言（七）文件的相关操作</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/08/25/c/structure-union/" class="archive-article-date">
-  <time datetime="2016-08-24T16:18:26.000Z" itemprop="datePublished">8月 25</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/25/c/structure-union/">C语言（六）结构体和联合体</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/08/23/c/memory_allocation/" class="archive-article-date">
-  <time datetime="2016-08-23T05:10:26.000Z" itemprop="datePublished">8月 23</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/23/c/memory_allocation/">C语言（五）内存分配与释放</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/08/22/c-pointers/" class="archive-article-date">
-  <time datetime="2016-08-22T06:41:06.000Z" itemprop="datePublished">8月 22</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/22/c-pointers/">C语言（四）指针概念的理解</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/08/13/c/language/string/" class="archive-article-date">
-  <time datetime="2016-08-13T11:30:00.000Z" itemprop="datePublished">8月 13</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/13/c/language/string/">C语言（三）字符串处理函数</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/08/07/c/language/signed/" class="archive-article-date">
-  <time datetime="2016-08-07T07:43:20.000Z" itemprop="datePublished">8月 7</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/07/c/language/signed/">C语言（二）有符号和无符号的理解</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2016/08/07/c-language/" class="archive-article-date">
-  <time datetime="2016-08-06T23:00:33.000Z" itemprop="datePublished">8月 7</time>
-</a>
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/07/c-language/">C语言（一）的基本数据类型</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">分类</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C-C/">C/C++</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/NDK/">NDK</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Ubuntu/">Ubuntu</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Vim/">Vim</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/开源项目/">开源项目</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/教程/">教程</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">标签</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AOSP/">AOSP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-C/">C/C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MVP/">MVP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NDK/">NDK</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Retrofit/">Retrofit</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/">Shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TextView/">TextView</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/">Ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vim/">Vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Xshell/">Xshell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/公钥/">公钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/私钥/">私钥</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/线程池/">线程池</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">标签云</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/AOSP/" style="font-size: 10px;">AOSP</a> <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C-C/" style="font-size: 18px;">C/C++</a> <a href="/tags/JNI/" style="font-size: 14px;">JNI</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Linux/" style="font-size: 16px;">Linux</a> <a href="/tags/MVP/" style="font-size: 10px;">MVP</a> <a href="/tags/NDK/" style="font-size: 14px;">NDK</a> <a href="/tags/Retrofit/" style="font-size: 10px;">Retrofit</a> <a href="/tags/Shell/" style="font-size: 14px;">Shell</a> <a href="/tags/TextView/" style="font-size: 10px;">TextView</a> <a href="/tags/Ubuntu/" style="font-size: 12px;">Ubuntu</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/Xshell/" style="font-size: 10px;">Xshell</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/公钥/" style="font-size: 10px;">公钥</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/私钥/" style="font-size: 10px;">私钥</a> <a href="/tags/线程池/" style="font-size: 10px;">线程池</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/12/09/android-kotlin-mvp/">基于Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</a>
-          </li>
-        
-          <li>
-            <a href="/2016/10/20/Android-getdate-language/">Android 中获取当前时区和语言</a>
-          </li>
-        
-          <li>
-            <a href="/2016/10/19/ndk/jni-5/">AndroidStudio 2.2 更友好的支持NDK</a>
-          </li>
-        
-          <li>
-            <a href="/2016/10/18/ndk/jni-4/">NDK 开发（四）JNI 中局部引用、全局引用和弱全局引用</a>
-          </li>
-        
-          <li>
-            <a href="/2016/10/06/ndk/jni-3/">NDK开发（三）C访问Java属性和方法</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
+</div>
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2018 Xiho<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+  </div>
+  <style>
+  #footer {
+    min-height: 10vh;
+    background: black;
+    color: #fff;
+  }
+
+  #footer a {
+    color: #e1e1e1;
+  }
+</style>
+<footer id="footer" class="has-text-centered is-flex center">
+  <div class="container has-padding">
+    <div>
+      <div>
+        <!--请您保留作者署名, 主题制作来之不易-->
+        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
+        <br>
+        Copyright © Xiho 2018
+        <br>
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      </div>
     </div>
   </div>
 </footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
+<script src="/js/search_core.js"></script>
 <script src="/js/script.js"></script>
 
-
-
-  </div>
 </body>
 </html>
