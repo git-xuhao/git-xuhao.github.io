@@ -140,7 +140,7 @@
             & > pre {
               border-radius: 0;
               display: block;
-              @include overflow(auto);
+              overflow: visible;
               margin: 0;
               &.lineno {
                 color: $text-color-l;
@@ -159,15 +159,17 @@
       margin-bottom: 0;
     }
     li {
+      margin: 0;
       p {
-        margin: map-get($base, vertical-space);
+        margin: 0;
       }
     }
   }
   dl {
     dt, dd {
+      margin: 0;
       p {
-        margin: map-get($base, vertical-space);
+        margin: 0;
       }
     }
     dt {
