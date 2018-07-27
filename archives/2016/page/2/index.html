@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html class="full-height">
+<html lang=zh>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-  
-  <title>归档: 2016 | Xiho’s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Android Developer">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Android Developer">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Xiho’s Blog">
 <meta property="og:url" content="https://xuhaoblog.com/archives/2016/page/2/index.html">
@@ -18,573 +16,342 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Xiho’s Blog">
 <meta name="twitter:description" content="Android Developer">
-  
-    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/nav.css">
-<link rel="stylesheet" href="/css/layout.css">
-  
-
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Xiho’s Blog</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
-<body>
-  <header id="navbar" class="overflow-hidden">
-  <div class="container">
-    <nav class="nav">
-         <div class="nav-left">
-            <a href="/" class="nav-item" style="font-size: 20px;">
-              <span class="logo">Xiho</span>'s Blog
-            </a>
-         </div>
-        <div class="nav-center is-hidden position-relative" id="search_container">
-            <div class="nav-item full-width full-height">
-                <i class="fa fa-search has-padding" aria-hidden="true"></i>
-                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
-                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
-            </div>
-            <div id="search_result"></div>
-        </div>
-        <div class="nav-right nav-menu">
-            <a class="nav-item" id="search">
-                <i class="fa fa-search" aria-hidden="true"></i>
-            </a>
-            
-            <a class="nav-item" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item" href="/about">
-                About
-            </a>
-            
-        </div>
-        <span class="nav-toggle" id="navMenuDropdown">
-            <span></span>
-            <span></span>
-            <span></span>
-        </span>
-        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
-            
-            <a class="nav-item flex-1" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item flex-1" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item flex-1" href="/about">
-                About
-            </a>
-            
-        </div>
-    </nav>
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index my4">
+        
+          <header id="header">
+  <a href="/">
+  
+    
+      <div id="logo" style="background-image: url(/images/logo.png);"></div>
+    
+  
+    <div id="title">
+      <h1>Xiho’s Blog</h1>
+    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#"><i class="fas fa-bars fa-2x"></i></a>
+      </li>
+       
+        <li><a href="/">首页</a></li>
+       
+        <li><a href="/about/">关于</a></li>
+       
+        <li><a href="/archives/">归档</a></li>
+       
+        <li><a href="/projects_url">项目</a></li>
+      
+    </ul>
   </div>
 </header>
 
-  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
-      <div class="main-inner-content">
-          <style>
-    .post-hover:hover {
-        box-shadow: inset 0 0 100px #000;
-        transition: box-shadow .2s;
-    }
-
-    .sub-post-container .post-hover:hover h3 {
-        text-decoration: underline gray;
-    }
-
-
-    .primary-item-main {
-        height: 330px;
-        background-size: cover;
-    }
-
-    .primary-container .title,
-    .primary-container .sub-title,
-    .primary-container .post-content-text,
-    .primary-container .date {
-        color: #fff;
-    }
-
-    .post-content-text {
-        color: #f1f1f1!important;
-    }
-
-    .primary-container .post-hover {
-        background: black;
-    }
-
-    .content-bg-mask {
-        background: rgba(0,0,0,.4);
-    }
-
-</style>
-
-<div style="background: #f5f8f9;">
-    <div id="main-container" class="container" style="padding-top: 20px;">
-        <div class="is-flex main-content justify-center">
-            <section class="column is-9">
-                
-<div class="primary-container content-box is-flex-desktop clear-padding bottom-line" style="margin-bottom: 25px;">
-    <div class="column  is-7-desktop">
-        <a href="/2016/09/29/linux/vim-config/">
-            <div class="full-height post-hover"
-                 style="
-                         background-image: url('http://img.blog.csdn.net/20160929104119636');
-                         height: 350px;
-                         background-size: cover;
-                         background-repeat: no-repeat;
-                         ">
-                    <div class=" is-flex flex-column center content has-text-centered full-height has-padding content-bg-mask">
-                        <h1 class="title text-shadow" style="margin-bottom: 15px;">
-                            Linux环境下 Vim的安装配置及使用
-                        </h1>
-                        <div>
-                        
-                            `
-                                <span class="tag is-post-tag">Linux</span>
-                            `
-                                <span class="tag is-post-tag">Vim</span>
-                            
-                        
-                        </div>
-                        <p class="post-content-text is-marginless has-padding text-shadow">
-                            前言Learn vim and it will be your last text editor. There isn’t any better text editor that I know of. It is hard to lea..
-                        </p>
-                        <p class="date text-shadow">2016-09-29</p>
-                        <button class="button is-info is-small">Read More</button>
-                    </div>
-            </div>
-        </a>
-    </div>
-    <div class="column is-5 is-hidden-touch" style="padding-left: 0;">
-        <div class="full-height is-flex flex-column justify-space-between" style="min-height: 350px;">
-            
-                
-<a class="post-hover" href="/2016/09/28/linux/cmd/" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux 常用的一些基本命令
-            </h3>
-            
-            
-            <span class="tag is-post-tag">Linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                前言Linux提供了大量的命令，利用它可以有效地完成大量的工作，如磁盘操作、文件存取、目录操作、..
-            </p>
-            <p class="date text-shadow is-marginless">2016-09-28</p>
-        </div>
-    </div>
-</a>
-            
-            
-                
-<a class="post-hover" href="/2016/09/23/ndk/jni-1/" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://img.blog.csdn.net/20160921002729113')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                NDK开发（一）JNI简介及调用流程
-            </h3>
-            
-            
-            <span class="tag is-post-tag">NDK</span>
-            
-            <span class="tag is-post-tag">JNI</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会..
-            </p>
-            <p class="date text-shadow is-marginless">2016-09-23</p>
-        </div>
-    </div>
-</a>
-            
-        </div>
-    </div>
-    <div class="column is-12 is-hidden-desktop">
         
+        <div id="archive">
+  <ul class="post-list">
+    
+    
+    
+      
+      
+      
+      
+        <h2>2016</h2>
+      
+      <li class="post-item">
         
-<a class="post-hover" href="/2016/09/28/linux/cmd/" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                Linux 常用的一些基本命令
-            </h3>
-            
-            
-            <span class="tag is-post-tag">Linux</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                前言Linux提供了大量的命令，利用它可以有效地完成大量的工作，如磁盘操作、文件存取、目录操作、..
-            </p>
-            <p class="date text-shadow is-marginless">2016-09-28</p>
-        </div>
+    <div class="meta">
+        <time datetime="2016-09-29T04:22:31.000Z" itemprop="datePublished">2016-09-29</time>
     </div>
-</a>
+
+
+        <span>
+    
+        <a class="" href="/2016/09/29/linux/vim-config/">Linux环境下 Vim的安装配置及使用</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
         
-        
-        
-<a class="post-hover" href="/2016/09/23/ndk/jni-1/" style="height: 48.5%">
-    <div class="content is-hidden-touch full-height overflow-hidden" style="background-image: url('http://img.blog.csdn.net/20160921002729113')">
-        <div class="content-bg-mask full-width full-height has-padding">
-            <h3 class="title is-marginless text-shadow">
-                NDK开发（一）JNI简介及调用流程
-            </h3>
-            
-            
-            <span class="tag is-post-tag">NDK</span>
-            
-            <span class="tag is-post-tag">JNI</span>
-            
-            
-            <p class="sub-title text-shadow"></p>
-            <p class="is-marginless text-shadow post-content-text">
-                前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会..
-            </p>
-            <p class="date text-shadow is-marginless">2016-09-23</p>
-        </div>
+    <div class="meta">
+        <time datetime="2016-09-28T04:17:31.000Z" itemprop="datePublished">2016-09-28</time>
     </div>
-</a>
+
+
+        <span>
+    
+        <a class="" href="/2016/09/28/linux/cmd/">Linux 常用的一些基本命令</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
+        
+    <div class="meta">
+        <time datetime="2016-09-23T07:28:31.000Z" itemprop="datePublished">2016-09-23</time>
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2016/09/23/ndk/jni-1/">NDK开发（一）JNI简介及调用流程</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
+        
+    <div class="meta">
+        <time datetime="2016-09-20T10:30:31.000Z" itemprop="datePublished">2016-09-20</time>
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2016/09/20/linux/xshell/">Xshell 远程连接Linux服务器</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
+        
+    <div class="meta">
+        <time datetime="2016-09-12T06:28:31.000Z" itemprop="datePublished">2016-09-12</time>
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2016/09/12/cpp/string/">C++ New和delete操作符使用</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
+        
+    <div class="meta">
+        <time datetime="2016-09-11T09:50:45.000Z" itemprop="datePublished">2016-09-11</time>
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2016/09/11/cpp/aduc/">C++ String字符串的增删改查</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
+        
+    <div class="meta">
+        <time datetime="2016-09-11T06:28:31.000Z" itemprop="datePublished">2016-09-11</time>
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2016/09/11/cpp/string/">C++ String类和字符串的访问和拼接操作</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
+        
+    <div class="meta">
+        <time datetime="2016-09-02T09:08:06.000Z" itemprop="datePublished">2016-09-02</time>
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2016/09/02/sign/">Android中签名、证书、公钥密钥的概念及使用</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
+        
+    <div class="meta">
+        <time datetime="2016-08-30T13:21:06.000Z" itemprop="datePublished">2016-08-30</time>
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2016/08/30/maven/">使用Gradle和Nexus 搭建私有Maven仓库</a>
+    
+
+
+</span>
+      </li>
+    
+      
+      
+      
+      
+      <li class="post-item">
+        
+    <div class="meta">
+        <time datetime="2016-08-29T09:12:26.000Z" itemprop="datePublished">2016-08-29</time>
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/2016/08/29/c/c-file-operation/">C语言（七）文件的相关操作</a>
+    
+
+
+</span>
+      </li>
+    
+  </ul>
+  
+    <div class="pagination">
+        
+            <a href="/archives/2016/"><i class="fas fa-angle-left"></i></a>
+        
+        <span class="page-number">Page 2 of 4</span>
+        
+            <a href="/archives/2016/page/3/"><i class="fas fa-angle-right"></i>
+            </a>
         
     </div>
+
+
 </div>
 
-                    
-                    
-                
-                    
-                        <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/09/28/linux/cmd/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>Linux 常用的一些基本命令</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">Linux</span>
-                                            
-                                        </p>
-                                        <p>
-                                            前言Linux提供了大量的命令，利用它可以有效地完成大量的工作，如磁盘操作、文件存取、目录操作、进程管理、文件权限设定等。所以，在Linux系统上工作离不开使用系统提供的命令。要想真正理解Linux系统，就必须从Linux命令学起，通过基础的命令学习可以进一步理解Linux系统，下面就来简单总结下常用的基础操作命令。
-
-基本命令（1）指令名称：pwd1p..
-                                        </p>
-                                        <p>2016-09-28</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                    
-                        <div class="content-box  is-hidden-desktop" style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/09/23/ndk/jni-1/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://img.blog.csdn.net/20160921002729113')">
-                                    </div>
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>NDK开发（一）JNI简介及调用流程</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">NDK</span>
-                                            
-                                                <span class="tag is-post-tag">JNI</span>
-                                            
-                                        </p>
-                                        <p>
-                                            前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！
-JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代..
-                                        </p>
-                                        <p>2016-09-23</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                    
-                        <div class="content-box  " style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/09/20/linux/xshell/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://img.blog.csdn.net/20160919180446941')">
-                                    </div>
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>Xshell 远程连接Linux服务器</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">Linux</span>
-                                            
-                                                <span class="tag is-post-tag">Xshell</span>
-                                            
-                                        </p>
-                                        <p>
-                                            我这里有一台电脑，装的Ubuntu系统，当我想使用时，又要去使用另外一台机器（如果没有，可以直接去阿里云整一台主机），更何况文件传输也不方便，比较麻烦，后来，看着同事用的Xshell 远程连接linux，挺方便的就折腾了一番，当然，putty，xftp是个很不错的选择。
-xshell和xftp是windows下访问ubuntu（linux）服务器的一个非..
-                                        </p>
-                                        <p>2016-09-20</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                    
-                        <div class="content-box  " style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/09/12/cpp/string/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>C++ New和delete操作符使用</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">C/C++</span>
-                                            
-                                        </p>
-                                        <p>
-                                            在C语言中，动态分配内存用 malloc() 函数，释放内存用 free() 函数。如下所示：
-12int *p = (int*) malloc( sizeof(int) * 10 );  //分配10个int型的内存空间free(p);  //释放内存
-在C++中，这两个函数仍然可以使用，但是C++又新增了两个关键字，new 和 delete：new ..
-                                        </p>
-                                        <p>2016-09-12</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                    
-                        <div class="content-box  " style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/09/11/cpp/aduc/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>C++ String字符串的增删改查</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">C/C++</span>
-                                            
-                                        </p>
-                                        <p>
-                                            c++ 提供的string类包含了若干实用的成员函数，大大方便了字符串的增加、删除、更改、查询等操作。
-插入字符串insert（）函数可以在string字符串中置顶的位置插入另一个字符串，它的原型为：
-1string&amp; insert (size_t pos, const string&amp; str);
-看这个插入的格式我们就能猜想到，pos表..
-                                        </p>
-                                        <p>2016-09-11</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                    
-                        <div class="content-box  " style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/09/11/cpp/string/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>C++ String类和字符串的访问和拼接操作</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">C/C++</span>
-                                            
-                                        </p>
-                                        <p>
-                                            C++ 增强了对字符串的支持，除了可以使用c中的字符串，还可以使用内置的数据类型string，string类处理字符串会翻遍很多，完全可以代替C语言中的char 数组和char 指针。
-使用sting类需要包含头文件&lt; sting &gt;, 下面我们就来介绍怎么使用。
-string 的几种用法：
-1234567891011121314151617..
-                                        </p>
-                                        <p>2016-09-11</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                    
-                        <div class="content-box  " style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/09/02/sign/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://img.blog.csdn.net/20160902150733659')">
-                                    </div>
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>Android中签名、证书、公钥密钥的概念及使用</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">公钥</span>
-                                            
-                                                <span class="tag is-post-tag">私钥</span>
-                                            
-                                        </p>
-                                        <p>
-                                            资料来源于Android 官方文档：https://developer.android.com/studio/publish/app-signing.html还有些资料来源于网络。加以整理！
-公钥和私钥的概念在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这..
-                                        </p>
-                                        <p>2016-09-02</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                    
-                        <div class="content-box  " style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/08/30/maven/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                    <div class="column is-4-desktop is-5-tablet post-avatar is-hidden-mobile"
-                                         style="margin: 10px; background-size: cover;background-image: url('http://img.blog.csdn.net/20160830184129972')">
-                                    </div>
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>使用Gradle和Nexus 搭建私有Maven仓库</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">maven</span>
-                                            
-                                        </p>
-                                        <p>
-                                            前言：随着业务的增长，需求量增多，我们的App 组件也越来越多，几乎大部分组件都有用到同样的第三方库和公司内部封装的库，而团队中的所有人都重复的从maven 远程的中央仓库下载构建，这样就会加大了仓库的负载和浪费了外网的带宽，网速慢的话，就要等很久很久，半个小时，几个小时，都有可能！这样明显影响项目的开发进度，有的公司还是在内网的情况下开发，连接不到中央..
-                                        </p>
-                                        <p>2016-08-30</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                    
-                        <div class="content-box  " style="margin-bottom: 27px;">
-                            <a class="post-hover" href="/2016/08/29/c/c-file-operation/">
-                            <div class="columns" style="min-height: 230px;">
-                                
-                                <div class="column is-8-desktop post-content is-flex align-center">
-                                    <div class="content">
-                                        <h3>C语言（七）文件的相关操作</h3>
-                                        
-                                        <p>
-                                            
-                                                <span class="tag is-post-tag">C/C++</span>
-                                            
-                                        </p>
-                                        <p>
-                                            C语言文件的打开与关闭
-在C语言中，文件操作都是由库函数来完成的，我们就来总结文件的相关的操作。
-文件的打开(fopen函数)fopen() 函数用来打开一个文件，它的格式为：
-1FILE *fopen(char *filename, char *type);
-filename为文件名（包括文件路径），type为打开方式，它们都是字符串。fopen() ..
-                                        </p>
-                                        <p>2016-08-29</p>
-                                        <button class="button is-small">Read More</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
-                    
-                
-                <!--翻頁-->
-                <nav class="pagination is-flex" style="justify-content: flex-end">
-                    
-                </nav>
-            </section>
-            
-        </div>
     </div>
-</div>
-
-      </div>
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 Xiho
   </div>
-  <style>
-  #footer {
-    min-height: 10vh;
-    background: black;
-    color: #fff;
-  }
-
-  #footer a {
-    color: #e1e1e1;
-  }
-</style>
-<footer id="footer" class="has-text-centered is-flex center">
-  <div class="container has-padding">
-    <div>
-      <div>
-        <!--请您保留作者署名, 主题制作来之不易-->
-        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
-        <br>
-        Copyright © Xiho 2018
-        <br>
-        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-      </div>
-    </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
   </div>
 </footer>
 
-<script src="/js/search_core.js"></script>
-<script src="/js/script.js"></script>
-
 </body>
 </html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-122974929-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

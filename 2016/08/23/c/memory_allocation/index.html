@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html class="full-height">
+<html lang=zh>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-  
-  <title>C语言（五）内存分配与释放 | Xiho’s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="首先我们来科普一下： 什么是堆？说到堆，又忍不住说到了栈！什么是 栈？1、什么是堆：堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。2、什么是栈：栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="首先我们来科普一下： 什么是堆？说到堆，又忍不住说到了栈！什么是 栈？1、什么是堆：堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。2、什么是栈：栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈">
 <meta name="keywords" content="C&#x2F;C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C语言（五）内存分配与释放">
@@ -16,145 +14,138 @@
 <meta property="og:site_name" content="Xiho’s Blog">
 <meta property="og:description" content="首先我们来科普一下： 什么是堆？说到堆，又忍不住说到了栈！什么是 栈？1、什么是堆：堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。2、什么是栈：栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/img_021.jpeg">
 <meta property="og:updated_time" content="2017-12-18T16:01:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C语言（五）内存分配与释放">
 <meta name="twitter:description" content="首先我们来科普一下： 什么是堆？说到堆，又忍不住说到了栈！什么是 栈？1、什么是堆：堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。2、什么是栈：栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈">
-  
-    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/nav.css">
-<link rel="stylesheet" href="/css/layout.css">
-  
-
+<meta name="twitter:image" content="https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/img_021.jpeg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>C语言（五）内存分配与释放</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
-<body>
-  <header id="navbar" class="overflow-hidden">
-  <div class="container">
-    <nav class="nav">
-         <div class="nav-left">
-            <a href="/" class="nav-item" style="font-size: 20px;">
-              <span class="logo">Xiho</span>'s Blog
-            </a>
-         </div>
-        <div class="nav-center is-hidden position-relative" id="search_container">
-            <div class="nav-item full-width full-height">
-                <i class="fa fa-search has-padding" aria-hidden="true"></i>
-                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
-                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
-            </div>
-            <div id="search_result"></div>
-        </div>
-        <div class="nav-right nav-menu">
-            <a class="nav-item" id="search">
-                <i class="fa fa-search" aria-hidden="true"></i>
-            </a>
-            
-            <a class="nav-item" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item" href="/about">
-                About
-            </a>
-            
-        </div>
-        <span class="nav-toggle" id="navMenuDropdown">
-            <span></span>
-            <span></span>
-            <span></span>
-        </span>
-        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
-            
-            <a class="nav-item flex-1" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item flex-1" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item flex-1" href="/about">
-                About
-            </a>
-            
-        </div>
-    </nav>
-  </div>
-</header>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2016/08/25/c/structure-union/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2016/08/22/c-pointers/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://xuhaoblog.com/2016/08/23/c/memory_allocation/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&text=C语言（五）内存分配与释放"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&is_video=false&description=C语言（五）内存分配与释放"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=C语言（五）内存分配与释放&body=Check out this article: https://xuhaoblog.com/2016/08/23/c/memory_allocation/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&name=C语言（五）内存分配与释放&description=&lt;p&gt;首先我们来科普一下：&lt;/p&gt;
+&lt;h2 id=&#34;什么是堆？说到堆，又忍不住说到了栈！什么是-栈？&#34;&gt;&lt;a href=&#34;#什么是堆？说到堆，又忍不住说到了栈！什么是-栈？&#34; class=&#34;headerlink&#34; title=&#34;什么是堆？说到堆，又忍不住说到了栈！什么是 栈？&#34;&gt;&lt;/a&gt;&lt;strong&gt;什么是堆？说到堆，又忍不住说到了栈！什么是 栈？&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;1、什么是堆：&lt;/strong&gt;堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。&lt;br&gt;&lt;strong&gt;2、什么是栈：&lt;/strong&gt;栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS/ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
-      <div class="main-inner-content">
-          <!--博文页面-->
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是堆？说到堆，又忍不住说到了栈！什么是-栈？"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x5806;&#xFF1F;&#x8BF4;&#x5230;&#x5806;&#xFF0C;&#x53C8;&#x5FCD;&#x4E0D;&#x4F4F;&#x8BF4;&#x5230;&#x4E86;&#x6808;&#xFF01;&#x4EC0;&#x4E48;&#x662F;-&#x6808;&#xFF1F;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x5806;&#xFF1F;&#x8BF4;&#x5230;&#x5806;&#xFF0C;&#x53C8;&#x5FCD;&#x4E0D;&#x4F4F;&#x8BF4;&#x5230;&#x4E86;&#x6808;&#xFF01;&#x4EC0;&#x4E48;&#x662F; &#x6808;&#xFF1F;"></a><strong>&#x4EC0;&#x4E48;&#x662F;&#x5806;&#xFF1F;&#x8BF4;&#x5230;&#x5806;&#xFF0C;&#x53C8;&#x5FCD;&#x4E0D;&#x4F4F;&#x8BF4;&#x5230;&#x4E86;&#x6808;&#xFF01;&#x4EC0;&#x4E48;&#x662F; &#x6808;&#xFF1F;</strong></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C语言程序编译的内存分配，堆与栈的区别："><span class="toc-number">2.</span> <span class="toc-text"><a href="#C&#x8BED;&#x8A00;&#x7A0B;&#x5E8F;&#x7F16;&#x8BD1;&#x7684;&#x5185;&#x5B58;&#x5206;&#x914D;&#xFF0C;&#x5806;&#x4E0E;&#x6808;&#x7684;&#x533A;&#x522B;&#xFF1A;" class="headerlink" title="C&#x8BED;&#x8A00;&#x7A0B;&#x5E8F;&#x7F16;&#x8BD1;&#x7684;&#x5185;&#x5B58;&#x5206;&#x914D;&#xFF0C;&#x5806;&#x4E0E;&#x6808;&#x7684;&#x533A;&#x522B;&#xFF1A;"></a><strong>C&#x8BED;&#x8A00;&#x7A0B;&#x5E8F;&#x7F16;&#x8BD1;&#x7684;&#x5185;&#x5B58;&#x5206;&#x914D;&#xFF0C;&#x5806;&#x4E0E;&#x6808;&#x7684;&#x533A;&#x522B;&#xFF1A;</strong></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新分配内存的两种情况："><span class="toc-number">3.</span> <span class="toc-text"><a href="#&#x65B0;&#x5206;&#x914D;&#x5185;&#x5B58;&#x7684;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF1A;" class="headerlink" title="&#x65B0;&#x5206;&#x914D;&#x5185;&#x5B58;&#x7684;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF1A;"></a><strong>&#x65B0;&#x5206;&#x914D;&#x5185;&#x5B58;&#x7684;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF1A;</strong></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存分配的几个注意细节"><span class="toc-number">4.</span> <span class="toc-text"><a href="#&#x5185;&#x5B58;&#x5206;&#x914D;&#x7684;&#x51E0;&#x4E2A;&#x6CE8;&#x610F;&#x7EC6;&#x8282;" class="headerlink" title="&#x5185;&#x5B58;&#x5206;&#x914D;&#x7684;&#x51E0;&#x4E2A;&#x6CE8;&#x610F;&#x7EC6;&#x8282;"></a><strong>&#x5185;&#x5B58;&#x5206;&#x914D;&#x7684;&#x51E0;&#x4E2A;&#x6CE8;&#x610F;&#x7EC6;&#x8282;</strong></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多系列相关文章传送门："><span class="toc-number">5.</span> <span class="toc-text"><a href="#&#x66F4;&#x591A;&#x7CFB;&#x5217;&#x76F8;&#x5173;&#x6587;&#x7AE0;&#x4F20;&#x9001;&#x95E8;&#xFF1A;" class="headerlink" title="&#x66F4;&#x591A;&#x7CFB;&#x5217;&#x76F8;&#x5173;&#x6587;&#x7AE0;&#x4F20;&#x9001;&#x95E8;&#xFF1A;"></a>&#x66F4;&#x591A;&#x7CFB;&#x5217;&#x76F8;&#x5173;&#x6587;&#x7AE0;&#x4F20;&#x9001;&#x95E8;&#xFF1A;</span></a></li></ol>
+    </div>
+  </span>
+</div>
 
-<style>
-    .header-box {
-        height: 370px;
-        filter: blur(10px);
-        background-size: cover;
-        background-color: lightsteelblue;
-    }
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        C语言（五）内存分配与释放
+    </h1>
 
-    .post-box {
-        padding: 15px;
-        padding-top: 60px;
-        min-height: 80vh;
-        margin-top: -200px;
-        border-radius: 4px;
-        background-color: rgba(255,255,255,.8);
-    }
 
-    .post-avatar {
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-    }
 
-    .flow-chart {
-        text-align: center;
-    }
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xiho’s Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2016-08-23T05:10:26.000Z" itemprop="datePublished">2016-08-23</time>
+    </div>
 
-    img[alt="post-cover"] {
-        display: none;
-    }
-</style>
-<header>
-    <div id="header_box" class="header-box"></div>
-</header>
-<section>
-    <div class="container post-box">
-        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
-            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
-                <strong>C语言（五）内存分配与释放</strong>
-            </h1>
-            
-            <div class="is-flex align-center">
-                <img class="post-avatar" src="https://cdn2.iconfinder.com/data/icons/rcons-user/32/male-shadow-circle-512.png">
-                <span style="padding:0 10px;"> <span class="sub-title">By</span> Xiho</span>
-                <span class="post-date sub-title">at: 2016-08-23</span>
-            </div>
-            
-                <div>
-                    
-                         <a class="tag is-post-tag" href="/tags/C-C/">C/C++</a>
-                    
-                </div>
-            
-        </div>
-        <div class="content" style="overflow: auto">
-            <p>首先我们来科普一下：</p>
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/C-C/">C/C++</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>首先我们来科普一下：</p>
 <h2 id="什么是堆？说到堆，又忍不住说到了栈！什么是-栈？"><a href="#什么是堆？说到堆，又忍不住说到了栈！什么是-栈？" class="headerlink" title="什么是堆？说到堆，又忍不住说到了栈！什么是 栈？"></a><strong>什么是堆？说到堆，又忍不住说到了栈！什么是 栈？</strong></h2><p><strong>1、什么是堆：</strong>堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。<br><strong>2、什么是栈：</strong>栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS/ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。<br><a id="more"></a> </p>
 <h2 id="C语言程序编译的内存分配，堆与栈的区别："><a href="#C语言程序编译的内存分配，堆与栈的区别：" class="headerlink" title="C语言程序编译的内存分配，堆与栈的区别："></a><strong>C语言程序编译的内存分配，堆与栈的区别：</strong></h2><ul>
 <li>栈是由编译器自动分配释放，存放函数的参数值、局部变量的值等。操作方式类似于数据结构中的栈。<br>堆一般由程序员分配释放，若不释放，程序结束时可能由OS回收。注意这里说是可能，并非一定。再强调一次，记得要释放！</li>
@@ -197,71 +188,108 @@
 <p>学习理解并整理下来的笔记。<br>希望大家能够指点或提出宝贵意见，谢谢！一起学习。</p>
 </blockquote>
 
-        </div>
-        <div class="post-reply">
-            
-                <!-- 来必力City版安装代码 -->
-                <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYxOC84MTgy">
-                    <script type="text/javascript">
-                        (function(d, s) {
-                            var j, e = d.getElementsByTagName(s)[0];
-
-                            if (typeof LivereTower === 'function') { return; }
-
-                            j = d.createElement(s);
-                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-                            j.async = true;
-
-                            e.parentNode.insertBefore(j, e);
-                        })(document, 'script');
-                    </script>
-                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
-                </div>
-                <!-- City版安装代码已完成 -->
-            
-            
-        </div>
-    </div>
-</section>
-<script>
-    // 获取第一张图, 用以当封面背景图
-    var img = document.querySelectorAll('img')[1]
-
-    if (img) {
-        var header_box = document.querySelector('#header_box')
-        header_box.style.backgroundImage = 'url('+ img.src +')'
-    }
-</script>
-      </div>
   </div>
-  <style>
-  #footer {
-    min-height: 10vh;
-    background: black;
-    color: #fff;
-  }
+</article>
 
-  #footer a {
-    color: #e1e1e1;
-  }
-</style>
-<footer id="footer" class="has-text-centered is-flex center">
-  <div class="container has-padding">
-    <div>
-      <div>
-        <!--请您保留作者署名, 主题制作来之不易-->
-        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
-        <br>
-        Copyright © Xiho 2018
-        <br>
-        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-      </div>
+
+
     </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是堆？说到堆，又忍不住说到了栈！什么是-栈？"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x4EC0;&#x4E48;&#x662F;&#x5806;&#xFF1F;&#x8BF4;&#x5230;&#x5806;&#xFF0C;&#x53C8;&#x5FCD;&#x4E0D;&#x4F4F;&#x8BF4;&#x5230;&#x4E86;&#x6808;&#xFF01;&#x4EC0;&#x4E48;&#x662F;-&#x6808;&#xFF1F;" class="headerlink" title="&#x4EC0;&#x4E48;&#x662F;&#x5806;&#xFF1F;&#x8BF4;&#x5230;&#x5806;&#xFF0C;&#x53C8;&#x5FCD;&#x4E0D;&#x4F4F;&#x8BF4;&#x5230;&#x4E86;&#x6808;&#xFF01;&#x4EC0;&#x4E48;&#x662F; &#x6808;&#xFF1F;"></a><strong>&#x4EC0;&#x4E48;&#x662F;&#x5806;&#xFF1F;&#x8BF4;&#x5230;&#x5806;&#xFF0C;&#x53C8;&#x5FCD;&#x4E0D;&#x4F4F;&#x8BF4;&#x5230;&#x4E86;&#x6808;&#xFF01;&#x4EC0;&#x4E48;&#x662F; &#x6808;&#xFF1F;</strong></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C语言程序编译的内存分配，堆与栈的区别："><span class="toc-number">2.</span> <span class="toc-text"><a href="#C&#x8BED;&#x8A00;&#x7A0B;&#x5E8F;&#x7F16;&#x8BD1;&#x7684;&#x5185;&#x5B58;&#x5206;&#x914D;&#xFF0C;&#x5806;&#x4E0E;&#x6808;&#x7684;&#x533A;&#x522B;&#xFF1A;" class="headerlink" title="C&#x8BED;&#x8A00;&#x7A0B;&#x5E8F;&#x7F16;&#x8BD1;&#x7684;&#x5185;&#x5B58;&#x5206;&#x914D;&#xFF0C;&#x5806;&#x4E0E;&#x6808;&#x7684;&#x533A;&#x522B;&#xFF1A;"></a><strong>C&#x8BED;&#x8A00;&#x7A0B;&#x5E8F;&#x7F16;&#x8BD1;&#x7684;&#x5185;&#x5B58;&#x5206;&#x914D;&#xFF0C;&#x5806;&#x4E0E;&#x6808;&#x7684;&#x533A;&#x522B;&#xFF1A;</strong></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#新分配内存的两种情况："><span class="toc-number">3.</span> <span class="toc-text"><a href="#&#x65B0;&#x5206;&#x914D;&#x5185;&#x5B58;&#x7684;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF1A;" class="headerlink" title="&#x65B0;&#x5206;&#x914D;&#x5185;&#x5B58;&#x7684;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF1A;"></a><strong>&#x65B0;&#x5206;&#x914D;&#x5185;&#x5B58;&#x7684;&#x4E24;&#x79CD;&#x60C5;&#x51B5;&#xFF1A;</strong></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存分配的几个注意细节"><span class="toc-number">4.</span> <span class="toc-text"><a href="#&#x5185;&#x5B58;&#x5206;&#x914D;&#x7684;&#x51E0;&#x4E2A;&#x6CE8;&#x610F;&#x7EC6;&#x8282;" class="headerlink" title="&#x5185;&#x5B58;&#x5206;&#x914D;&#x7684;&#x51E0;&#x4E2A;&#x6CE8;&#x610F;&#x7EC6;&#x8282;"></a><strong>&#x5185;&#x5B58;&#x5206;&#x914D;&#x7684;&#x51E0;&#x4E2A;&#x6CE8;&#x610F;&#x7EC6;&#x8282;</strong></span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多系列相关文章传送门："><span class="toc-number">5.</span> <span class="toc-text"><a href="#&#x66F4;&#x591A;&#x7CFB;&#x5217;&#x76F8;&#x5173;&#x6587;&#x7AE0;&#x4F20;&#x9001;&#x95E8;&#xFF1A;" class="headerlink" title="&#x66F4;&#x591A;&#x7CFB;&#x5217;&#x76F8;&#x5173;&#x6587;&#x7AE0;&#x4F20;&#x9001;&#x95E8;&#xFF1A;"></a>&#x66F4;&#x591A;&#x7CFB;&#x5217;&#x76F8;&#x5173;&#x6587;&#x7AE0;&#x4F20;&#x9001;&#x95E8;&#xFF1A;</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://xuhaoblog.com/2016/08/23/c/memory_allocation/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&text=C语言（五）内存分配与释放"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&is_video=false&description=C语言（五）内存分配与释放"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=C语言（五）内存分配与释放&body=Check out this article: https://xuhaoblog.com/2016/08/23/c/memory_allocation/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&title=C语言（五）内存分配与释放"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://xuhaoblog.com/2016/08/23/c/memory_allocation/&name=C语言（五）内存分配与释放&description=&lt;p&gt;首先我们来科普一下：&lt;/p&gt;
+&lt;h2 id=&#34;什么是堆？说到堆，又忍不住说到了栈！什么是-栈？&#34;&gt;&lt;a href=&#34;#什么是堆？说到堆，又忍不住说到了栈！什么是-栈？&#34; class=&#34;headerlink&#34; title=&#34;什么是堆？说到堆，又忍不住说到了栈！什么是 栈？&#34;&gt;&lt;/a&gt;&lt;strong&gt;什么是堆？说到堆，又忍不住说到了栈！什么是 栈？&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;1、什么是堆：&lt;/strong&gt;堆是大家共有的空间，分全局堆和局部堆。全局堆就是所有没有分配的空间，局部堆就是用户分配的空间。堆在操作系统对进程 初始化的时候分配，运行过程中也可以向系统要额外的堆，但是记得用完了要还给操作系统，要不然就是内存泄漏。&lt;br&gt;&lt;strong&gt;2、什么是栈：&lt;/strong&gt;栈是线程独有的，保存其运行状态和局部自动变量的。栈在线程开始的时候初始化，每个线程的栈互相独立。每个函数都有自己的栈，栈被用来在函数之间传递参数。操作系统在切换线程的时候会自动的切换栈，就是切换SS/ESP寄存器。栈空间不需要在高级语言里面显式的分配和释放。&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 Xiho
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
   </div>
 </footer>
 
-<script src="/js/search_core.js"></script>
-<script src="/js/script.js"></script>
-
 </body>
 </html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-122974929-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

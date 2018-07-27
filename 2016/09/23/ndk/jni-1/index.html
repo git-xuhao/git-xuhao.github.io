@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html class="full-height">
+<html lang=zh>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-  
-  <title>NDK开发（一）JNI简介及调用流程 | Xiho’s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！ JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！ JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言">
 <meta name="keywords" content="NDK,JNI">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NDK开发（一）JNI简介及调用流程">
@@ -16,155 +14,138 @@
 <meta property="og:site_name" content="Xiho’s Blog">
 <meta property="og:description" content="前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！ JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://img.blog.csdn.net/20160921002729113">
-<meta property="og:image" content="http://img.blog.csdn.net/20160921004851299">
-<meta property="og:image" content="http://img.blog.csdn.net/20160921011013003">
-<meta property="og:image" content="http://img.blog.csdn.net/20160921011522662">
-<meta property="og:image" content="http://img.blog.csdn.net/20160921011811821">
-<meta property="og:image" content="http://img.blog.csdn.net/20160921012257530">
-<meta property="og:image" content="http://img.blog.csdn.net/20160921013119011">
+<meta property="og:image" content="https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/pexels-photo-160107.jpeg">
 <meta property="og:updated_time" content="2017-12-17T15:45:48.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NDK开发（一）JNI简介及调用流程">
 <meta name="twitter:description" content="前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！ JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20160921002729113">
-  
-    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/nav.css">
-<link rel="stylesheet" href="/css/layout.css">
-  
-
+<meta name="twitter:image" content="https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/pexels-photo-160107.jpeg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>NDK开发（一）JNI简介及调用流程</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
-<body>
-  <header id="navbar" class="overflow-hidden">
-  <div class="container">
-    <nav class="nav">
-         <div class="nav-left">
-            <a href="/" class="nav-item" style="font-size: 20px;">
-              <span class="logo">Xiho</span>'s Blog
-            </a>
-         </div>
-        <div class="nav-center is-hidden position-relative" id="search_container">
-            <div class="nav-item full-width full-height">
-                <i class="fa fa-search has-padding" aria-hidden="true"></i>
-                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
-                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
-            </div>
-            <div id="search_result"></div>
-        </div>
-        <div class="nav-right nav-menu">
-            <a class="nav-item" id="search">
-                <i class="fa fa-search" aria-hidden="true"></i>
-            </a>
-            
-            <a class="nav-item" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item" href="/about">
-                About
-            </a>
-            
-        </div>
-        <span class="nav-toggle" id="navMenuDropdown">
-            <span></span>
-            <span></span>
-            <span></span>
-        </span>
-        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
-            
-            <a class="nav-item flex-1" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item flex-1" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item flex-1" href="/about">
-                About
-            </a>
-            
-        </div>
-    </nav>
-  </div>
-</header>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2016/09/28/linux/cmd/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2016/09/20/linux/xshell/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://xuhaoblog.com/2016/09/23/ndk/jni-1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&text=NDK开发（一）JNI简介及调用流程"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&is_video=false&description=NDK开发（一）JNI简介及调用流程"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=NDK开发（一）JNI简介及调用流程&body=Check out this article: https://xuhaoblog.com/2016/09/23/ndk/jni-1/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&name=NDK开发（一）JNI简介及调用流程&description=&lt;h3 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h3&gt;&lt;p&gt;前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！&lt;/p&gt;
+&lt;h3 id=&#34;JNI简介&#34;&gt;&lt;a href=&#34;#JNI简介&#34; class=&#34;headerlink&#34; title=&#34;JNI简介&#34;&gt;&lt;/a&gt;&lt;strong&gt;JNI简介&lt;/strong&gt;&lt;/h3&gt;&lt;p&gt;　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。&lt;br&gt;　　&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
-      <div class="main-inner-content">
-          <!--博文页面-->
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a><strong>&#x524D;&#x8A00;</strong></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JNI简介"><span class="toc-number">2.</span> <span class="toc-text"><a href="#JNI&#x7B80;&#x4ECB;" class="headerlink" title="JNI&#x7B80;&#x4ECB;"></a><strong>JNI&#x7B80;&#x4ECB;</strong></span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步：编写带有native声明方法的java类"><span class="toc-number">2.1.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E00;&#x6B65;&#xFF1A;&#x7F16;&#x5199;&#x5E26;&#x6709;native&#x58F0;&#x660E;&#x65B9;&#x6CD5;&#x7684;java&#x7C7B;" class="headerlink" title="&#x7B2C;&#x4E00;&#x6B65;&#xFF1A;&#x7F16;&#x5199;&#x5E26;&#x6709;native&#x58F0;&#x660E;&#x65B9;&#x6CD5;&#x7684;java&#x7C7B;"></a><font color="blue"><strong>&#x7B2C;&#x4E00;&#x6B65;&#xFF1A;&#x7F16;&#x5199;&#x5E26;&#x6709;native&#x58F0;&#x660E;&#x65B9;&#x6CD5;&#x7684;java&#x7C7B;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步：用”javac”命令来编译所编写的java类；"><span class="toc-number">2.2.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E8C;&#x6B65;&#xFF1A;&#x7528;&#x201D;javac&#x201D;&#x547D;&#x4EE4;&#x6765;&#x7F16;&#x8BD1;&#x6240;&#x7F16;&#x5199;&#x7684;java&#x7C7B;&#xFF1B;" class="headerlink" title="&#x7B2C;&#x4E8C;&#x6B65;&#xFF1A;&#x7528;&#x201D;javac&#x201D;&#x547D;&#x4EE4;&#x6765;&#x7F16;&#x8BD1;&#x6240;&#x7F16;&#x5199;&#x7684;java&#x7C7B;&#xFF1B;"></a><font color="blue"><strong>&#x7B2C;&#x4E8C;&#x6B65;&#xFF1A;&#x7528;&#x201D;javac&#x201D;&#x547D;&#x4EE4;&#x6765;&#x7F16;&#x8BD1;&#x6240;&#x7F16;&#x5199;&#x7684;java&#x7C7B;&#xFF1B;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第三步：使用”javah”java类的名生成-h的头文件"><span class="toc-number">2.3.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E09;&#x6B65;&#xFF1A;&#x4F7F;&#x7528;&#x201D;javah&#x201D;java&#x7C7B;&#x7684;&#x540D;&#x751F;&#x6210;-h&#x7684;&#x5934;&#x6587;&#x4EF6;" class="headerlink" title="&#x7B2C;&#x4E09;&#x6B65;&#xFF1A;&#x4F7F;&#x7528;&#x201D;javah&#x201D;java&#x7C7B;&#x7684;&#x540D;&#x751F;&#x6210;.h&#x7684;&#x5934;&#x6587;&#x4EF6;"></a><font color="blue"><strong>&#x7B2C;&#x4E09;&#x6B65;&#xFF1A;&#x4F7F;&#x7528;&#x201D;javah&#x201D;java&#x7C7B;&#x7684;&#x540D;&#x751F;&#x6210;.h&#x7684;&#x5934;&#x6587;&#x4EF6;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第四步：复制jni-h和jni-md-h文件到CPP工程中"><span class="toc-number">2.4.</span> <span class="toc-text"><a href="#&#x7B2C;&#x56DB;&#x6B65;&#xFF1A;&#x590D;&#x5236;jni-h&#x548C;jni-md-h&#x6587;&#x4EF6;&#x5230;CPP&#x5DE5;&#x7A0B;&#x4E2D;" class="headerlink" title="&#x7B2C;&#x56DB;&#x6B65;&#xFF1A;&#x590D;&#x5236;jni.h&#x548C;jni_md.h&#x6587;&#x4EF6;&#x5230;CPP&#x5DE5;&#x7A0B;&#x4E2D;"></a><font color="blue"><strong>&#x7B2C;&#x56DB;&#x6B65;&#xFF1A;&#x590D;&#x5236;jni.h&#x548C;jni_md.h&#x6587;&#x4EF6;&#x5230;CPP&#x5DE5;&#x7A0B;&#x4E2D;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第五步：实现-h头文件中声明的函数"><span class="toc-number">2.5.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E94;&#x6B65;&#xFF1A;&#x5B9E;&#x73B0;-h&#x5934;&#x6587;&#x4EF6;&#x4E2D;&#x58F0;&#x660E;&#x7684;&#x51FD;&#x6570;" class="headerlink" title="&#x7B2C;&#x4E94;&#x6B65;&#xFF1A;&#x5B9E;&#x73B0;.h&#x5934;&#x6587;&#x4EF6;&#x4E2D;&#x58F0;&#x660E;&#x7684;&#x51FD;&#x6570;"></a><font color="blue"><strong>&#x7B2C;&#x4E94;&#x6B65;&#xFF1A;&#x5B9E;&#x73B0;.h&#x5934;&#x6587;&#x4EF6;&#x4E2D;&#x58F0;&#x660E;&#x7684;&#x51FD;&#x6570;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第六步：生成dll动态链接库"><span class="toc-number">2.6.</span> <span class="toc-text"><a href="#&#x7B2C;&#x516D;&#x6B65;&#xFF1A;&#x751F;&#x6210;dll&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x5E93;" class="headerlink" title="&#x7B2C;&#x516D;&#x6B65;&#xFF1A;&#x751F;&#x6210;dll&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x5E93;"></a><font color="blue"><strong>&#x7B2C;&#x516D;&#x6B65;&#xFF1A;&#x751F;&#x6210;dll&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x5E93;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第七步：配置dll文件所在目录到环境变量"><span class="toc-number">2.7.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E03;&#x6B65;&#xFF1A;&#x914D;&#x7F6E;dll&#x6587;&#x4EF6;&#x6240;&#x5728;&#x76EE;&#x5F55;&#x5230;&#x73AF;&#x5883;&#x53D8;&#x91CF;" class="headerlink" title="&#x7B2C;&#x4E03;&#x6B65;&#xFF1A;&#x914D;&#x7F6E;dll&#x6587;&#x4EF6;&#x6240;&#x5728;&#x76EE;&#x5F55;&#x5230;&#x73AF;&#x5883;&#x53D8;&#x91CF;"></a><font color="blue"><strong>&#x7B2C;&#x4E03;&#x6B65;&#xFF1A;&#x914D;&#x7F6E;dll&#x6587;&#x4EF6;&#x6240;&#x5728;&#x76EE;&#x5F55;&#x5230;&#x73AF;&#x5883;&#x53D8;&#x91CF;</strong></font></span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
 
-<style>
-    .header-box {
-        height: 370px;
-        filter: blur(10px);
-        background-size: cover;
-        background-color: lightsteelblue;
-    }
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        NDK开发（一）JNI简介及调用流程
+    </h1>
 
-    .post-box {
-        padding: 15px;
-        padding-top: 60px;
-        min-height: 80vh;
-        margin-top: -200px;
-        border-radius: 4px;
-        background-color: rgba(255,255,255,.8);
-    }
 
-    .post-avatar {
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-    }
 
-    .flow-chart {
-        text-align: center;
-    }
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xiho’s Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2016-09-23T07:28:31.000Z" itemprop="datePublished">2016-09-23</time>
+    </div>
 
-    img[alt="post-cover"] {
-        display: none;
-    }
-</style>
-<header>
-    <div id="header_box" class="header-box"></div>
-</header>
-<section>
-    <div class="container post-box">
-        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
-            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
-                <strong>NDK开发（一）JNI简介及调用流程</strong>
-            </h1>
-            
-            <div class="is-flex align-center">
-                <img class="post-avatar" src="https://cdn2.iconfinder.com/data/icons/rcons-user/32/male-shadow-circle-512.png">
-                <span style="padding:0 10px;"> <span class="sub-title">By</span> Xiho</span>
-                <span class="post-date sub-title">at: 2016-09-23</span>
-            </div>
-            
-                <div>
-                    
-                         <a class="tag is-post-tag" href="/tags/NDK/">NDK</a>
-                    
-                         <a class="tag is-post-tag" href="/tags/JNI/">JNI</a>
-                    
-                </div>
-            
-        </div>
-        <div class="content" style="overflow: auto">
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h3><p>前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！</p>
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/JNI/">JNI</a>, <a class="tag-link" href="/tags/NDK/">NDK</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong>前言</strong></h3><p>前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！</p>
 <h3 id="JNI简介"><a href="#JNI简介" class="headerlink" title="JNI简介"></a><strong>JNI简介</strong></h3><p>　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。<br>　　<br><a id="more"></a> </p>
 <p>　　开发JNI程序会受到系统环境的限制，因为用C/C++语言写出来的代码或模块，编译过程当中要依赖当前操作系统环境所提供的一些库函数，并和本地库链接在一起。而且编译后生成的二进制代码只能在本地操作系统环境下运行，因为不同的操作系统环境，有自己的本地库和CPU指令集，而且各个平台对标准C/C++的规范和标准库函数实现方式也有所区别。这就造成使用了JNI接口的JAVA程序，不再像以前那样自由的跨平台。如果要实现跨平台，就必须将本地代码在不同的操作系统平台下编译出相应的动态库。</p>
 <p><strong>JNI的开发流程主要分为以下几个步骤：</strong></p>
@@ -225,71 +206,108 @@
 <p>学习理解并整理下来的笔记；<br>希望大家能够指点或提出宝贵意见，一起学习，谢谢！ </p>
 </blockquote>
 
-        </div>
-        <div class="post-reply">
-            
-                <!-- 来必力City版安装代码 -->
-                <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYxOC84MTgy">
-                    <script type="text/javascript">
-                        (function(d, s) {
-                            var j, e = d.getElementsByTagName(s)[0];
-
-                            if (typeof LivereTower === 'function') { return; }
-
-                            j = d.createElement(s);
-                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-                            j.async = true;
-
-                            e.parentNode.insertBefore(j, e);
-                        })(document, 'script');
-                    </script>
-                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
-                </div>
-                <!-- City版安装代码已完成 -->
-            
-            
-        </div>
-    </div>
-</section>
-<script>
-    // 获取第一张图, 用以当封面背景图
-    var img = document.querySelectorAll('img')[1]
-
-    if (img) {
-        var header_box = document.querySelector('#header_box')
-        header_box.style.backgroundImage = 'url('+ img.src +')'
-    }
-</script>
-      </div>
   </div>
-  <style>
-  #footer {
-    min-height: 10vh;
-    background: black;
-    color: #fff;
-  }
+</article>
 
-  #footer a {
-    color: #e1e1e1;
-  }
-</style>
-<footer id="footer" class="has-text-centered is-flex center">
-  <div class="container has-padding">
-    <div>
-      <div>
-        <!--请您保留作者署名, 主题制作来之不易-->
-        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
-        <br>
-        Copyright © Xiho 2018
-        <br>
-        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-      </div>
+
+
     </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a><strong>&#x524D;&#x8A00;</strong></span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JNI简介"><span class="toc-number">2.</span> <span class="toc-text"><a href="#JNI&#x7B80;&#x4ECB;" class="headerlink" title="JNI&#x7B80;&#x4ECB;"></a><strong>JNI&#x7B80;&#x4ECB;</strong></span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步：编写带有native声明方法的java类"><span class="toc-number">2.1.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E00;&#x6B65;&#xFF1A;&#x7F16;&#x5199;&#x5E26;&#x6709;native&#x58F0;&#x660E;&#x65B9;&#x6CD5;&#x7684;java&#x7C7B;" class="headerlink" title="&#x7B2C;&#x4E00;&#x6B65;&#xFF1A;&#x7F16;&#x5199;&#x5E26;&#x6709;native&#x58F0;&#x660E;&#x65B9;&#x6CD5;&#x7684;java&#x7C7B;"></a><font color="blue"><strong>&#x7B2C;&#x4E00;&#x6B65;&#xFF1A;&#x7F16;&#x5199;&#x5E26;&#x6709;native&#x58F0;&#x660E;&#x65B9;&#x6CD5;&#x7684;java&#x7C7B;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步：用”javac”命令来编译所编写的java类；"><span class="toc-number">2.2.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E8C;&#x6B65;&#xFF1A;&#x7528;&#x201D;javac&#x201D;&#x547D;&#x4EE4;&#x6765;&#x7F16;&#x8BD1;&#x6240;&#x7F16;&#x5199;&#x7684;java&#x7C7B;&#xFF1B;" class="headerlink" title="&#x7B2C;&#x4E8C;&#x6B65;&#xFF1A;&#x7528;&#x201D;javac&#x201D;&#x547D;&#x4EE4;&#x6765;&#x7F16;&#x8BD1;&#x6240;&#x7F16;&#x5199;&#x7684;java&#x7C7B;&#xFF1B;"></a><font color="blue"><strong>&#x7B2C;&#x4E8C;&#x6B65;&#xFF1A;&#x7528;&#x201D;javac&#x201D;&#x547D;&#x4EE4;&#x6765;&#x7F16;&#x8BD1;&#x6240;&#x7F16;&#x5199;&#x7684;java&#x7C7B;&#xFF1B;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第三步：使用”javah”java类的名生成-h的头文件"><span class="toc-number">2.3.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E09;&#x6B65;&#xFF1A;&#x4F7F;&#x7528;&#x201D;javah&#x201D;java&#x7C7B;&#x7684;&#x540D;&#x751F;&#x6210;-h&#x7684;&#x5934;&#x6587;&#x4EF6;" class="headerlink" title="&#x7B2C;&#x4E09;&#x6B65;&#xFF1A;&#x4F7F;&#x7528;&#x201D;javah&#x201D;java&#x7C7B;&#x7684;&#x540D;&#x751F;&#x6210;.h&#x7684;&#x5934;&#x6587;&#x4EF6;"></a><font color="blue"><strong>&#x7B2C;&#x4E09;&#x6B65;&#xFF1A;&#x4F7F;&#x7528;&#x201D;javah&#x201D;java&#x7C7B;&#x7684;&#x540D;&#x751F;&#x6210;.h&#x7684;&#x5934;&#x6587;&#x4EF6;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第四步：复制jni-h和jni-md-h文件到CPP工程中"><span class="toc-number">2.4.</span> <span class="toc-text"><a href="#&#x7B2C;&#x56DB;&#x6B65;&#xFF1A;&#x590D;&#x5236;jni-h&#x548C;jni-md-h&#x6587;&#x4EF6;&#x5230;CPP&#x5DE5;&#x7A0B;&#x4E2D;" class="headerlink" title="&#x7B2C;&#x56DB;&#x6B65;&#xFF1A;&#x590D;&#x5236;jni.h&#x548C;jni_md.h&#x6587;&#x4EF6;&#x5230;CPP&#x5DE5;&#x7A0B;&#x4E2D;"></a><font color="blue"><strong>&#x7B2C;&#x56DB;&#x6B65;&#xFF1A;&#x590D;&#x5236;jni.h&#x548C;jni_md.h&#x6587;&#x4EF6;&#x5230;CPP&#x5DE5;&#x7A0B;&#x4E2D;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第五步：实现-h头文件中声明的函数"><span class="toc-number">2.5.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E94;&#x6B65;&#xFF1A;&#x5B9E;&#x73B0;-h&#x5934;&#x6587;&#x4EF6;&#x4E2D;&#x58F0;&#x660E;&#x7684;&#x51FD;&#x6570;" class="headerlink" title="&#x7B2C;&#x4E94;&#x6B65;&#xFF1A;&#x5B9E;&#x73B0;.h&#x5934;&#x6587;&#x4EF6;&#x4E2D;&#x58F0;&#x660E;&#x7684;&#x51FD;&#x6570;"></a><font color="blue"><strong>&#x7B2C;&#x4E94;&#x6B65;&#xFF1A;&#x5B9E;&#x73B0;.h&#x5934;&#x6587;&#x4EF6;&#x4E2D;&#x58F0;&#x660E;&#x7684;&#x51FD;&#x6570;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第六步：生成dll动态链接库"><span class="toc-number">2.6.</span> <span class="toc-text"><a href="#&#x7B2C;&#x516D;&#x6B65;&#xFF1A;&#x751F;&#x6210;dll&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x5E93;" class="headerlink" title="&#x7B2C;&#x516D;&#x6B65;&#xFF1A;&#x751F;&#x6210;dll&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x5E93;"></a><font color="blue"><strong>&#x7B2C;&#x516D;&#x6B65;&#xFF1A;&#x751F;&#x6210;dll&#x52A8;&#x6001;&#x94FE;&#x63A5;&#x5E93;</strong></font></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第七步：配置dll文件所在目录到环境变量"><span class="toc-number">2.7.</span> <span class="toc-text"><a href="#&#x7B2C;&#x4E03;&#x6B65;&#xFF1A;&#x914D;&#x7F6E;dll&#x6587;&#x4EF6;&#x6240;&#x5728;&#x76EE;&#x5F55;&#x5230;&#x73AF;&#x5883;&#x53D8;&#x91CF;" class="headerlink" title="&#x7B2C;&#x4E03;&#x6B65;&#xFF1A;&#x914D;&#x7F6E;dll&#x6587;&#x4EF6;&#x6240;&#x5728;&#x76EE;&#x5F55;&#x5230;&#x73AF;&#x5883;&#x53D8;&#x91CF;"></a><font color="blue"><strong>&#x7B2C;&#x4E03;&#x6B65;&#xFF1A;&#x914D;&#x7F6E;dll&#x6587;&#x4EF6;&#x6240;&#x5728;&#x76EE;&#x5F55;&#x5230;&#x73AF;&#x5883;&#x53D8;&#x91CF;</strong></font></span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://xuhaoblog.com/2016/09/23/ndk/jni-1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&text=NDK开发（一）JNI简介及调用流程"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&is_video=false&description=NDK开发（一）JNI简介及调用流程"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=NDK开发（一）JNI简介及调用流程&body=Check out this article: https://xuhaoblog.com/2016/09/23/ndk/jni-1/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&title=NDK开发（一）JNI简介及调用流程"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://xuhaoblog.com/2016/09/23/ndk/jni-1/&name=NDK开发（一）JNI简介及调用流程&description=&lt;h3 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h3&gt;&lt;p&gt;前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！&lt;/p&gt;
+&lt;h3 id=&#34;JNI简介&#34;&gt;&lt;a href=&#34;#JNI简介&#34; class=&#34;headerlink&#34; title=&#34;JNI简介&#34;&gt;&lt;/a&gt;&lt;strong&gt;JNI简介&lt;/strong&gt;&lt;/h3&gt;&lt;p&gt;　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。&lt;br&gt;　　&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 Xiho
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
   </div>
 </footer>
 
-<script src="/js/search_core.js"></script>
-<script src="/js/script.js"></script>
-
 </body>
 </html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-122974929-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

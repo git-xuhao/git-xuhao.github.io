@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html class="full-height">
+<html lang=zh>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-  
-  <title>Android中签名、证书、公钥密钥的概念及使用 | Xiho’s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="资料来源于Android 官方文档：https://developer.android.com/studio/publish/app-signing.html还有些资料来源于网络。加以整理！ 公钥和私钥的概念在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="资料来源于Android 官方文档：https://developer.android.com/studio/publish/app-signing.html还有些资料来源于网络。加以整理！ 公钥和私钥的概念在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要">
 <meta name="keywords" content="公钥,私钥">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android中签名、证书、公钥密钥的概念及使用">
@@ -16,154 +14,138 @@
 <meta property="og:site_name" content="Xiho’s Blog">
 <meta property="og:description" content="资料来源于Android 官方文档：https://developer.android.com/studio/publish/app-signing.html还有些资料来源于网络。加以整理！ 公钥和私钥的概念在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://img.blog.csdn.net/20160902150733659">
-<meta property="og:image" content="http://img.blog.csdn.net/20160902151403849">
-<meta property="og:image" content="http://img.blog.csdn.net/20160902152553403">
-<meta property="og:image" content="http://img.blog.csdn.net/20160902152859138">
-<meta property="og:image" content="http://img.blog.csdn.net/20160902164510994">
-<meta property="og:image" content="http://img.blog.csdn.net/20160902154255284">
+<meta property="og:image" content="https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/img_android_sign.jpeg">
 <meta property="og:updated_time" content="2017-12-17T15:15:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android中签名、证书、公钥密钥的概念及使用">
 <meta name="twitter:description" content="资料来源于Android 官方文档：https://developer.android.com/studio/publish/app-signing.html还有些资料来源于网络。加以整理！ 公钥和私钥的概念在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20160902150733659">
-  
-    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/nav.css">
-<link rel="stylesheet" href="/css/layout.css">
-  
-
+<meta name="twitter:image" content="https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/img_android_sign.jpeg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Android中签名、证书、公钥密钥的概念及使用</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
-<body>
-  <header id="navbar" class="overflow-hidden">
-  <div class="container">
-    <nav class="nav">
-         <div class="nav-left">
-            <a href="/" class="nav-item" style="font-size: 20px;">
-              <span class="logo">Xiho</span>'s Blog
-            </a>
-         </div>
-        <div class="nav-center is-hidden position-relative" id="search_container">
-            <div class="nav-item full-width full-height">
-                <i class="fa fa-search has-padding" aria-hidden="true"></i>
-                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
-                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
-            </div>
-            <div id="search_result"></div>
-        </div>
-        <div class="nav-right nav-menu">
-            <a class="nav-item" id="search">
-                <i class="fa fa-search" aria-hidden="true"></i>
-            </a>
-            
-            <a class="nav-item" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item" href="/about">
-                About
-            </a>
-            
-        </div>
-        <span class="nav-toggle" id="navMenuDropdown">
-            <span></span>
-            <span></span>
-            <span></span>
-        </span>
-        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
-            
-            <a class="nav-item flex-1" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item flex-1" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item flex-1" href="/about">
-                About
-            </a>
-            
-        </div>
-    </nav>
-  </div>
-</header>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2016/09/11/cpp/string/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2016/08/30/maven/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://xuhaoblog.com/2016/09/02/sign/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://xuhaoblog.com/2016/09/02/sign/&text=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xuhaoblog.com/2016/09/02/sign/&is_video=false&description=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android中签名、证书、公钥密钥的概念及使用&body=Check out this article: https://xuhaoblog.com/2016/09/02/sign/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://xuhaoblog.com/2016/09/02/sign/&name=Android中签名、证书、公钥密钥的概念及使用&description=&lt;p&gt;资料来源于Android 官方文档：&lt;br&gt;&lt;a href=&#34;https://developer.android.com/studio/publish/app-signing.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://developer.android.com/studio/publish/app-signing.html&lt;/a&gt;&lt;br&gt;还有些资料来源于网络。加以整理！&lt;/p&gt;
+&lt;h2 id=&#34;公钥和私钥的概念&#34;&gt;&lt;a href=&#34;#公钥和私钥的概念&#34; class=&#34;headerlink&#34; title=&#34;公钥和私钥的概念&#34;&gt;&lt;/a&gt;&lt;strong&gt;公钥和私钥的概念&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要保密，而私钥是由个人自己持有，并且必须妥善保管和注意保密。&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
-      <div class="main-inner-content">
-          <!--博文页面-->
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#公钥和私钥的概念"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x516C;&#x94A5;&#x548C;&#x79C1;&#x94A5;&#x7684;&#x6982;&#x5FF5;" class="headerlink" title="&#x516C;&#x94A5;&#x548C;&#x79C1;&#x94A5;&#x7684;&#x6982;&#x5FF5;"></a><strong>&#x516C;&#x94A5;&#x548C;&#x79C1;&#x94A5;&#x7684;&#x6982;&#x5FF5;</strong></span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#证书的概念"><span class="toc-number">1.0.1.</span> <span class="toc-text"><a href="#&#x8BC1;&#x4E66;&#x7684;&#x6982;&#x5FF5;" class="headerlink" title="&#x8BC1;&#x4E66;&#x7684;&#x6982;&#x5FF5;"></a><strong>&#x8BC1;&#x4E66;&#x7684;&#x6982;&#x5FF5;</strong></span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android中的签名："><span class="toc-number">2.</span> <span class="toc-text"><a href="#Android&#x4E2D;&#x7684;&#x7B7E;&#x540D;&#xFF1A;" class="headerlink" title="Android&#x4E2D;&#x7684;&#x7B7E;&#x540D;&#xFF1A;"></a><strong>Android&#x4E2D;&#x7684;&#x7B7E;&#x540D;&#xFF1A;</strong></span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#是什么签名？"><span class="toc-number">2.0.1.</span> <span class="toc-text"><a href="#&#x662F;&#x4EC0;&#x4E48;&#x7B7E;&#x540D;&#xFF1F;" class="headerlink" title="&#x662F;&#x4EC0;&#x4E48;&#x7B7E;&#x540D;&#xFF1F;"></a><strong>&#x662F;&#x4EC0;&#x4E48;&#x7B7E;&#x540D;&#xFF1F;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#为什么要有签名？"><span class="toc-number">2.0.2.</span> <span class="toc-text"><a href="#&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x6709;&#x7B7E;&#x540D;&#xFF1F;" class="headerlink" title="&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x6709;&#x7B7E;&#x540D;&#xFF1F;"></a><strong>&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x6709;&#x7B7E;&#x540D;&#xFF1F;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#签名策略"><span class="toc-number">2.0.3.</span> <span class="toc-text"><a href="#&#x7B7E;&#x540D;&#x7B56;&#x7565;" class="headerlink" title="&#x7B7E;&#x540D;&#x7B56;&#x7565;"></a><strong>&#x7B7E;&#x540D;&#x7B56;&#x7565;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Debug模式下的签名"><span class="toc-number">2.0.4.</span> <span class="toc-text"><a href="#Debug&#x6A21;&#x5F0F;&#x4E0B;&#x7684;&#x7B7E;&#x540D;" class="headerlink" title="Debug&#x6A21;&#x5F0F;&#x4E0B;&#x7684;&#x7B7E;&#x540D;"></a><strong>Debug&#x6A21;&#x5F0F;&#x4E0B;&#x7684;&#x7B7E;&#x540D;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调试证书到期"><span class="toc-number">2.0.5.</span> <span class="toc-text"><a href="#&#x8C03;&#x8BD5;&#x8BC1;&#x4E66;&#x5230;&#x671F;" class="headerlink" title="&#x8C03;&#x8BD5;&#x8BC1;&#x4E66;&#x5230;&#x671F;"></a><strong>&#x8C03;&#x8BD5;&#x8BC1;&#x4E66;&#x5230;&#x671F;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#发布版的签名"><span class="toc-number">2.0.6.</span> <span class="toc-text"><a href="#&#x53D1;&#x5E03;&#x7248;&#x7684;&#x7B7E;&#x540D;" class="headerlink" title="&#x53D1;&#x5E03;&#x7248;&#x7684;&#x7B7E;&#x540D;"></a><strong>&#x53D1;&#x5E03;&#x7248;&#x7684;&#x7B7E;&#x540D;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置build-gradle文件自动签名你的apk"><span class="toc-number">2.0.7.</span> <span class="toc-text"><a href="#&#x914D;&#x7F6E;build-gradle&#x6587;&#x4EF6;&#x81EA;&#x52A8;&#x7B7E;&#x540D;&#x4F60;&#x7684;apk" class="headerlink" title="&#x914D;&#x7F6E;build.gradle&#x6587;&#x4EF6;&#x81EA;&#x52A8;&#x7B7E;&#x540D;&#x4F60;&#x7684;apk"></a><strong>&#x914D;&#x7F6E;build.gradle&#x6587;&#x4EF6;&#x81EA;&#x52A8;&#x7B7E;&#x540D;&#x4F60;&#x7684;apk</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#签名注意事项"><span class="toc-number">2.0.8.</span> <span class="toc-text"><a href="#&#x7B7E;&#x540D;&#x6CE8;&#x610F;&#x4E8B;&#x9879;" class="headerlink" title="&#x7B7E;&#x540D;&#x6CE8;&#x610F;&#x4E8B;&#x9879;"></a><strong>&#x7B7E;&#x540D;&#x6CE8;&#x610F;&#x4E8B;&#x9879;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#保护您的私钥"><span class="toc-number">2.0.9.</span> <span class="toc-text"><a href="#&#x4FDD;&#x62A4;&#x60A8;&#x7684;&#x79C1;&#x94A5;" class="headerlink" title="&#x4FDD;&#x62A4;&#x60A8;&#x7684;&#x79C1;&#x94A5;"></a><strong>&#x4FDD;&#x62A4;&#x60A8;&#x7684;&#x79C1;&#x94A5;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除签名信息"><span class="toc-number">2.0.10.</span> <span class="toc-text"><a href="#&#x5220;&#x9664;&#x7B7E;&#x540D;&#x4FE1;&#x606F;" class="headerlink" title="&#x5220;&#x9664;&#x7B7E;&#x540D;&#x4FE1;&#x606F;"></a><strong>&#x5220;&#x9664;&#x7B7E;&#x540D;&#x4FE1;&#x606F;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用工具签名"><span class="toc-number">2.0.11.</span> <span class="toc-text"><a href="#&#x4F7F;&#x7528;&#x5DE5;&#x5177;&#x7B7E;&#x540D;" class="headerlink" title="&#x4F7F;&#x7528;&#x5DE5;&#x5177;&#x7B7E;&#x540D;"></a><strong>&#x4F7F;&#x7528;&#x5DE5;&#x5177;&#x7B7E;&#x540D;</strong></span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
 
-<style>
-    .header-box {
-        height: 370px;
-        filter: blur(10px);
-        background-size: cover;
-        background-color: lightsteelblue;
-    }
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Android中签名、证书、公钥密钥的概念及使用
+    </h1>
 
-    .post-box {
-        padding: 15px;
-        padding-top: 60px;
-        min-height: 80vh;
-        margin-top: -200px;
-        border-radius: 4px;
-        background-color: rgba(255,255,255,.8);
-    }
 
-    .post-avatar {
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-    }
 
-    .flow-chart {
-        text-align: center;
-    }
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xiho’s Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2016-09-02T09:08:06.000Z" itemprop="datePublished">2016-09-02</time>
+    </div>
 
-    img[alt="post-cover"] {
-        display: none;
-    }
-</style>
-<header>
-    <div id="header_box" class="header-box"></div>
-</header>
-<section>
-    <div class="container post-box">
-        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
-            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
-                <strong>Android中签名、证书、公钥密钥的概念及使用</strong>
-            </h1>
-            
-            <div class="is-flex align-center">
-                <img class="post-avatar" src="https://cdn2.iconfinder.com/data/icons/rcons-user/32/male-shadow-circle-512.png">
-                <span style="padding:0 10px;"> <span class="sub-title">By</span> Xiho</span>
-                <span class="post-date sub-title">at: 2016-09-02</span>
-            </div>
-            
-                <div>
-                    
-                         <a class="tag is-post-tag" href="/tags/公钥/">公钥</a>
-                    
-                         <a class="tag is-post-tag" href="/tags/私钥/">私钥</a>
-                    
-                </div>
-            
-        </div>
-        <div class="content" style="overflow: auto">
-            <p>资料来源于Android 官方文档：<br><a href="https://developer.android.com/studio/publish/app-signing.html" target="_blank" rel="noopener">https://developer.android.com/studio/publish/app-signing.html</a><br>还有些资料来源于网络。加以整理！</p>
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/公钥/">公钥</a>, <a class="tag-link" href="/tags/私钥/">私钥</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>资料来源于Android 官方文档：<br><a href="https://developer.android.com/studio/publish/app-signing.html" target="_blank" rel="noopener">https://developer.android.com/studio/publish/app-signing.html</a><br>还有些资料来源于网络。加以整理！</p>
 <h2 id="公钥和私钥的概念"><a href="#公钥和私钥的概念" class="headerlink" title="公钥和私钥的概念"></a><strong>公钥和私钥的概念</strong></h2><p>在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要保密，而私钥是由个人自己持有，并且必须妥善保管和注意保密。<br> <a id="more"></a></p>
 <h4 id="证书的概念"><a href="#证书的概念" class="headerlink" title="证书的概念"></a><strong>证书的概念</strong></h4><p>数字证书则是由证书认证机构（CA）对证书申请者真实身份验证之后，用CA的根证书对申请人的一些基本信息以及申请人的公钥进行签名（相当于加盖发证书机 构的公章）后形成的一个数字文件。CA完成签发证书后，会将证书发布在CA的证书库（目录服务器）中，任何人都可以查询和下载，因此数字证书和公钥一样是公开的。实际上，数字证书就是经过CA认证过的公钥。</p>
 <p><strong>原则：</strong></p>
@@ -300,71 +282,108 @@
 <p>学习理解并整理下来的笔记。<br>希望大家能够指点或提出宝贵意见，谢谢！一起学习。 </p>
 </blockquote>
 
-        </div>
-        <div class="post-reply">
-            
-                <!-- 来必力City版安装代码 -->
-                <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYxOC84MTgy">
-                    <script type="text/javascript">
-                        (function(d, s) {
-                            var j, e = d.getElementsByTagName(s)[0];
-
-                            if (typeof LivereTower === 'function') { return; }
-
-                            j = d.createElement(s);
-                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-                            j.async = true;
-
-                            e.parentNode.insertBefore(j, e);
-                        })(document, 'script');
-                    </script>
-                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
-                </div>
-                <!-- City版安装代码已完成 -->
-            
-            
-        </div>
-    </div>
-</section>
-<script>
-    // 获取第一张图, 用以当封面背景图
-    var img = document.querySelectorAll('img')[1]
-
-    if (img) {
-        var header_box = document.querySelector('#header_box')
-        header_box.style.backgroundImage = 'url('+ img.src +')'
-    }
-</script>
-      </div>
   </div>
-  <style>
-  #footer {
-    min-height: 10vh;
-    background: black;
-    color: #fff;
-  }
+</article>
 
-  #footer a {
-    color: #e1e1e1;
-  }
-</style>
-<footer id="footer" class="has-text-centered is-flex center">
-  <div class="container has-padding">
-    <div>
-      <div>
-        <!--请您保留作者署名, 主题制作来之不易-->
-        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
-        <br>
-        Copyright © Xiho 2018
-        <br>
-        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-      </div>
+
+
     </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#公钥和私钥的概念"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x516C;&#x94A5;&#x548C;&#x79C1;&#x94A5;&#x7684;&#x6982;&#x5FF5;" class="headerlink" title="&#x516C;&#x94A5;&#x548C;&#x79C1;&#x94A5;&#x7684;&#x6982;&#x5FF5;"></a><strong>&#x516C;&#x94A5;&#x548C;&#x79C1;&#x94A5;&#x7684;&#x6982;&#x5FF5;</strong></span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#证书的概念"><span class="toc-number">1.0.1.</span> <span class="toc-text"><a href="#&#x8BC1;&#x4E66;&#x7684;&#x6982;&#x5FF5;" class="headerlink" title="&#x8BC1;&#x4E66;&#x7684;&#x6982;&#x5FF5;"></a><strong>&#x8BC1;&#x4E66;&#x7684;&#x6982;&#x5FF5;</strong></span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android中的签名："><span class="toc-number">2.</span> <span class="toc-text"><a href="#Android&#x4E2D;&#x7684;&#x7B7E;&#x540D;&#xFF1A;" class="headerlink" title="Android&#x4E2D;&#x7684;&#x7B7E;&#x540D;&#xFF1A;"></a><strong>Android&#x4E2D;&#x7684;&#x7B7E;&#x540D;&#xFF1A;</strong></span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#是什么签名？"><span class="toc-number">2.0.1.</span> <span class="toc-text"><a href="#&#x662F;&#x4EC0;&#x4E48;&#x7B7E;&#x540D;&#xFF1F;" class="headerlink" title="&#x662F;&#x4EC0;&#x4E48;&#x7B7E;&#x540D;&#xFF1F;"></a><strong>&#x662F;&#x4EC0;&#x4E48;&#x7B7E;&#x540D;&#xFF1F;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#为什么要有签名？"><span class="toc-number">2.0.2.</span> <span class="toc-text"><a href="#&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x6709;&#x7B7E;&#x540D;&#xFF1F;" class="headerlink" title="&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x6709;&#x7B7E;&#x540D;&#xFF1F;"></a><strong>&#x4E3A;&#x4EC0;&#x4E48;&#x8981;&#x6709;&#x7B7E;&#x540D;&#xFF1F;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#签名策略"><span class="toc-number">2.0.3.</span> <span class="toc-text"><a href="#&#x7B7E;&#x540D;&#x7B56;&#x7565;" class="headerlink" title="&#x7B7E;&#x540D;&#x7B56;&#x7565;"></a><strong>&#x7B7E;&#x540D;&#x7B56;&#x7565;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Debug模式下的签名"><span class="toc-number">2.0.4.</span> <span class="toc-text"><a href="#Debug&#x6A21;&#x5F0F;&#x4E0B;&#x7684;&#x7B7E;&#x540D;" class="headerlink" title="Debug&#x6A21;&#x5F0F;&#x4E0B;&#x7684;&#x7B7E;&#x540D;"></a><strong>Debug&#x6A21;&#x5F0F;&#x4E0B;&#x7684;&#x7B7E;&#x540D;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#调试证书到期"><span class="toc-number">2.0.5.</span> <span class="toc-text"><a href="#&#x8C03;&#x8BD5;&#x8BC1;&#x4E66;&#x5230;&#x671F;" class="headerlink" title="&#x8C03;&#x8BD5;&#x8BC1;&#x4E66;&#x5230;&#x671F;"></a><strong>&#x8C03;&#x8BD5;&#x8BC1;&#x4E66;&#x5230;&#x671F;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#发布版的签名"><span class="toc-number">2.0.6.</span> <span class="toc-text"><a href="#&#x53D1;&#x5E03;&#x7248;&#x7684;&#x7B7E;&#x540D;" class="headerlink" title="&#x53D1;&#x5E03;&#x7248;&#x7684;&#x7B7E;&#x540D;"></a><strong>&#x53D1;&#x5E03;&#x7248;&#x7684;&#x7B7E;&#x540D;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置build-gradle文件自动签名你的apk"><span class="toc-number">2.0.7.</span> <span class="toc-text"><a href="#&#x914D;&#x7F6E;build-gradle&#x6587;&#x4EF6;&#x81EA;&#x52A8;&#x7B7E;&#x540D;&#x4F60;&#x7684;apk" class="headerlink" title="&#x914D;&#x7F6E;build.gradle&#x6587;&#x4EF6;&#x81EA;&#x52A8;&#x7B7E;&#x540D;&#x4F60;&#x7684;apk"></a><strong>&#x914D;&#x7F6E;build.gradle&#x6587;&#x4EF6;&#x81EA;&#x52A8;&#x7B7E;&#x540D;&#x4F60;&#x7684;apk</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#签名注意事项"><span class="toc-number">2.0.8.</span> <span class="toc-text"><a href="#&#x7B7E;&#x540D;&#x6CE8;&#x610F;&#x4E8B;&#x9879;" class="headerlink" title="&#x7B7E;&#x540D;&#x6CE8;&#x610F;&#x4E8B;&#x9879;"></a><strong>&#x7B7E;&#x540D;&#x6CE8;&#x610F;&#x4E8B;&#x9879;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#保护您的私钥"><span class="toc-number">2.0.9.</span> <span class="toc-text"><a href="#&#x4FDD;&#x62A4;&#x60A8;&#x7684;&#x79C1;&#x94A5;" class="headerlink" title="&#x4FDD;&#x62A4;&#x60A8;&#x7684;&#x79C1;&#x94A5;"></a><strong>&#x4FDD;&#x62A4;&#x60A8;&#x7684;&#x79C1;&#x94A5;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除签名信息"><span class="toc-number">2.0.10.</span> <span class="toc-text"><a href="#&#x5220;&#x9664;&#x7B7E;&#x540D;&#x4FE1;&#x606F;" class="headerlink" title="&#x5220;&#x9664;&#x7B7E;&#x540D;&#x4FE1;&#x606F;"></a><strong>&#x5220;&#x9664;&#x7B7E;&#x540D;&#x4FE1;&#x606F;</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用工具签名"><span class="toc-number">2.0.11.</span> <span class="toc-text"><a href="#&#x4F7F;&#x7528;&#x5DE5;&#x5177;&#x7B7E;&#x540D;" class="headerlink" title="&#x4F7F;&#x7528;&#x5DE5;&#x5177;&#x7B7E;&#x540D;"></a><strong>&#x4F7F;&#x7528;&#x5DE5;&#x5177;&#x7B7E;&#x540D;</strong></span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://xuhaoblog.com/2016/09/02/sign/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://xuhaoblog.com/2016/09/02/sign/&text=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xuhaoblog.com/2016/09/02/sign/&is_video=false&description=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Android中签名、证书、公钥密钥的概念及使用&body=Check out this article: https://xuhaoblog.com/2016/09/02/sign/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://xuhaoblog.com/2016/09/02/sign/&title=Android中签名、证书、公钥密钥的概念及使用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://xuhaoblog.com/2016/09/02/sign/&name=Android中签名、证书、公钥密钥的概念及使用&description=&lt;p&gt;资料来源于Android 官方文档：&lt;br&gt;&lt;a href=&#34;https://developer.android.com/studio/publish/app-signing.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;https://developer.android.com/studio/publish/app-signing.html&lt;/a&gt;&lt;br&gt;还有些资料来源于网络。加以整理！&lt;/p&gt;
+&lt;h2 id=&#34;公钥和私钥的概念&#34;&gt;&lt;a href=&#34;#公钥和私钥的概念&#34; class=&#34;headerlink&#34; title=&#34;公钥和私钥的概念&#34;&gt;&lt;/a&gt;&lt;strong&gt;公钥和私钥的概念&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;在现代密码体制中加密和解密是采用不同的密钥（公开密钥），也就是公开密钥算法（也叫非对称算法、双钥算法）”，每个通信方均需要两个密钥，即公钥和私钥，这两把密钥可以互为加解密。公钥是公开的，不需要保密，而私钥是由个人自己持有，并且必须妥善保管和注意保密。&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 Xiho
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
   </div>
 </footer>
 
-<script src="/js/search_core.js"></script>
-<script src="/js/script.js"></script>
-
 </body>
 </html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-122974929-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

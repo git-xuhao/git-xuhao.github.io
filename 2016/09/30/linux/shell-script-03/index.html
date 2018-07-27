@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html class="full-height">
+<html lang=zh>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="//cdn.bootcss.com/bulma/0.4.1/css/bulma.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-  
-  <title>Shell 流程控制Loop和引号（三） | Xiho’s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言Linux shell 脚本基础学习第三篇；上一篇Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="前言Linux shell 脚本基础学习第三篇；上一篇Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。">
 <meta name="keywords" content="Shell,Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shell 流程控制Loop和引号（三）">
@@ -16,149 +14,137 @@
 <meta property="og:site_name" content="Xiho’s Blog">
 <meta property="og:description" content="前言Linux shell 脚本基础学习第三篇；上一篇Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://img.blog.csdn.net/20160930140550992">
+<meta property="og:image" content="https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/thumb-default.png">
 <meta property="og:updated_time" content="2017-12-17T16:07:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Shell 流程控制Loop和引号（三）">
 <meta name="twitter:description" content="前言Linux shell 脚本基础学习第三篇；上一篇Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。">
-<meta name="twitter:image" content="http://img.blog.csdn.net/20160930140550992">
-  
-    <link rel="alternate" href="/atom.xml" title="Xiho’s Blog" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="/css/nav.css">
-<link rel="stylesheet" href="/css/layout.css">
-  
-
+<meta name="twitter:image" content="https://raw.githubusercontent.com/git-xuhao/Source/master/blog/img/thumb-default.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Shell 流程控制Loop和引号（三）</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
 </head>
 
-<body>
-  <header id="navbar" class="overflow-hidden">
-  <div class="container">
-    <nav class="nav">
-         <div class="nav-left">
-            <a href="/" class="nav-item" style="font-size: 20px;">
-              <span class="logo">Xiho</span>'s Blog
-            </a>
-         </div>
-        <div class="nav-center is-hidden position-relative" id="search_container">
-            <div class="nav-item full-width full-height">
-                <i class="fa fa-search has-padding" aria-hidden="true"></i>
-                <input type="text" id="search_input" class="search-input full-height full-width" placeholder="Search post" autofocus>
-                <i id="close_search" class="fa fa-times" aria-hidden="true"></i>
-            </div>
-            <div id="search_result"></div>
-        </div>
-        <div class="nav-right nav-menu">
-            <a class="nav-item" id="search">
-                <i class="fa fa-search" aria-hidden="true"></i>
-            </a>
-            
-            <a class="nav-item" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item" href="/about">
-                About
-            </a>
-            
-        </div>
-        <span class="nav-toggle" id="navMenuDropdown">
-            <span></span>
-            <span></span>
-            <span></span>
-        </span>
-        <div class="navbar-menu position-absolute full-width content-box is-hidden-desktop is-flex flex-column center" style="top: 100%;">
-            
-            <a class="nav-item flex-1" href="/">
-                Home
-            </a>
-            
-            <a class="nav-item flex-1" href="/works">
-                My Works
-            </a>
-            
-            <a class="nav-item flex-1" href="/about">
-                About
-            </a>
-            
-        </div>
-    </nav>
-  </div>
-</header>
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2016/10/01/linux/shell-script-04/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2016/09/29/linux/shell-script-02/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&text=Shell 流程控制Loop和引号（三）"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&is_video=false&description=Shell 流程控制Loop和引号（三）"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Shell 流程控制Loop和引号（三）&body=Check out this article: https://xuhaoblog.com/2016/09/30/linux/shell-script-03/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&name=Shell 流程控制Loop和引号（三）&description=&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Linux shell 脚本基础学习第三篇；&lt;br&gt;&lt;a href=&#34;http://xuhaoblog.com/linux/shell-script-02.html&#34;&gt;上一篇&lt;/a&gt;Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。&lt;br&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
 
-  <div id="main-wrap" class="position-relative" style="margin-top: 55px;">
-      <div class="main-inner-content">
-          <!--博文页面-->
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text"><a href="#&#x6B63;&#x6587;" class="headerlink" title="&#x6B63;&#x6587;"></a>&#x6B63;&#x6587;</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4、loop"><span class="toc-number">2.0.1.</span> <span class="toc-text"><a href="#4&#x3001;loop" class="headerlink" title="4&#x3001;loop"></a><strong>4&#x3001;loop</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、引号"><span class="toc-number">2.0.2.</span> <span class="toc-text"><a href="#5&#x3001;&#x5F15;&#x53F7;" class="headerlink" title="5&#x3001;&#x5F15;&#x53F7;"></a><strong>5&#x3001;&#x5F15;&#x53F7;</strong></span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#5-1、双引号"><span class="toc-number">2.0.2.1.</span> <span class="toc-text"><a href="#5-1&#x3001;&#x53CC;&#x5F15;&#x53F7;" class="headerlink" title="5.1&#x3001;&#x53CC;&#x5F15;&#x53F7;"></a><strong>5.1&#x3001;&#x53CC;&#x5F15;&#x53F7;</strong></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-2、单引号"><span class="toc-number">2.0.2.2.</span> <span class="toc-text"><a href="#5-2&#x3001;&#x5355;&#x5F15;&#x53F7;" class="headerlink" title="5.2&#x3001;&#x5355;&#x5F15;&#x53F7;"></a><strong>5.2&#x3001;&#x5355;&#x5F15;&#x53F7;</strong></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-3、单引号和双引号的区别"><span class="toc-number">2.0.2.3.</span> <span class="toc-text"><a href="#5-3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;" class="headerlink" title="5.3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;"></a><strong>5.3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;</strong></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-4、反引号"><span class="toc-number">2.0.2.4.</span> <span class="toc-text"><a href="#5-4&#x3001;&#x53CD;&#x5F15;&#x53F7;" class="headerlink" title="5.4&#x3001;&#x53CD;&#x5F15;&#x53F7;"></a><strong>5.4&#x3001;&#x53CD;&#x5F15;&#x53F7;</strong></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-5、反斜杠"><span class="toc-number">2.0.2.5.</span> <span class="toc-text"><a href="#5-5&#x3001;&#x53CD;&#x659C;&#x6760;" class="headerlink" title="5.5&#x3001;&#x53CD;&#x659C;&#x6760;"></a><strong>5.5&#x3001;&#x53CD;&#x659C;&#x6760;</strong></span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多相关系列传送门："><span class="toc-number">3.</span> <span class="toc-text"><a href="#&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;" class="headerlink" title="&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;"></a>&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;</span></a></li></ol>
+    </div>
+  </span>
+</div>
 
-<style>
-    .header-box {
-        height: 370px;
-        filter: blur(10px);
-        background-size: cover;
-        background-color: lightsteelblue;
-    }
+    
+    <div class="content index my4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Shell 流程控制Loop和引号（三）
+    </h1>
 
-    .post-box {
-        padding: 15px;
-        padding-top: 60px;
-        min-height: 80vh;
-        margin-top: -200px;
-        border-radius: 4px;
-        background-color: rgba(255,255,255,.8);
-    }
 
-    .post-avatar {
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-    }
 
-    .flow-chart {
-        text-align: center;
-    }
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Xiho’s Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2016-09-30T03:06:31.000Z" itemprop="datePublished">2016-09-30</time>
+    </div>
 
-    img[alt="post-cover"] {
-        display: none;
-    }
-</style>
-<header>
-    <div id="header_box" class="header-box"></div>
-</header>
-<section>
-    <div class="container post-box">
-        <div class="content post-title is-flex center flex-column" style="margin-bottom: 70px; overflow: auto;">
-            <h1 class="has-text-centered" style="padding-bottom: 10px; border-bottom: 3px solid #fff">
-                <strong>Shell 流程控制Loop和引号（三）</strong>
-            </h1>
-            
-            <div class="is-flex align-center">
-                <img class="post-avatar" src="https://cdn2.iconfinder.com/data/icons/rcons-user/32/male-shadow-circle-512.png">
-                <span style="padding:0 10px;"> <span class="sub-title">By</span> Xiho</span>
-                <span class="post-date sub-title">at: 2016-09-30</span>
-            </div>
-            
-                <div>
-                    
-                         <a class="tag is-post-tag" href="/tags/Shell/">Shell</a>
-                    
-                         <a class="tag is-post-tag" href="/tags/Linux/">Linux</a>
-                    
-                </div>
-            
-        </div>
-        <div class="content" style="overflow: auto">
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Linux shell 脚本基础学习第三篇；<br><a href="http://xuhaoblog.com/linux/shell-script-02.html">上一篇</a>Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。<br><a id="more"></a></p>
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Linux/">Linux</a>, <a class="tag-link" href="/tags/Shell/">Shell</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Linux shell 脚本基础学习第三篇；<br><a href="http://xuhaoblog.com/linux/shell-script-02.html">上一篇</a>Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。<br><a id="more"></a></p>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p><a href="http://xuhaoblog.com/linux/shell-script-02.html">继上篇之后</a></p>
 <h4 id="4、loop"><a href="#4、loop" class="headerlink" title="4、loop"></a><strong>4、loop</strong></h4><p>loop 表达式：</p>
 <figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="params">...</span>; <span class="keyword">do</span></span><br><span class="line"><span class="params">...</span></span><br><span class="line">done</span><br></pre></td></tr></table></figure>
@@ -226,71 +212,107 @@
 <p>本文由博主辛苦整理下来的笔记；<br>希望大家能够指点或提出宝贵意见，共同学习，谢谢！ </p>
 </blockquote>
 
-        </div>
-        <div class="post-reply">
-            
-                <!-- 来必力City版安装代码 -->
-                <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTYxOC84MTgy">
-                    <script type="text/javascript">
-                        (function(d, s) {
-                            var j, e = d.getElementsByTagName(s)[0];
-
-                            if (typeof LivereTower === 'function') { return; }
-
-                            j = d.createElement(s);
-                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-                            j.async = true;
-
-                            e.parentNode.insertBefore(j, e);
-                        })(document, 'script');
-                    </script>
-                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
-                </div>
-                <!-- City版安装代码已完成 -->
-            
-            
-        </div>
-    </div>
-</section>
-<script>
-    // 获取第一张图, 用以当封面背景图
-    var img = document.querySelectorAll('img')[1]
-
-    if (img) {
-        var header_box = document.querySelector('#header_box')
-        header_box.style.backgroundImage = 'url('+ img.src +')'
-    }
-</script>
-      </div>
   </div>
-  <style>
-  #footer {
-    min-height: 10vh;
-    background: black;
-    color: #fff;
-  }
+</article>
 
-  #footer a {
-    color: #e1e1e1;
-  }
-</style>
-<footer id="footer" class="has-text-centered is-flex center">
-  <div class="container has-padding">
-    <div>
-      <div>
-        <!--请您保留作者署名, 主题制作来之不易-->
-        Theme by <a href="http://haojen.github.io/">Haojen Ma</a>
-        <br>
-        Copyright © Xiho 2018
-        <br>
-        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-      </div>
+
+
     </div>
+    
+      <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text"><a href="#&#x524D;&#x8A00;" class="headerlink" title="&#x524D;&#x8A00;"></a>&#x524D;&#x8A00;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#正文"><span class="toc-number">2.</span> <span class="toc-text"><a href="#&#x6B63;&#x6587;" class="headerlink" title="&#x6B63;&#x6587;"></a>&#x6B63;&#x6587;</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4、loop"><span class="toc-number">2.0.1.</span> <span class="toc-text"><a href="#4&#x3001;loop" class="headerlink" title="4&#x3001;loop"></a><strong>4&#x3001;loop</strong></span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5、引号"><span class="toc-number">2.0.2.</span> <span class="toc-text"><a href="#5&#x3001;&#x5F15;&#x53F7;" class="headerlink" title="5&#x3001;&#x5F15;&#x53F7;"></a><strong>5&#x3001;&#x5F15;&#x53F7;</strong></span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#5-1、双引号"><span class="toc-number">2.0.2.1.</span> <span class="toc-text"><a href="#5-1&#x3001;&#x53CC;&#x5F15;&#x53F7;" class="headerlink" title="5.1&#x3001;&#x53CC;&#x5F15;&#x53F7;"></a><strong>5.1&#x3001;&#x53CC;&#x5F15;&#x53F7;</strong></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-2、单引号"><span class="toc-number">2.0.2.2.</span> <span class="toc-text"><a href="#5-2&#x3001;&#x5355;&#x5F15;&#x53F7;" class="headerlink" title="5.2&#x3001;&#x5355;&#x5F15;&#x53F7;"></a><strong>5.2&#x3001;&#x5355;&#x5F15;&#x53F7;</strong></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-3、单引号和双引号的区别"><span class="toc-number">2.0.2.3.</span> <span class="toc-text"><a href="#5-3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;" class="headerlink" title="5.3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;"></a><strong>5.3&#x3001;&#x5355;&#x5F15;&#x53F7;&#x548C;&#x53CC;&#x5F15;&#x53F7;&#x7684;&#x533A;&#x522B;</strong></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-4、反引号"><span class="toc-number">2.0.2.4.</span> <span class="toc-text"><a href="#5-4&#x3001;&#x53CD;&#x5F15;&#x53F7;" class="headerlink" title="5.4&#x3001;&#x53CD;&#x5F15;&#x53F7;"></a><strong>5.4&#x3001;&#x53CD;&#x5F15;&#x53F7;</strong></span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-5、反斜杠"><span class="toc-number">2.0.2.5.</span> <span class="toc-text"><a href="#5-5&#x3001;&#x53CD;&#x659C;&#x6760;" class="headerlink" title="5.5&#x3001;&#x53CD;&#x659C;&#x6760;"></a><strong>5.5&#x3001;&#x53CD;&#x659C;&#x6760;</strong></span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多相关系列传送门："><span class="toc-number">3.</span> <span class="toc-text"><a href="#&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;" class="headerlink" title="&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;"></a>&#x66F4;&#x591A;&#x76F8;&#x5173;&#x7CFB;&#x5217;&#x4F20;&#x9001;&#x95E8;&#xFF1A;</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&text=Shell 流程控制Loop和引号（三）"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&is_video=false&description=Shell 流程控制Loop和引号（三）"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Shell 流程控制Loop和引号（三）&body=Check out this article: https://xuhaoblog.com/2016/09/30/linux/shell-script-03/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&title=Shell 流程控制Loop和引号（三）"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://xuhaoblog.com/2016/09/30/linux/shell-script-03/&name=Shell 流程控制Loop和引号（三）&description=&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Linux shell 脚本基础学习第三篇；&lt;br&gt;&lt;a href=&#34;http://xuhaoblog.com/linux/shell-script-02.html&#34;&gt;上一篇&lt;/a&gt;Liunx shell  脚本基础学习中，我们讲到了Linux shell 脚本中控制流程的if、select、case，这里接着介绍Linux shell 脚本控制流程的loop和引导，控制流程这部分内容较多，还有一部分是关于here document。&lt;br&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+    
+    <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 Xiho
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
   </div>
 </footer>
 
-<script src="/js/search_core.js"></script>
-<script src="/js/script.js"></script>
-
 </body>
 </html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-122974929-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
