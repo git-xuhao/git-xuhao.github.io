@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh"><generator uri="https://jekyllrb.com/" version="3.6.2">Jekyll</generator><link href="http://localhost:4001/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4001/" rel="alternate" type="text/html" hreflang="zh" /><updated>2018-07-27T03:33:23+00:00</updated><id>http://localhost:4001/</id><title type="html">Xu Hao’s Site</title><subtitle>主要用于分享日常学习、生活及工作的一些心得总结
+</subtitle><author><name>徐昊 Xiho</name><email>igeekho@gmail.com</email></author><entry><title type="html">极简主题：TeXt Theme</title><link href="http://localhost:4001/blog/2017/10/05/TeXt-theme.html" rel="alternate" type="text/html" title="极简主题：TeXt Theme" /><published>2017-10-04T17:00:00+00:00</published><updated>2017-10-04T17:00:00+00:00</updated><id>http://localhost:4001/blog/2017/10/05/TeXt-theme</id><content type="html" xml:base="http://localhost:4001/blog/2017/10/05/TeXt-theme.html">&lt;p&gt;嗨，最近在原有的基础上做了些修改，形成了这个新的主题，我把它叫做 &lt;code class=&quot;highlighter-rouge&quot;&gt;TeXt&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;颜色的选择和搭配不是一件容易的事，为了简单，新的主题移除了 Header 和 Footer 的背景色彩，改用了白色和灰色，同时也移除了大部分的阴影效果和分割线，整个页面看起来更加清(jian)爽(lou)了。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/TeXt-home.png&quot; alt=&quot;TeXt Theme&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;模仿 iOS 11 的风格，新的标题字体比之前更大了些，链接和按钮也更大更粗了。总之，整体的风格就是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;更凸显的标题和按钮文字&lt;/li&gt;
+  &lt;li&gt;更多的弧（圆）形元素&lt;/li&gt;
+  &lt;li&gt;更少的内容无关的修辞&lt;/li&gt;
+  &lt;li&gt;没有太多的图片（不用像有些主题需要费心去找什么封面和配图）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/TeXt-details.png&quot; alt=&quot;TeXt Theme Details&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;当然功能还是全的：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;响应式&lt;/li&gt;
+  &lt;li&gt;分页&lt;/li&gt;
+  &lt;li&gt;文章目录（使用了 &lt;a href=&quot;http://projects.jga.me/toc/&quot;&gt;TOC&lt;/a&gt; 插件，nice work !）&lt;/li&gt;
+  &lt;li&gt;文章标签&lt;/li&gt;
+  &lt;li&gt;阅读次数统计（&lt;a href=&quot;https://leancloud.cn/&quot;&gt;LeanCloud&lt;/a&gt;）&lt;/li&gt;
+  &lt;li&gt;Emoji（&lt;a href=&quot;https://www.emojione.com/&quot;&gt;EmojiOne&lt;/a&gt;）&lt;/li&gt;
+  &lt;li&gt;评论（&lt;a href=&quot;https://disqus.com/&quot;&gt;Disqus&lt;/a&gt;）&lt;/li&gt;
+  &lt;li&gt;Google Analytics&lt;/li&gt;
+  &lt;li&gt;联系方式设置（Email, Facebook, Twitter, 微博, 知乎……）&lt;/li&gt;
+  &lt;li&gt;Web 语意化&lt;/li&gt;
+  &lt;li&gt;Color Theme&lt;/li&gt;
+  &lt;li&gt;网站图标的自动化工具&lt;/li&gt;
+  &lt;li&gt;RSS&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;整体来说，当前的这个主题算是第一个让我比较满意的作品。首先它不需要去找什么封面和配图（这也是我自己做主题的最大原因）。其次，它不丑（至少我这么认为）。最后，它有文章的目录指示器，我认为这是很有必要的功能。&lt;/p&gt;
+
+&lt;p&gt;该主题已经正式发布了，并且写了份比较详细的文档，详见 &lt;a href=&quot;https://github.com/kitian616/jekyll-TeXt-theme&quot;&gt;kitian616/jekyll-TeXt-theme&lt;/a&gt;。欢迎使用和找茬，当然如果能提交代码就更好了。 :smile:&lt;/p&gt;
+
+&lt;p&gt;整个博客的风格应该不会再大变了，内容才是最重要的。&lt;/p&gt;</content><author><name>徐昊 Xiho</name><email>igeekho@gmail.com</email></author><category term="blog" /><category term="blog" /><summary type="html">嗨，最近在原有的基础上做了些修改，形成了这个新的主题，我把它叫做 TeXt。 颜色的选择和搭配不是一件容易的事，为了简单，新的主题移除了 Header 和 Footer 的背景色彩，改用了白色和灰色，同时也移除了大部分的阴影效果和分割线，整个页面看起来更加清(jian)爽(lou)了。 模仿 iOS 11 的风格，新的标题字体比之前更大了些，链接和按钮也更大更粗了。总之，整体的风格就是： 更凸显的标题和按钮文字 更多的弧（圆）形元素 更少的内容无关的修辞 没有太多的图片（不用像有些主题需要费心去找什么封面和配图）</summary></entry><entry><title type="html">使用 textlint 解决中英文混排的问题</title><link href="http://localhost:4001/blog/2017/09/15/textlint.html" rel="alternate" type="text/html" title="使用 textlint 解决中英文混排的问题" /><published>2017-09-15T11:00:00+00:00</published><updated>2017-09-15T11:00:00+00:00</updated><id>http://localhost:4001/blog/2017/09/15/textlint</id><content type="html" xml:base="http://localhost:4001/blog/2017/09/15/textlint.html">&lt;p&gt;中英混排一直都是一个挺麻烦的事情，对于 Word 这种软件会自动在中英文之间加上留白。但是对于网页，现阶段就无能为力了。&lt;/p&gt;
+
+&lt;p&gt;所以现在有很多规范都要求中文和英文之间必须加上空格，例如&lt;a href=&quot;https://github.com/fex-team/styleguide/blob/master/markdown.md&quot;&gt;这个规范&lt;/a&gt;。这样确实是大大提高了可读性，不管是在网页上，还是在编辑器中，不过在实际的书写中，我们还是会经常的会漏掉一些空格。而且在我看来，通过在内容中加入一些空格来优化其显示，这本身就不是一个非常完美的方案。内容本应该只有内容，而样式就应该跟内容彻底的解耦。不过目前来看，我还是支持加空格的。&lt;/p&gt;
+
+&lt;p&gt;于是，为了能更好的“加空格”，为了更好的把样式和内容解耦，我开始寻求插件的帮助。而 &lt;a href=&quot;https://github.com/textlint/textlint&quot;&gt;textlint&lt;/a&gt; 就能够很好的解决这个问题。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;textlint-的安装&quot;&gt;textlint 的安装&lt;/h2&gt;
+
+&lt;p&gt;textlint 是一个针对 Markdown 和文本文件的 Lint 工具，当然页可以通过插件支持 HTML 等其他文件。textlint 本身不包含任何的规则，你需要单独的来安装规则包。textlint 使用 Node.js 开发，我们能很容易的进行安装：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;npm install textlint &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;规则包&quot;&gt;规则包&lt;/h2&gt;
+
+&lt;p&gt;我们还需要安装一些规则包。通过官网的 &lt;a href=&quot;https://github.com/textlint/textlint/wiki/Collection-of-textlint-rule&quot;&gt;规则包列表&lt;/a&gt;，我们能够很方便的找到一些我们需要的规则包。&lt;/p&gt;
+
+&lt;p&gt;这里我想要介绍的是 &lt;a href=&quot;https://github.com/textlint-ja/textlint-rule-spacing/tree/master/packages/textlint-rule-ja-space-between-half-and-full-width&quot;&gt;textlint-rule-ja-space-between-half-and-full-width&lt;/a&gt; 规则包，虽然是日语的，但是对中文也同样有用。&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;npm install textlint-rule-ja-space-between-half-and-full-width &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;安装好后按照文档中配好 &lt;code class=&quot;highlighter-rouge&quot;&gt;textlintrc&lt;/code&gt; 文件就可以用了。&lt;/p&gt;
+
+&lt;h2 id=&quot;编辑器&quot;&gt;编辑器&lt;/h2&gt;
+
+&lt;p&gt;textlint 支持&lt;a href=&quot;https://github.com/textlint/textlint#editors&quot;&gt;非常多的编辑器&lt;/a&gt;，下载好对应的编辑器插件后，就可以使用了。&lt;/p&gt;</content><author><name>徐昊 Xiho</name><email>igeekho@gmail.com</email></author><category term="blog" /><category term="Tools" /><category term="VSCode" /><summary type="html">中英混排一直都是一个挺麻烦的事情，对于 Word 这种软件会自动在中英文之间加上留白。但是对于网页，现阶段就无能为力了。 所以现在有很多规范都要求中文和英文之间必须加上空格，例如这个规范。这样确实是大大提高了可读性，不管是在网页上，还是在编辑器中，不过在实际的书写中，我们还是会经常的会漏掉一些空格。而且在我看来，通过在内容中加入一些空格来优化其显示，这本身就不是一个非常完美的方案。内容本应该只有内容，而样式就应该跟内容彻底的解耦。不过目前来看，我还是支持加空格的。 于是，为了能更好的“加空格”，为了更好的把样式和内容解耦，我开始寻求插件的帮助。而 textlint 就能够很好的解决这个问题。</summary></entry><entry><title type="html">LeanCloud 使用记</title><link href="http://localhost:4001/blog/2016/10/05/leancloud-use-records.html" rel="alternate" type="text/html" title="LeanCloud 使用记" /><published>2016-10-04T17:15:00+00:00</published><updated>2016-10-04T17:15:00+00:00</updated><id>http://localhost:4001/blog/2016/10/05/leancloud-use-records</id><content type="html" xml:base="http://localhost:4001/blog/2016/10/05/leancloud-use-records.html">&lt;p&gt;&lt;img src=&quot;https://leancloud.cn/images/static/press/Logo%20-%20Blue%20Padding.png&quot; alt=&quot;LeanCloud&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这个博客本来是有浏览量统计功能的，之前是使用的 Python Flask 框架、MySQL 数据库在新浪云上搭建的。奈何后来新浪云更改了公共 MySQL 数据库的收费策略，对于这么一个小的后端服务来说，每天接近一元的价格显得太过昂贵。于是这个功能就不了了之了，很长时间它都是无效的状态，我也没怎么去管它。&lt;/p&gt;
+
+&lt;p&gt;昨天晚上在知乎上闲逛，无意看到了一个叫 &lt;a href=&quot;https://leancloud.cn/&quot;&gt;LeanCloud&lt;/a&gt; 的云服务，价格几乎是免费的，于是心血来潮，想着在 LeanCloud 上再搭建一个浏览量统计后端。事实证明，LeanCloud 根本就不是一个传统意义上的云服务器，它更像是一个平台，一个开发接口。借助 LeanCloud 提供的数据写入、查找和更新接口，我直接在前端调用这些接口就完成我的目标。总之，我没有写一行的后端代码。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;很惊讶吧？是的，我也很惊讶。其实，一般在写 Java Web 的时候，我们基本都会先去封装一个数据库的操作库，包括数据库的连接、数据的增删改查。然后再这个基础上，再来写业务的逻辑代码。LeanCloud 在云平台上为我们提供了这些数据库的通用接口，而业务的逻辑代码，可以直接写在前端网页上。&lt;/p&gt;
+
+&lt;p&gt;近年来，前后端分离，REST 架构开始流行，越来越多的业务开始放到了前端，后端只需提供数据的接口。我认为这是一种非常不错的开发模式。它把前后端的开发分离开来，使得前端和后端之间的开发互相独立，提高了开发效率。同时，也能减缓服务器的压力，降低运营成本。而且更加简单纯粹的后端，也能产生更好的复用性，网页、iOS 应用、安卓应用甚至微信服务号都可以共用一套后端接口。这正是我多年以前想过的问题，那时我还只会 Jsp。&lt;/p&gt;
+
+&lt;p&gt;总之 LeanCloud 很符合当今 Web 的发展趋势，是一款非常不错的产品，值得推荐和学习。&lt;/p&gt;</content><author><name>徐昊 Xiho</name><email>igeekho@gmail.com</email></author><category term="blog" /><category term="blog" /><summary type="html">这个博客本来是有浏览量统计功能的，之前是使用的 Python Flask 框架、MySQL 数据库在新浪云上搭建的。奈何后来新浪云更改了公共 MySQL 数据库的收费策略，对于这么一个小的后端服务来说，每天接近一元的价格显得太过昂贵。于是这个功能就不了了之了，很长时间它都是无效的状态，我也没怎么去管它。 昨天晚上在知乎上闲逛，无意看到了一个叫 LeanCloud 的云服务，价格几乎是免费的，于是心血来潮，想着在 LeanCloud 上再搭建一个浏览量统计后端。事实证明，LeanCloud 根本就不是一个传统意义上的云服务器，它更像是一个平台，一个开发接口。借助 LeanCloud 提供的数据写入、查找和更新接口，我直接在前端调用这些接口就完成我的目标。总之，我没有写一行的后端代码。</summary></entry></feed>

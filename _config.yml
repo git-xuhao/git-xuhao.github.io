@@ -16,34 +16,33 @@
 
 ## => Site Settings
 ##############################
-url: https://tianqi.name
+url: https://xuhaoblog.com
 baseurl: /
-title: Qi's Site
+title: Xu Hao's Site
 description: >
-    Tian Qi's Site | 田琦的小站
+    主要用于分享日常学习、生活及工作的一些心得总结
 
 
 ## => Language and Timezone
 ##############################
 lang: zh
-timezone: Asia/Shanghai
+timezone: Asia/Hangzhou
 
 
 ## => Author and Social
 ##############################
 author:
-  name: Tian Qi
-  email: kitian616@outlook.com
-  twitter: kitian616
-  github:  kitian616
-  googleplus: 101827554735084402671
-  weibo: 234695683
-  douban: kitian616
+  name: 徐昊 Xiho
+  email: igeekho@gmail.com
+  github:  git-xuhao
+  weibo: xuxiho
+  facebook: google.xu
+
 
 
 ## => GitHub Repository (if the site is hosted by GitHub)
 ##############################
-repository: kitian616/kitian616.github.io
+repository: git-xuhao/gi-xuhao.github.io
 repository_tree: master
 
 
