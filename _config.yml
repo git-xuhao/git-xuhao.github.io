@@ -62,7 +62,7 @@ excerpt_separator: <!--more-->
 excerpt_type: html # text (default), html
 
 ## license
-license: CC-BY-4.0
+license: CC-BY-NC-4.0
 
 
 ## => Paginate
@@ -74,9 +74,15 @@ paginate_path: /blog/page:num
 ## => Comments
 ##############################
 comments:
-  provider: disqus
-  disqus:
-    shortname: kitian616-github-io
+  provider: gitalk
+  gitalk:
+    clientID    : 3d507f3b58e98bd4c002
+    clientSecret: 20eb5562ff08dcc12a9a61edbdb8b29f9135e302
+    repository  : "gi-xuhao.github.io"
+    owner       : "git-xuhao"
+    admin: # Github repo owner and collaborators, only these guys can initialize github issues, IT IS A LIST.
+      - "git-xuhao"
+      - "the-other-admin-github-id"
 
 
 ## => Pageview
@@ -84,9 +90,9 @@ comments:
 pageview:
   provider: leancloud
   leancloud:
-    app_id: uAG3OhdcH8H4fxSqXLyBljA7-gzGzoHsz
-    app_key: Mzf5m9skSwYVWVXhGiYMNyXs
-    app_class: ThomasBlog
+    app_id: db0QWTbzNHkUbR4g6lK859ao-gzGzoHsz
+    app_key: 1JNOBbvRKLuklIw1CXsSvJp4
+    app_class: Counter
 
 
 ## => Analytics
@@ -94,7 +100,7 @@ pageview:
 analytics:
   provider: google
   google:
-    tracking_id: UA-71907556-1
+    tracking_id: UA-122974929-1
 
 
 ## => Build
@@ -141,7 +147,16 @@ plugins:
   - jekyll-feed
   - jekyll-paginate
   - jemoji
+  
+# Mathjax
+mathjax: true
+mathjax_autoNumber: true
 
+# Mermaid
+mermaid: true
+
+# Chart
+chart: true
 
 ## => Server
 ##############################
