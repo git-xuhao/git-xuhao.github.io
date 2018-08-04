@@ -1,7 +1,7 @@
 ---
 layout: article
 title: 基于Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP
-key: 100011
+key: kotlin100011
 tags: kotlin mvp
 category: blog
 date: 2017-12-25 01:15:00 +08:00

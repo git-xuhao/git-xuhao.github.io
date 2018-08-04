@@ -62,7 +62,7 @@ excerpt_separator: <!--more-->
 excerpt_type: html # text (default), html
 
 ## license
-license: CC-BY-NC-4.0
+license: CC-BY-4.0
 
 
 ## => Paginate
@@ -91,7 +91,7 @@ pageview:
   leancloud:
     app_id: db0QWTbzNHkUbR4g6lK859ao-gzGzoHsz
     app_key: 1JNOBbvRKLuklIw1CXsSvJp4
-    app_class: Counter
+    app_class: BlogCounter
 
 
 ## => Analytics
