@@ -82,7 +82,6 @@ comments:
     owner       : "git-xuhao"
     admin: # Github repo owner and collaborators, only these guys can initialize github issues, IT IS A LIST.
       - "git-xuhao"
-      - "the-other-admin-github-id"
 
 
 ## => Pageview
