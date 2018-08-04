@@ -78,7 +78,7 @@ comments:
   gitalk:
     clientID    : 3d507f3b58e98bd4c002
     clientSecret: 20eb5562ff08dcc12a9a61edbdb8b29f9135e302
-    repository  : "gi-xuhao.github.io"
+    repository  : "git-xuhao.github.io"
     owner       : "git-xuhao"
     admin: # Github repo owner and collaborators, only these guys can initialize github issues, IT IS A LIST.
       - "git-xuhao"
