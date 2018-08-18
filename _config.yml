@@ -6,8 +6,8 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: HyG
-brief-intro: Front-end Dev Engineer
+title: Xiho开源技术博客
+brief-intro: Always hungry to keep learning.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://git-xuhao.github.io" # the base hostname & protocol for your site
 
@@ -19,11 +19,11 @@ facebook_username: google.xu
 github_username:  git-xuhao
 email: igeekho@gmail.com
 weibo_username: xuxiho
-zhihu_username: dev_xuhao
+zhihu_username: 
 linkedIn_username: 
 dribbble_username:
 
-description_footer: 主要用于分享日常学习、生活及工作的一些心得总结！
+description_footer: 徐昊Xiho开源技术博客
 
 # comments
 # two ways to comment, only choose one, and use your own short name
