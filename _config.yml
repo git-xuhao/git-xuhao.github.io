@@ -6,7 +6,7 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: Xiho开源技术博客
+title: 开源技术博客
 brief-intro: Always hungry to keep learning.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://git-xuhao.github.io" # the base hostname & protocol for your site
@@ -28,8 +28,20 @@ description_footer: 徐昊Xiho开源技术博客
 # comments
 # two ways to comment, only choose one, and use your own short name
 # 两种评论插件，选一个就好了，使用自己的 short_name
-duoshuo_shortname: #
 disqus_shortname: #
+
+
+## => Comments
+##############################
+gitalk:
+  clientID: 3d507f3b58e98bd4c002
+  clientSecret: 20eb5562ff08dcc12a9a61edbdb8b29f9135e302
+  repo: gi-xuhao.github.io #存储你评论 issue 的 Github 仓库名（建议直接用 GitHub Page 的仓库名）
+  owner: git-xuhao
+  admin: git-xuhao #这个仓库的管理员，可以有多个，用数组表示，一般写自己,
+  id: 'window.location.pathname' #页面的唯一标识，gitalk 会根据这个标识自动创建的issue的标签,我们使用页面的相对路径作为标识
+
+
 
 # statistic analysis 统计代码
 # 百度统计 id，将统计代码替换为自己的百度统计id，即

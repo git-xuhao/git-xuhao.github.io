@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>开源技术博客</title>
+    <description></description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 19 Aug 2018 12:44:56 +0800</pubDate>
+    <lastBuildDate>Sun, 19 Aug 2018 12:44:56 +0800</lastBuildDate>
+    <generator>Jekyll v3.8.3</generator>
+    
+      <item>
+        <title>Git 如何 clone 非 master 分支的代码</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#问题描述&quot; id=&quot;markdown-toc-问题描述&quot;&gt;问题描述&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;问题描述&quot;&gt;问题描述&lt;/h2&gt;
+
+我们每次使用命令
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone git@gitlab.xxx.com:xxxxx.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+默认 clone 的是这个仓库的 master 分支。如果最新的代码不在 master 分支上，该如何拿到呢？如下图所示，最新的代码可能在&lt;code class=&quot;highlighter-rouge&quot;&gt;daily/1.4.1&lt;/code&gt;分支上，我们希望拿到这个分支上的代码。
+
+</description>
+        <pubDate>Thu, 07 Jul 2016 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2016/07/07/git-clone-not-master-branch/</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/07/07/git-clone-not-master-branch/</guid>
+        
+        <category>Git</category>
+        
+        <category>GitHub</category>
+        
+        <category>分支</category>
+        
+        
+        <category>GitHub</category>
+        
+      </item>
+    
+  </channel>
+</rss>
