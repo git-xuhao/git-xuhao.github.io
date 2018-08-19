@@ -1,11 +1,32 @@
 ---
 layout: default
 ---
+<style>
+        /*user info start*/
+        .user-info {
+            padding: 10px 0 0;
+        }
+    
+        .user-info .avatar {
+            display: block;
+            margin: 20px auto;
+            border-radius: 50%;
+            transition: all 1.0s;
+        }
+        .user-info .avatar:hover{
+                transform: rotate(360deg);
+            }
+        .user-info .text {
+            font-size: 20px;
+            font-weight:bold
+        }
+       
+    </style>
 
 <div class="page clearfix" index>
     <div class="left">
-        <h4 style="color:#CB3E42;"><b>Hi~,I am a android developer focusing .Always hungry to keep learning.</b></h4>
-        <small><b>主要用于分享日常学习、生活及工作的一些心得总结！</b></small>
+        <!-- <h4 style="color:#CB3E42;"><b>Hi~,我是一个专注于 Android 的开发者，总是保持着学习的态度。</b></h4> -->
+        <h4><b>主要用于分享日常学习、生活及工作的一些心得总结！</b></h4>
         <hr>
         <ul>
             {% for post in paginator.posts %}
@@ -14,13 +35,14 @@ layout: default
                   <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
                 </h2>
                 <div class="label">
+
                     <div class="label-card">
-                        <i class="fa fa-calendar"></i>{{ post.date | date: "%F" }}
+                                {% if post.author %}<i class="fa "></i>{{ post.author }} {% endif %}
                     </div>
                     <div class="label-card">
-                        {% if post.author %}<i class="fa fa-user"></i>{{ post.author }}
-                        {% endif %}
+                        <i class=""></i>创作于 {{ post.date | date: "%F" }}
                     </div>
+                   
                     <div class="label-card">
                         {% if page.meta %}<i class="fa fa-key"></i>{{ page.meta }}  {% endif %}
                     </div>
@@ -33,11 +55,13 @@ layout: default
                     {% include tag.html %}
                     </div>
                 </div>
-                <div class="excerpt">
-                    {{post.excerpt}}
+                <!-- 文章简要描述-->
+                <div class="desc">
+                        {% if post.desc %} {{post.desc}}{% endif %}
+                    
                 </div>
                 <div class="read-all">
-                    <a  href="{{ post.url | prepend: site.baseurl }}"><i class="fa fa-newspaper-o"></i>Read All</a>
+                    <a  href="{{ post.url | prepend: site.baseurl }}"><i class="fa fa-newspaper-o"></i>more>></a>
                 </div>
                 <hr>
               </li>
@@ -68,10 +92,29 @@ layout: default
     <!-- <button class="anchor"><i class="fa fa-anchor"></i></button> -->
     <div class="right">
         <div class="wrap">
+
+          <!-- 个人头像资料-->
+
+          <div class="side user-info">
+                <div style="text-align: center">
+                        <img class="avatar" height="150" width="150" src="{{ site.user_avatar }}">
+        
+                        <small class="text" style="color:#000" >{{ site.user_name }}</small> 
+                        <p style="color: gray">
+                                <i class="fa fa-map-marker" style="padding:2px"></i>
+                                {{ site.user_location }}
+                            </p>
+                        <p>{{ site.user_description }}</p>
+                        
+                </div>
+        
+                </div>
+            </div>
+
             <div class="side">
                 <div>
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    Recent Posts
+                 最新文章
                 </div>
                 <ul class="content-ul" recent>
                     {% for post in site.posts offset: 0 limit: 10  %}
@@ -84,7 +127,7 @@ layout: default
             <div class="side ">
                 <div>
                     <i class="fa fa-th-list"></i>
-                    Categories
+                    分类
                 </div>
                 <ul class="content-ul" cate>
                     {% for category in site.categories %}
@@ -103,7 +146,7 @@ layout: default
             <div class="side">
                 <div>
                     <i class="fa fa-tags"></i>
-                    Tags
+                    标签
                 </div>
                 <div class="tags-cloud">
                     {% assign first = site.tags.first %}
@@ -144,15 +187,15 @@ layout: default
                 </div>
             </div>
 
-            <!-- <div class="side">
+            <div class="side">
                 <div>
                     <i class="fa fa-external-link"></i>
                     Links
                 </div>
                 <ul  class="content-ul">
-
+                        <a href="http://blog.csdn.net/u011974987" class="previous" target="_blank"><i class="fa fa-angle-double-right"></i> CSDN</a>
                 </ul>
-            </div> -->
+            </div>
         </div>
     </div>
 </div>

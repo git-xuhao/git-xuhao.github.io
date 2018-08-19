@@ -25,6 +25,12 @@ dribbble_username:
 
 description_footer: 徐昊Xiho开源技术博客
 
+# 用户头像和坐标
+user_avatar: https://blog-1253441343.cos.ap-chengdu.myqcloud.com/avatar.jpg
+user_name: 徐昊Xiho
+user_location: Hangzhou,China
+user_description: I am a Android developer focusing on Android development.Always hungry to keep learning.
+
 # comments
 # two ways to comment, only choose one, and use your own short name
 # 两种评论插件，选一个就好了，使用自己的 short_name
