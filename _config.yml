@@ -45,7 +45,7 @@ gitalk:
   repo: gi-xuhao.github.io #存储你评论 issue 的 Github 仓库名（建议直接用 GitHub Page 的仓库名）
   owner: git-xuhao
   admin: git-xuhao #这个仓库的管理员，可以有多个，用数组表示，一般写自己,
-  id: 'window.location.pathname' #页面的唯一标识，gitalk 会根据这个标识自动创建的issue的标签,我们使用页面的相对路径作为标识
+  id: window.location.pathname #页面的唯一标识，gitalk 会根据这个标识自动创建的issue的标签,我们使用页面的相对路径作为标识
 
 
 

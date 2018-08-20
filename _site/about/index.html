@@ -159,25 +159,28 @@
 
 <p><!-- Gitalk 评论 start  -->
   <!-- Link Gitalk 的支持文件  --></p>
-<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
 
-<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css" />
 
-<div id="gitalk-container"></div>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;script type="text/javascript"&gt;
-  var gitalk = new Gitalk({
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
   
-  // gitalk的主要参数
-      clientID: `3d507f3b58e98bd4c002`,
-      clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
-      repo: `gi-xuhao.github.io`,
-      owner: 'git-xuhao',
-      admin: [git-xuhao],
-      id: '',
-  
-  });
-  gitalk.render('gitalk-container');   &lt;/script&gt;   &lt;!-- Gitalk end --&gt;
-</code></pre></div></div>
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `gi-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: ``,
+      
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+<p><!-- Gitalk end --></p>
 
 
     </div>
