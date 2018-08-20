@@ -21,9 +21,9 @@
           repo: `{{ site.gitalk.repo }}`,
           owner: `{{ site.gitalk.owner }}`,
           admin: [`{{ site.gitalk.admin }}`],
-          id: `{{ site.gitak.id }}`,
-          labels: ['gitalk'],
-      
+          id: location.pathname,
+          distractionFreeMode: false
+
       });
       gitalk.render('gitalk-container');
   </script>

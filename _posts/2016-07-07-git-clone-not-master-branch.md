@@ -2,6 +2,7 @@
 layout: post
 title:  "Git 如何 clone 非 master 分支的代码"
 categories: GitHub
+key: 100012
 tags:  Git
 desc: Git clone 非 master 分支的代码的解决方案
 ---
