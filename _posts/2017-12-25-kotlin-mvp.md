@@ -3,7 +3,7 @@ layout: post
 title: 基于Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP
 key: 100011
 tags: kotlin mvp
-category: 项目
+category: 开源项目
 date: 2017-12-25 01:15:00 +08:00
 desc: 《KotlinMvp》是一款的短视频小应用，每日为你推荐精选视频，让你大开眼界，采用 Kotlin 语言编写，结合 MVP+RxJava2+Retrofit2+Glide等的架构设计。
 ---

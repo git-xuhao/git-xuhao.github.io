@@ -7,6 +7,7 @@
         }
     }
     .left {
+        border-radius: 5px;
         >ul {
             padding: 0;
             >li {
@@ -16,7 +17,7 @@
                 color: #333;
                 h2 {
                     border: none;
-                    font-size: 27px;
+                    font-size: 22px;
                     margin: 0;
                 }
                 .label {
@@ -28,7 +29,7 @@
                         i {
                             padding-right: 0;
                             margin-right: 3px;
-                            color: #6b6a6a;
+                            color: #666666;
                         }
                     }
                     .categories {
@@ -82,6 +83,27 @@
             .side {
                 margin-bottom: 20px;
                 padding-bottom: 0;
+                  /*user info start*/
+                .user-info {
+                     padding: 10px 0 0;
+                     padding-bottom: 20px;
+                     margin: 20px;
+                
+                    
+                }
+                .user-info .avatar {
+                    display: block;
+                    margin: 20px auto;
+                    border-radius: 50%;
+                    transition: all 1.0s;
+                 }
+                .user-info .avatar:hover{
+                        transform: rotate(360deg);
+                    }
+                .user-info .text {
+                    font-size: 16px;
+                }
+       
                 i {
                     margin-right: 3px;
                 }

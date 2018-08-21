@@ -6,7 +6,7 @@
 # 'jekyll serve'. If you change this file, please restart the server process.
 
 # Site settings
-title: 开源技术博客
+title: XUHAO’S 博客
 brief-intro: Always hungry to keep learning.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://git-xuhao.github.io" # the base hostname & protocol for your site
@@ -26,7 +26,7 @@ dribbble_username:
 description_footer: 徐昊Xiho开源技术博客
 
 # 用户头像和坐标
-user_avatar: https://blog-1253441343.cos.ap-chengdu.myqcloud.com/avatar.jpg
+user_avatar: https://blog-1253441343.cos.ap-chengdu.myqcloud.com/build/WX20180821-195938%402x.png
 user_name: 徐昊Xiho
 user_location: Hangzhou,China
 user_description: 专注于 Android 开发,总是保持学习的态度。

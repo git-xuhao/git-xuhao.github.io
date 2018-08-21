@@ -1,26 +1,6 @@
 ---
 layout: default
 ---
-<style>
-        /*user info start*/
-        .user-info {
-            padding: 10px 0 0;
-        }
-    
-        .user-info .avatar {
-            display: block;
-            margin: 20px auto;
-            border-radius: 50%;
-            transition: all 1.0s;
-        }
-        .user-info .avatar:hover{
-                transform: rotate(360deg);
-            }
-        .user-info .text {
-            font-size: 20px;
-        }
-       
-    </style>
 
 <div class="page clearfix" index>
     <div class="left">
@@ -35,6 +15,9 @@ layout: default
                 </h2>
                 <div class="label">
 
+                      <div class="label-card">
+                    {% include category.html %}
+                    </div>
                     <div class="label-card">
                                 {% if post.author %}<i class="fa "></i>{{ post.author }} {% endif %}
                     </div>
@@ -47,10 +30,6 @@ layout: default
                     </div>
 
                     <div class="label-card">
-                    {% include category.html %}
-                    </div>
-
-                    <div class="label-card">
                     {% include tag.html %}
                     </div>
                 </div>
@@ -59,9 +38,9 @@ layout: default
                         {% if post.desc %} {{post.desc}}{% endif %}
                     
                 </div>
-                <div class="read-all">
-                    <a  href="{{ post.url | prepend: site.baseurl }}"><i class="fa fa-newspaper-o"></i>more>></a>
-                </div>
+                <!-- <div class="read-all">
+                    <a  href="{{ post.url | prepend: site.baseurl }}"><i class="fa fa-newspaper-o"></i>Read More</a>
+                </div> -->
                 <hr>
               </li>
             {% endfor %}
@@ -92,22 +71,30 @@ layout: default
     <div class="right">
         <div class="wrap">
 
-          <!-- 个人头像资料-->
+            <div class="side">
+                <div>
+                    <i class="fa fa-bullhorn" aria-hidden="true"></i>
+                 公告
+                </div>
 
-          <div class="side user-info">
-                <div style="text-align: center">
+                <div>
+                    {% include notice.html %}
+                </div>
+            </div>
+
+          <!-- 个人头像资料-->
+          <div class="side">
+                <div class="user-info" style="text-align: center">
                         <img class="avatar" height="150" width="150" src="{{ site.user_avatar }}">
         
                         <small class="text" style="color:#000" >{{ site.user_name }}</small> 
-                        <p style="color: gray">
+                        <p style="color: #666666; margin-top: 5px;">
                                 <i class="fa fa-map-marker" style="padding:2px"></i>
                                 {{ site.user_location }}
-                            </p>
-                    <small style="color: gray">{{ site.user_description }}</small>
-
+                        </p>
+                    <small style="color: #666666">{{ site.user_description }}</small>
                 </div>
-        
-                </div>
+    
             </div>
 
             <div class="side">
@@ -186,6 +173,7 @@ layout: default
                 </div>
             </div>
 
+            <!-- 额外链接-->
             <div class="side">
                 <div>
                     <i class="fa fa-external-link"></i>
