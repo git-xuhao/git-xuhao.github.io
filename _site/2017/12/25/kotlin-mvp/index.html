@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>基于Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</title>
+    <meta name="description" content="  KotlinMvp          项目截图      下载体验      技术要点      更新日志      关于我      Thanks      声明      LICENSE      KotlinMvpGitHub地址：https://github.com/git-xuhao/KotlinM...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2017/12/25/kotlin-mvp/">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>基于Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2017-12-25
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#开源项目" title="Category: 开源项目" rel="category">开源项目</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#开源项目" title="Category: 开源项目" rel="category">开源项目</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#kotlin" title="Tag: kotlin" rel="tag">kotlin</a-->
+        <a href="/tag/#kotlin" title="Tag: kotlin" rel="tag">kotlin</a>&nbsp;
+    
+        <!--a href="/tag/#mvp" title="Tag: mvp" rel="tag">mvp</a-->
+        <a href="/tag/#mvp" title="Tag: mvp" rel="tag">mvp</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <ul id="markdown-toc">
+  <li><a href="#kotlinmvp" id="markdown-toc-kotlinmvp">KotlinMvp</a>    <ul>
+      <li><a href="#项目截图" id="markdown-toc-项目截图">项目截图</a></li>
+      <li><a href="#下载体验" id="markdown-toc-下载体验">下载体验</a></li>
+      <li><a href="#技术要点" id="markdown-toc-技术要点">技术要点</a></li>
+      <li><a href="#更新日志" id="markdown-toc-更新日志">更新日志</a></li>
+      <li><a href="#关于我" id="markdown-toc-关于我">关于我</a></li>
+      <li><a href="#thanks" id="markdown-toc-thanks">Thanks</a></li>
+      <li><a href="#声明" id="markdown-toc-声明">声明</a></li>
+      <li><a href="#license" id="markdown-toc-license">LICENSE</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="kotlinmvp">KotlinMvp</h1>
+
+<p><a href="http://xuhaoblog.com"><img src="https://img.shields.io/badge/QQ-504105930-blue.svg" alt="" /></a></p>
+
+<p><img src="http://oyp2zrwnm.bkt.clouddn.com/ic_launcher.png" alt="这里写图片描述" /></p>
+
+<p>GitHub地址：<a href="https://github.com/git-xuhao/KotlinMvp">https://github.com/git-xuhao/KotlinMvp</a></p>
+
+<p>（开源不易，如果喜欢的话希望给个 Star 或者 Fork，谢谢！）</p>
+
+<p>《KotlinMvp》 是仿着“开眼Eyepetizer”之前版本并加上自己的想法，开发的一款的短视频小应用，每日为你推荐精选视频，让你大开眼界。本项目采用 Kotlin 语言编写，结合 MVP+RxJava2+Retrofit2+Glide等的架构设计，学习 Kotlin 利用空余时间开发的一款小项目，代码结构清晰有详细注释，如有任何疑问和建议请提 Issue或联系<a href=""><img src="https://img.shields.io/badge/Gmail:-igeekho@gmail.com-blue.svg" alt="" /></a></p>
+
+<h2 id="项目截图">项目截图</h2>
+
+<p><img src="http://oyp2zrwnm.bkt.clouddn.com/pt2017_12_09_10_27_10.jpg" alt="" /></p>
+
+<ul>
+  <li>
+    <p>gif</p>
+
+    <p><img src="http://oyp2zrwnm.bkt.clouddn.com/kotlin-mvp-1.gif" /></p>
+    <h2 id="下载体验">下载体验</h2>
+  </li>
+</ul>
+
+<p>点击<a href="https://fir.im/kotlinmvp"><img src="https://img.shields.io/badge/Download-apk-green.svg" alt="" /></a> 或者扫描下方二维码</p>
+
+<p><img src="http://oyp2zrwnm.bkt.clouddn.com/QR-code-kotlin-mvp.png" /></p>
+
+<h2 id="技术要点">技术要点</h2>
+<p>主要使用的第三方开源框架有：</p>
+
+<ul>
+  <li><a href="https://github.com/ReactiveX/RxJava">RxJava</a></li>
+  <li><a href="https://github.com/ReactiveX/RxAndroid">RxAndroid</a></li>
+  <li><a href="https://github.com/square/retrofit">Retrofit</a></li>
+  <li><a href="https://github.com/bumptech/glide">Glide</a></li>
+  <li><a href="https://github.com/orhanobut/logger">Logger</a></li>
+  <li><a href="https://github.com/H07000223/FlycoTabLayout">FlycoTabLayout</a></li>
+  <li><a href="https://github.com/google/flexbox-layout">Flexbox-layout</a></li>
+  <li><a href="https://github.com/mmin18/RealtimeBlurView">RealtimeBlurView</a></li>
+  <li><a href="https://github.com/scwang90/SmartRefreshLayout">SmartRefreshLayout</a></li>
+  <li><a href="https://github.com/bingoogolapple/BGABanner-Android">BGABanner-Android</a></li>
+  <li><a href="https://github.com/CarGuo/GSYVideoPlayer">GSYVideoPlayer</a></li>
+</ul>
+
+<p>模块说明：</p>
+
+<ul>
+  <li><strong>每日精选：</strong>首页采用下拉刷新+RecyclerView 实现，Banner展示每日精选推荐的视频，监听 RecyclerView 的滑动事件，实现 TitleBar 的隐藏显示功能，底部菜单采用高斯模糊的半透明效果，使整个 APP 风格更加清爽。</li>
+  <li><strong>发现：</strong> 包括关注和分类模块，关注是推荐的作者上传的视频，分类包括时尚、运动、创意、广告、音乐、旅行、生活、记录、开胃、游戏、萌宠、动画、综艺、搞笑等可自由选择想查看的类型视频。</li>
+  <li><strong>热门：</strong> 热门排行榜包括周排行、月排行、总排行的视频列表。</li>
+  <li><strong>搜索：</strong> 根据关键字搜索榜你找到感兴趣的视频。</li>
+  <li><strong>我的：</strong> 个人主页的相关介绍。</li>
+</ul>
+
+<h2 id="更新日志">更新日志</h2>
+
+<p><strong>v1.0</strong></p>
+
+<ul>
+  <li>初始化版本，主要功能已经完成。</li>
+</ul>
+
+<h2 id="关于我">关于我</h2>
+
+<ul>
+  <li>Email: igeekho@gmail.com</li>
+  <li>Home: <a href="https://xuhaoblog.com">https://xuhaoblog.com</a></li>
+  <li>CSDN:<a href="http://blog.csdn.net/u011974987">http://blog.csdn.net/u011974987</a></li>
+  <li>简书: <a href="http://www.jianshu.com/u/25bc3e1e7595">http://www.jianshu.com/u/25bc3e1e7595</a></li>
+</ul>
+
+<h2 id="thanks">Thanks</h2>
+
+<ul>
+  <li>感谢所有优秀的开源项目</li>
+  <li><a href="https://github.com/kaikaixue/Eyepetizer">Eyepetizer</a> ：最初是看了这个项目才开始做的，学了不少东西，写出了我自己的代码风格</li>
+</ul>
+
+<h2 id="声明">声明</h2>
+<p><strong>项目中的 API 均来自开眼视频，纯属学习交流使用，不得用于商业用途！</strong></p>
+
+<h2 id="license">LICENSE</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Copyright 2017 Xiho
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</code></pre></div></div>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2016/07/07/git-clone-not-master-branch/">Git 如何 clone 非 master 分支的代码</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

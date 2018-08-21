@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>XUHAO’S 博客</title>
+    <description></description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 21 Aug 2018 21:42:44 +0800</pubDate>
+    <lastBuildDate>Tue, 21 Aug 2018 21:42:44 +0800</lastBuildDate>
+    <generator>Jekyll v3.8.3</generator>
+    
+      <item>
+        <title>基于Kotlin+Mvp+RxJava+Retrofit架构开发的短视频APP</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#kotlinmvp&quot; id=&quot;markdown-toc-kotlinmvp&quot;&gt;KotlinMvp&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#项目截图&quot; id=&quot;markdown-toc-项目截图&quot;&gt;项目截图&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#下载体验&quot; id=&quot;markdown-toc-下载体验&quot;&gt;下载体验&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#技术要点&quot; id=&quot;markdown-toc-技术要点&quot;&gt;技术要点&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#更新日志&quot; id=&quot;markdown-toc-更新日志&quot;&gt;更新日志&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#关于我&quot; id=&quot;markdown-toc-关于我&quot;&gt;关于我&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#thanks&quot; id=&quot;markdown-toc-thanks&quot;&gt;Thanks&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#声明&quot; id=&quot;markdown-toc-声明&quot;&gt;声明&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#license&quot; id=&quot;markdown-toc-license&quot;&gt;LICENSE&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;kotlinmvp&quot;&gt;KotlinMvp&lt;/h1&gt;
+
+&lt;a href=&quot;http://xuhaoblog.com&quot;&gt;&lt;img src=&quot;https://img.shields.io/badge/QQ-504105930-blue.svg&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+
+&lt;img src=&quot;http://oyp2zrwnm.bkt.clouddn.com/ic_launcher.png&quot; alt=&quot;这里写图片描述&quot; /&gt;
+
+GitHub地址：&lt;a href=&quot;https://github.com/git-xuhao/KotlinMvp&quot;&gt;https://github.com/git-xuhao/KotlinMvp&lt;/a&gt;
+
+（开源不易，如果喜欢的话希望给个 Star 或者 Fork，谢谢！）
+
+《KotlinMvp》 是仿着“开眼Eyepetizer”之前版本并加上自己的想法，开发的一款的短视频小应用，每日为你推荐精选视频，让你大开眼界。本项目采用 Kotlin 语言编写，结合 MVP+RxJava2+Retrofit2+Glide等的架构设计，学习 Kotlin 利用空余时间开发的一款小项目，代码结构清晰有详细注释，如有任何疑问和建议请提 Issue或联系&lt;a href=&quot;&quot;&gt;&lt;img src=&quot;https://img.shields.io/badge/Gmail:-igeekho@gmail.com-blue.svg&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;
+
+&lt;h2 id=&quot;项目截图&quot;&gt;项目截图&lt;/h2&gt;
+
+&lt;img src=&quot;http://oyp2zrwnm.bkt.clouddn.com/pt2017_12_09_10_27_10.jpg&quot; alt=&quot;&quot; /&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    gif
+
+    &lt;img src=&quot;http://oyp2zrwnm.bkt.clouddn.com/kotlin-mvp-1.gif&quot; /&gt;
+    &lt;h2 id=&quot;下载体验&quot;&gt;下载体验&lt;/h2&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+点击&lt;a href=&quot;https://fir.im/kotlinmvp&quot;&gt;&lt;img src=&quot;https://img.shields.io/badge/Download-apk-green.svg&quot; alt=&quot;&quot; /&gt;&lt;/a&gt; 或者扫描下方二维码
+
+&lt;img src=&quot;http://oyp2zrwnm.bkt.clouddn.com/QR-code-kotlin-mvp.png&quot; /&gt;
+
+&lt;h2 id=&quot;技术要点&quot;&gt;技术要点&lt;/h2&gt;
+主要使用的第三方开源框架有：
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/ReactiveX/RxJava&quot;&gt;RxJava&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/ReactiveX/RxAndroid&quot;&gt;RxAndroid&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/square/retrofit&quot;&gt;Retrofit&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/bumptech/glide&quot;&gt;Glide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/orhanobut/logger&quot;&gt;Logger&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/H07000223/FlycoTabLayout&quot;&gt;FlycoTabLayout&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/google/flexbox-layout&quot;&gt;Flexbox-layout&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/mmin18/RealtimeBlurView&quot;&gt;RealtimeBlurView&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/scwang90/SmartRefreshLayout&quot;&gt;SmartRefreshLayout&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/bingoogolapple/BGABanner-Android&quot;&gt;BGABanner-Android&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/CarGuo/GSYVideoPlayer&quot;&gt;GSYVideoPlayer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+模块说明：
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;每日精选：&lt;/strong&gt;首页采用下拉刷新+RecyclerView 实现，Banner展示每日精选推荐的视频，监听 RecyclerView 的滑动事件，实现 TitleBar 的隐藏显示功能，底部菜单采用高斯模糊的半透明效果，使整个 APP 风格更加清爽。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;发现：&lt;/strong&gt; 包括关注和分类模块，关注是推荐的作者上传的视频，分类包括时尚、运动、创意、广告、音乐、旅行、生活、记录、开胃、游戏、萌宠、动画、综艺、搞笑等可自由选择想查看的类型视频。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;热门：&lt;/strong&gt; 热门排行榜包括周排行、月排行、总排行的视频列表。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;搜索：&lt;/strong&gt; 根据关键字搜索榜你找到感兴趣的视频。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;我的：&lt;/strong&gt; 个人主页的相关介绍。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;更新日志&quot;&gt;更新日志&lt;/h2&gt;
+
+&lt;strong&gt;v1.0&lt;/strong&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;初始化版本，主要功能已经完成。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;关于我&quot;&gt;关于我&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Email: igeekho@gmail.com&lt;/li&gt;
+  &lt;li&gt;Home: &lt;a href=&quot;https://xuhaoblog.com&quot;&gt;https://xuhaoblog.com&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;CSDN:&lt;a href=&quot;http://blog.csdn.net/u011974987&quot;&gt;http://blog.csdn.net/u011974987&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;简书: &lt;a href=&quot;http://www.jianshu.com/u/25bc3e1e7595&quot;&gt;http://www.jianshu.com/u/25bc3e1e7595&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;thanks&quot;&gt;Thanks&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;感谢所有优秀的开源项目&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/kaikaixue/Eyepetizer&quot;&gt;Eyepetizer&lt;/a&gt; ：最初是看了这个项目才开始做的，学了不少东西，写出了我自己的代码风格&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;声明&quot;&gt;声明&lt;/h2&gt;
+&lt;strong&gt;项目中的 API 均来自开眼视频，纯属学习交流使用，不得用于商业用途！&lt;/strong&gt;
+
+&lt;h2 id=&quot;license&quot;&gt;LICENSE&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Copyright 2017 Xiho
+
+Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Mon, 25 Dec 2017 01:15:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/12/25/kotlin-mvp/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/12/25/kotlin-mvp/</guid>
+        
+        <category>kotlin</category>
+        
+        <category>mvp</category>
+        
+        
+        <category>开源项目</category>
+        
+      </item>
+    
+      <item>
+        <title>Git 如何 clone 非 master 分支的代码</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#问题描述&quot; id=&quot;markdown-toc-问题描述&quot;&gt;问题描述&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#解决方法&quot; id=&quot;markdown-toc-解决方法&quot;&gt;解决方法&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#原来的解决方案&quot; id=&quot;markdown-toc-原来的解决方案&quot;&gt;原来的解决方案&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;问题描述&quot;&gt;问题描述&lt;/h2&gt;
+
+我们每次使用命令
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone git@gitlab.xxx.com:xxxxx.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+默认 clone 的是这个仓库的 master 分支。如果最新的代码不在 master 分支上，该如何拿到呢？如下图所示，最新的代码可能在&lt;code class=&quot;highlighter-rouge&quot;&gt;daily/1.4.1&lt;/code&gt;分支上，我们希望拿到这个分支上的代码。
+
+&lt;img src=&quot;https://ooo.0o0.ooo/2016/07/07/577e349ab42ed.png&quot; alt=&quot;7f07c8f6deef169ef6be5103bbd3e932f8676bb1.png&quot; /&gt;
+
+&lt;h2 id=&quot;解决方法&quot;&gt;解决方法&lt;/h2&gt;
+
+直接使用命令
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch -r #查看远程分支
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+或
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch -a #查看所有分支
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+会显示
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;origin/HEAD -&amp;gt; origin/master
+origin/daily/1.2.2
+origin/daily/1.3.0
+origin/daily/1.4.1
+origin/develop
+origin/feature/daily-1.0.0
+origin/master
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+然后直接
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout origin/daily/1.4.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+就好了。。。
+
+&lt;h2 id=&quot;原来的解决方案&quot;&gt;原来的解决方案&lt;/h2&gt;
+
+&lt;strong&gt;其实我原来写的这个方法更多的是：设置已有的本地分支跟踪一个刚刚拉取下来的远程分支，或者想要修改正在跟踪的上游分支。&lt;/strong&gt;
+
+我们在本地先建立一个分支，建议名称和远程的想要同步的分支名称一样。
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch daily/1.4.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+在切换到这个本地分支
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git checkout daily/1.4.1
+# Switched to branch 'daily/1.4.1'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+接下来就可以去建立上游分支的关联了，但是这个命令比较长，不好记，我们可以直接先&lt;code class=&quot;highlighter-rouge&quot;&gt;pull&lt;/code&gt;一下，git 会提示我们相应的操作和命令。
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git pull
+There is no tracking information for the current branch.
+Please specify which branch you want to merge with.
+See git-pull(1) for details.
+
+    git pull &amp;lt;remote&amp;gt; &amp;lt;branch&amp;gt;
+
+If you wish to set tracking information for this branch you can do so with:
+
+    git branch --set-upstream-to=origin/&amp;lt;branch&amp;gt; daily/1.4.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+我们看到最后一行，执行这个命令，即可完成与上游分支的关联。
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch --set-upstream-to=origin/daily/1.4.1 daily/1.4.1
+# Branch daily/1.4.1 set up to track remote branch daily/1.4.1 from origin.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+然后再&lt;code class=&quot;highlighter-rouge&quot;&gt;pull&lt;/code&gt;一下就好了！
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git pull
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Thu, 07 Jul 2016 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2016/07/07/git-clone-not-master-branch/</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/07/07/git-clone-not-master-branch/</guid>
+        
+        <category>Git</category>
+        
+        
+        <category>GitHub</category>
+        
+      </item>
+    
+  </channel>
+</rss>
