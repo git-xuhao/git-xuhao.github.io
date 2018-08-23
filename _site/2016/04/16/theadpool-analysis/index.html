@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Android 中线程池的分析</title>
+    <meta name="description" content="介绍new Thread的弊端及Java四种线程池的使用，对Android同样适用。1、new Thread的弊端执行一个异步任务你还只是如下new Thread吗？new Thread(new Runnable() {     @Override    public void run() {        //...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/2016/04/16/theadpool-analysis/">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Android 中线程池的分析</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-04-16
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Android" title="Category: Android" rel="category">Android</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#Android" title="Category: Android" rel="category">Android</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Android" title="Tag: Android" rel="tag">Android</a-->
+        <a href="/tag/#Android" title="Tag: Android" rel="tag">Android</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <p><strong>介绍new Thread的弊端及Java四种线程池的使用，对Android同样适用。</strong></p>
+
+<h3 id="1new-thread的弊端"><strong>1、new Thread的弊端</strong></h3>
+
+<p>执行一个异步任务你还只是如下new Thread吗？</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+new Thread(new Runnable() {
+ 
+    @Override
+    public void run() {
+        // TODO Auto-generated method stub
+        }
+    }
+).start();
+
+</code></pre></div></div>
+
+<p><strong>那你就out太多了，new Thread的弊端如下：</strong></p>
+
+<p>a. 每次new Thread新建对象性能差。
+b. 线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。
+c. 缺乏更多功能，如定时执行、定期执行、线程中断。
+<!-- more --></p>
+
+<p><strong>相比new Thread，Java提供的四种线程池的好处在于：</strong></p>
+
+<p>a. 重用存在的线程，减少对象创建、消亡的开销，性能佳。
+b. 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。
+c. 提供定时执行、定期执行、单线程、并发数控制等功能。</p>
+
+<h3 id="2java-线程池"><strong>2、Java 线程池</strong></h3>
+<p>Java通过Executors提供四种线程池，分别为：</p>
+
+<ul>
+  <li>newCachedThreadPool创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。</li>
+  <li>newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。</li>
+  <li>newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行。</li>
+  <li>newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。</li>
+</ul>
+
+<h3 id="1newcachedthreadpool"><strong>(1)newCachedThreadPool：</strong></h3>
+
+<p>创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。示例代码如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+    for (int i = 0; i &lt; 10; i++) {
+        final int index = i;
+    try {
+        Thread.sleep(index * 1000);
+    } 
+        catch (InterruptedException e) {
+            e.printStackTrace();
+    }
+ 
+cachedThreadPool.execute(new Runnable() {
+ 
+@Override
+public void run() {
+    System.out.println(index);
+}
+});
+}
+</code></pre></div></div>
+<p>线程池为无限大，当执行第二个任务时第一个任务已经完成，会复用执行第一个任务的线程，而不用每次新建线程。</p>
+
+<h3 id="2newfixedthreadpool"><strong>(2)newFixedThreadPool：</strong></h3>
+<p>创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。示例代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
+    for (int i = 0; i &lt; 10; i++) {
+    final int index = i;
+
+    fixedThreadPool.execute(new Runnable() {
+ 
+@Override
+public void run() {
+try {
+    System.out.println(index);
+    Thread.sleep(2000);
+} catch (InterruptedException e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+    }
+}
+});
+}
+</code></pre></div></div>
+
+<p>因为线程池大小为3，每个任务输出index后sleep 2秒，所以每两秒打印3个数字。</p>
+
+<p>定长线程池的大小最好根据系统资源进行设置。如Runtime.getRuntime().availableProcessors()。可参考PreloadDataCache。</p>
+
+<h3 id="3newscheduledthreadpool"><strong>(3)newScheduledThreadPool：</strong></h3>
+<p>创建一个定长线程池，支持定时及周期性任务执行。延迟执行示例代码如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(5);
+ scheduledThreadPool.schedule(new Runnable() {
+ 
+@Override
+public void run() {
+    System.out.println("delay 3 seconds");
+}
+}, 3, TimeUnit.SECONDS);
+
+</code></pre></div></div>
+
+<p>表示延迟3秒执行。</p>
+
+<p>定期执行示例代码如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+scheduledThreadPool.scheduleAtFixedRate(new Runnable() {
+ 
+@Override
+public void run() {
+    System.out.println("delay 1 seconds, and excute every 3 seconds");
+}
+}, 1, 3, TimeUnit.SECONDS);
+
+</code></pre></div></div>
+<p>表示延迟1秒后每3秒执行一次。</p>
+
+<p>ScheduledExecutorService比Timer更安全，功能更强大</p>
+
+<h3 id="4newsinglethreadexecutor"><strong>(4)newSingleThreadExecutor：</strong></h3>
+
+<p>创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。示例代码如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+for (int i = 0; i &lt; 10; i++) {
+final int index = i;
+singleThreadExecutor.execute(new Runnable() {
+ 
+@Override
+public void run() {
+    try {
+        System.out.println(index);
+    Thread.sleep(2000);
+} catch (InterruptedException e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+        }
+}
+    });
+}
+</code></pre></div></div>
+
+<p>结果依次输出，相当于顺序执行各个任务。</p>
+
+<p>现行大多数GUI程序都是单线程的。Android中单线程可用于数据库操作，文件操作，应用批量安装，应用批量删除等不适合并发但可能IO阻塞性及影响UI线程响应的操作。</p>
+
+<h3 id="线程池的作用"><strong>线程池的作用：</strong></h3>
+
+<p>线程池作用就是限制系统中执行线程的数量。
+     根 据系统的环境情况，可以自动或手动设置线程数量，达到运行的最佳效果；少了浪费了系统资源，多了造成系统拥挤效率不高。用线程池控制线程数量，其他线程排 队等候。一个任务执行完毕，再从队列的中取最前面的任务开始执行。若队列中没有等待进程，线程池的这一资源处于等待。当一个新任务需要运行时，如果线程池 中有等待的工作线程，就可以开始运行了；否则进入等待队列。</p>
+
+<h3 id="为什么要用线程池"><strong>为什么要用线程池:</strong></h3>
+
+<p>1.减少了创建和销毁线程的次数，每个工作线程都可以被重复利用，可执行多个任务。</p>
+
+<p>2.可以根据系统的承受能力，调整线程池中工作线线程的数目，防止因为消耗过多的内存，而把服务器累趴下(每个线程需要大约1MB内存，线程开的越多，消耗的内存也就越大，最后死机)。</p>
+
+<p>Java里面线程池的顶级接口是Executor，但是严格意义上讲Executor并不是一个线程池，而只是一个执行线程的工具。真正的线程池接口是ExecutorService。</p>
+
+<p><strong>比较重要的几个类：</strong></p>
+
+<p>ExecutorService：               真正的线程池接口。</p>
+
+<p>ScheduledExecutorService：      能和Timer/TimerTask类似，解决那些需要任务重复执行的问题。</p>
+
+<p>ThreadPoolExecutor：            ExecutorService的默认实现。</p>
+
+<p>ScheduledThreadPoolExecutor：   继承ThreadPoolExecutor的ScheduledExecutorService接口实现，周期性任务调度的类实现。</p>
+
+<p>要配置一个线程池是比较复杂的，尤其是对于线程池的原理不是很清楚的情况下，很有可能配置的线程池不是较优的，因此在Executors类里面提供了一些静态工厂，生成一些常用的线程池。</p>
+
+<h3 id="1newsinglethreadexecutor"><strong>1.newSingleThreadExecutor</strong></h3>
+
+<p>创建一个单线程的线程池。这个线程池只有一个线程在工作，也就是相当于单线程串行执行所有任务。如果这个唯一的线程因为异常结束，那么会有一个新的线程来替代它。此线程池保证所有任务的执行顺序按照任务的提交顺序执行。</p>
+
+<h3 id="2newfixedthreadpool-1"><strong>2.newFixedThreadPool</strong></h3>
+
+<p>创建固定大小的线程池。每次提交一个任务就创建一个线程，直到线程达到线程池的最大大小。线程池的大小一旦达到最大值就会保持不变，如果某个线程因为执行异常而结束，那么线程池会补充一个新线程。</p>
+
+<h3 id="3newcachedthreadpool"><strong>3.newCachedThreadPool</strong></h3>
+
+<p>创建一个可缓存的线程池。如果线程池的大小超过了处理任务所需要的线程，</p>
+
+<p>那么就会回收部分空闲（60秒不执行任务）的线程，当任务数增加时，此线程池又可以智能的添加新线程来处理任务。此线程池不会对线程池大小做限制，线程池大小完全依赖于操作系统（或者说JVM）能够创建的最大线程大小。</p>
+
+<h3 id="4newscheduledthreadpool"><strong>4.newScheduledThreadPool</strong></h3>
+<p>创建一个大小无限的线程池。此线程池支持定时以及周期性执行任务的需求。</p>
+
+<h3 id="实例代码"><strong>实例代码</strong></h3>
+
+<h3 id="一固定大小的线程池newfixedthreadpool"><strong>一、固定大小的线程池，newFixedThreadPool：</strong></h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">app</span><span class="p">.</span><span class="n">executors</span><span class="p">;</span>  
+  
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">concurrent</span><span class="p">.</span><span class="n">Executors</span><span class="p">;</span>  
+<span class="n">import</span> <span class="n">java</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">concurrent</span><span class="p">.</span><span class="n">ExecutorService</span><span class="p">;</span>  
+  
+<span class="p">/**</span> 
+ <span class="p">*</span> <span class="n">Java</span><span class="err">线程：线程池</span> 
+ <span class="p">*</span>  
+ <span class="p">*</span> <span class="p">@</span><span class="n">author</span> <span class="n">xiho</span>
+ <span class="p">*/</span>  
+<span class="k">public</span> <span class="n">class</span> <span class="n">Test</span> <span class="p">{</span>  
+    <span class="k">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span><span class="k">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>  
+        <span class="p">//</span> <span class="err">创建一个可重用固定线程数的线程池</span>  
+        <span class="n">ExecutorService</span> <span class="n">pool</span> <span class="p">=</span> <span class="n">Executors</span><span class="p">.</span><span class="n">newFixedThreadPool</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>  
+        <span class="p">//</span> <span class="err">创建线程</span>  
+        <span class="n">Thread</span> <span class="n">t1</span> <span class="p">=</span> <span class="n">new</span> <span class="n">MyThread</span><span class="p">();</span>  
+        <span class="n">Thread</span> <span class="n">t2</span> <span class="p">=</span> <span class="n">new</span> <span class="n">MyThread</span><span class="p">();</span>  
+        <span class="n">Thread</span> <span class="n">t3</span> <span class="p">=</span> <span class="n">new</span> <span class="n">MyThread</span><span class="p">();</span>  
+        <span class="n">Thread</span> <span class="n">t4</span> <span class="p">=</span> <span class="n">new</span> <span class="n">MyThread</span><span class="p">();</span>  
+        <span class="n">Thread</span> <span class="n">t5</span> <span class="p">=</span> <span class="n">new</span> <span class="n">MyThread</span><span class="p">();</span>  
+        <span class="p">//</span> <span class="err">将线程放入池中进行执行</span>  
+        <span class="n">pool</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="n">t1</span><span class="p">);</span>  
+        <span class="n">pool</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="n">t2</span><span class="p">);</span>  
+        <span class="n">pool</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="n">t3</span><span class="p">);</span>  
+        <span class="n">pool</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="n">t4</span><span class="p">);</span>  
+        <span class="n">pool</span><span class="p">.</span><span class="n">execute</span><span class="p">(</span><span class="n">t5</span><span class="p">);</span>  
+        <span class="p">//</span> <span class="err">关闭线程池</span>  
+        <span class="n">pool</span><span class="p">.</span><span class="n">shutdown</span><span class="p">();</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+  
+<span class="n">class</span> <span class="n">MyThread</span> <span class="n">extends</span> <span class="n">Thread</span> <span class="p">{</span>  
+    <span class="p">@</span><span class="n">Override</span>  
+    <span class="k">public</span> <span class="n">void</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span>  
+        <span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">Thread</span><span class="p">.</span><span class="n">currentThread</span><span class="p">().</span><span class="n">getName</span><span class="p">()</span> <span class="p">+</span> <span class="s2">"正在执行。。。"</span><span class="p">);</span>  
+    <span class="p">}</span>  
+<span class="p">}</span>  
+</code></pre></div></div>
+
+<p><strong>输出结果：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pool-1-thread-1正在执行。。。  
+pool-1-thread-3正在执行。。。  
+pool-1-thread-4正在执行。。。  
+pool-1-thread-2正在执行。。。  
+pool-1-thread-5正在执行。。。  
+</code></pre></div></div>
+
+<p>改变ExecutorService pool = Executors.newFixedThreadPool(5)中的参数：ExecutorService pool = Executors.newFixedThreadPool(2)，输出结果是：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pool-1-thread-1正在执行。。。  
+pool-1-thread-1正在执行。。。  
+pool-1-thread-2正在执行。。。  
+pool-1-thread-1正在执行。。。  
+pool-1-thread-2正在执行。。。  
+</code></pre></div></div>
+
+<p>从以上结果可以看出，newFixedThreadPool的参数指定了可以运行的线程的最大数目，超过这个数目的线程加进去以后，不会运行。其次，加入线程池的线程属于托管状态，线程的运行不受加入顺序的影响。</p>
+
+<h3 id="二单任务线程池newsinglethreadexecutor"><strong>二、单任务线程池，newSingleThreadExecutor：</strong></h3>
+
+<p>仅仅是把上述代码中的ExecutorService pool = Executors.newFixedThreadPool(2)改为ExecutorService pool = Executors.newSingleThreadExecutor();
+<strong>输出结果：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pool-1-thread-1正在执行。。。  
+pool-1-thread-1正在执行。。。  
+pool-1-thread-1正在执行。。。  
+pool-1-thread-1正在执行。。。  
+pool-1-thread-1正在执行。。。  
+</code></pre></div></div>
+
+<p>可以看出，每次调用execute方法，其实最后都是调用了thread-1的run方法。</p>
+
+<h3 id="三可变尺寸的线程池newcachedthreadpool"><strong>三、可变尺寸的线程池，newCachedThreadPool：</strong></h3>
+
+<p>与上面的类似，只是改动下pool的创建方式：ExecutorService pool = Executors.newCachedThreadPool();</p>
+
+<p><strong>输出结果：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pool-1-thread-1正在执行。。。  
+pool-1-thread-2正在执行。。。  
+pool-1-thread-4正在执行。。。  
+pool-1-thread-3正在执行。。。  
+pool-1-thread-5正在执行。。。  
+</code></pre></div></div>
+
+<p>这种方式的特点是：可根据需要创建新线程的线程池，但是在以前构造的线程可用时将重用它们。</p>
+
+<h3 id="四延迟连接池newscheduledthreadpool"><strong>四、延迟连接池，newScheduledThreadPool：</strong></h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestScheduledThreadPoolExecutor</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="n">ScheduledThreadPoolExecutor</span> <span class="n">exec</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ScheduledThreadPoolExecutor</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+
+        <span class="n">exec</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span><span class="c1">//每隔一段时间就触发异常</span>
+
+                      <span class="nd">@Override</span>
+
+                      <span class="n">publicvoid</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+
+                           <span class="c1">//throw new RuntimeException();</span>
+
+                           <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"================"</span><span class="o">);</span>
+
+                      <span class="o">}</span>
+
+                  <span class="o">},</span> <span class="mi">1000</span><span class="o">,</span> <span class="mi">5000</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">);</span>
+
+        <span class="n">exec</span><span class="o">.</span><span class="na">scheduleAtFixedRate</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span><span class="c1">//每隔一段时间打印系统时间，证明两者是互不影响的</span>
+
+                      <span class="nd">@Override</span>
+
+                      <span class="n">publicvoid</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+
+                           <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">());</span>
+
+                      <span class="o">}</span>
+
+                  <span class="o">},</span> <span class="mi">1000</span><span class="o">,</span> <span class="mi">2000</span><span class="o">,</span> <span class="n">TimeUnit</span><span class="o">.</span><span class="na">MILLISECONDS</span><span class="o">);</span>
+
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+<p><strong>输出结果：</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">================</span>
+
+<span class="mi">8384644549516</span>
+
+<span class="mi">8386643829034</span>
+
+<span class="mi">8388643830710</span>
+
+<span class="o">================</span>
+
+<span class="mi">8390643851383</span>
+
+<span class="mi">8392643879319</span>
+
+<span class="mi">8400643939383</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>转载请标注原地址：http://blog.csdn.net/u011974987/article/details/51027795</p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/android-sim">Android-L SIM卡自适应更新语言问题
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/Android-getdate-language">Android 中取得当前时区（以GMT形式）和语言
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/android-retrofit">Android 网络请求库Retrofit简单使用</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/Android-exception-exit">Android 异常退出的生命周期分析</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

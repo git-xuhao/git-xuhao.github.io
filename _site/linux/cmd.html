@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Linux 常用的一些基本命令</title>
+    <meta name="description" content="前言Linux提供了大量的命令，利用它可以有效地完成大量的工作，如磁盘操作、文件存取、目录操作、进程管理、文件权限设定等。所以，在Linux系统上工作离不开使用系统提供的命令。要想真正理解Linux系统，就必须从Linux命令学起，通过基础的命令学习可以进一步理解Linux系统，下面就来简单总结下常用的基础操作命...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/linux/cmd">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Linux 常用的一些基本命令</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-09-28
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Linux" title="Category: Linux" rel="category">Linux</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#Linux" title="Category: Linux" rel="category">Linux</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Linux" title="Tag: Linux" rel="tag">Linux</a-->
+        <a href="/tag/#Linux" title="Tag: Linux" rel="tag">Linux</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h4 id="前言"><strong>前言</strong></h4>
+<p>Linux提供了大量的命令，利用它可以有效地完成大量的工作，如磁盘操作、文件存取、目录操作、进程管理、文件权限设定等。所以，在Linux系统上工作离不开使用系统提供的命令。要想真正理解Linux系统，就必须从Linux命令学起，通过基础的命令学习可以进一步理解Linux系统，
+下面就来简单总结下常用的基础操作命令。</p>
+
+<h4 id="基本命令"><strong>基本命令</strong></h4>
+
+<h5 id="1指令名称pwd"><strong>（1）指令名称：pwd</strong></h5>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwd 命令也是最常用最基本的命令之一，用于显示用户当前所在的目录。
+</code></pre></div></div>
+<h5 id="2指令名称cd"><strong>（2）指令名称：cd</strong></h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cd命令不仅显示当前状态，还改变当前状态，它的用法跟dos下的cd命令基本一致。 
+cd ..可进入上一层目录 
+cd -可进入上一个进入的目录 
+cd ~可进入用户的home目录
+
+</code></pre></div></div>
+
+<h5 id="3指令名称cp"><strong>（3）指令名称：cp</strong></h5>
+<p>使用方式：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp [options] source dest 
+cp [options] source... directory 
+</code></pre></div></div>
+<p>说明：将一个档案拷贝至另一档案，或将数个档案拷贝至另一目录。
+<!-- more --></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>参数</th>
+      <th style="text-align: left">说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-a</td>
+      <td style="text-align: left">尽可能将档案状态、权限等资料都照原状予以复制。</td>
+    </tr>
+    <tr>
+      <td>-r</td>
+      <td style="text-align: left">若 source 中含有目录名，则将目录下之档案亦皆依序拷贝至目的地。</td>
+    </tr>
+    <tr>
+      <td>-f</td>
+      <td style="text-align: left">若目的地已经有相同档名的档案存在，则在复制前先予以删除再行复制。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>比如：</p>
+
+<p>将档案 aaa 复制(已存在)，并命名为 bbb :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp aaa bbb 
+</code></pre></div></div>
+
+<p>将所有的C语言文件拷贝至 Finished 子目录中 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp *.c Finished
+</code></pre></div></div>
+<p>复制文件</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cp src.txt dest.txt
+cp -i src.txt dest.txt 询问
+cp src.txt . 复制到当前目录
+cp -R 目录 dest 复制整个目录到指定路径
+cp c_?1 ../  通配符复制到上级目录
+</code></pre></div></div>
+
+<h5 id="4指令名称mv"><strong>（4）指令名称：mv</strong></h5>
+
+<p>使用方式：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mv [options] source dest 
+mv [options] source... directory 
+
+</code></pre></div></div>
+<p>说明：将一个档案移至另一档案，或将数个档案移至另一目录。 
+参数：-i 若目的地已有同名档案，则先询问是否覆盖旧档。</p>
+
+<p>将档案 aaa 更名为 bbb :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mv aaa bbb 
+</code></pre></div></div>
+
+<p>将所有的C语言程序移至 Finished 子目录中 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mv -i *.c /Finished
+</code></pre></div></div>
+
+<h5 id="5指令名称--chmod"><strong>（5）指令名称 : chmod</strong></h5>
+
+<p>使用方式 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod [-cfvR] [--help] [--version] mode file...
+</code></pre></div></div>
+<p>说明 : Linux/Unix 的档案存取权限分为三级 : 档案拥有者、群组、其他。利用 chmod 可以藉以控制档案如何被他人所存取。</p>
+
+<p><strong>mode :</strong> 权限设定字串，格式如下 : [ugoa…][+-=][rwxX]…][,…]，其中u 表示该档案的拥有者，g 表示与该档案的拥有者属于同一个群体(group)者，o 表示其他以外的人，a 表示这三者皆是。</p>
+<ul>
+  <li>表示增加权限、- 表示取消权限、= 表示唯一设定权限。
+r 表示可读取，w 表示可写入，x 表示可执行，X 表示只有当该档案是个子目录或者该档案已经被设定过为可执行。</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-c	若该档案权限确实已经更改，才显示其更改动作
+-f	若该档案权限无法被更改也不要显示错误讯息
+-v	显示权限变更的详细资料
+-R	对目前目录下的所有档案与子目录进行相同的权限变更(即以递回的方式逐个变更)
+
+</code></pre></div></div>
+<p>将档案 file1.txt 设为所有人皆可读取 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod ugo+r file1.txt 
+</code></pre></div></div>
+
+<p>将档案 file1.txt 设为所有人皆可读取 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod a+r file1.txt 
+</code></pre></div></div>
+
+<p>将档案 file1.txt 与 file2.txt 设为该档案拥有者，与其所属同一个群体者可写入，但其他以外的人则不可写入 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod ug+w,o-w file1.txt file2.txt 
+</code></pre></div></div>
+
+<p>将 ex1.py 设定为只有该档案拥有者可以执行 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod u+x ex1.py 
+</code></pre></div></div>
+
+<p>将目前目录下的所有档案与子目录皆设为任何人可读取 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod -R a+r * 
+</code></pre></div></div>
+
+<p>此外chmod也可以用数字来表示权限如 chmod 777 file</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>语法为：chmod abc file 
+</code></pre></div></div>
+
+<p>其中a,b,c各为一个数字，分别表示User、Group、及Other的权限。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r=4，w=2，x=1 
+若要rwx属性则4+2+1=7； 
+若要rw-属性则4+2=6；
+若要r-x属性则4+1=7。
+</code></pre></div></div>
+
+<p><strong>创建用户</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>useradd -m jack 创建用户的同时，创建了home目录
+userdel -r jack 删除用户
+</code></pre></div></div>
+
+<p><strong>创建组</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>groupadd androidgroup
+</code></pre></div></div>
+
+<p><strong>分配用户到组</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usermod -G androidgroup jack
+</code></pre></div></div>
+
+<p><strong>文件权限</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r读 w写 x执行
+drwxr-xr-x
+d rwx r-x r-x
+</code></pre></div></div>
+
+<p><strong>d目录</strong></p>
+
+<p>1.文件所属用户具备的权限（root对该文件具备读写执行权限）
+2.文件所属用户的所属组具备的权限（读、执行）
+3.系统的其他用户具备的权限（读、执行）</p>
+
+<p>rwx必须是固定顺序</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>权限		二进制		八进制
+---			000			0
+--x			001			1
+-w-			010			2
+-wx			011			3
+r--			100			4
+r-x			101			5
+rw-			110			6
+rwx			111			7
+</code></pre></div></div>
+
+<p>修改文件权限</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod 644 file
+</code></pre></div></div>
+
+<p>给用户加上执行权限</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chmod u+x file
+</code></pre></div></div>
+
+<p>改变创建目录的默认权限</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>umask 026
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>777-026
+</code></pre></div></div>
+
+<p>改变文件的所属</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chown user.group file
+chown user file
+chown .group file
+</code></pre></div></div>
+
+<h5 id="6指令名称--ls"><strong>（6）指令名称 : ls</strong></h5>
+
+<p>使用方式 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ls [-alrtAFR] [name...] 
+</code></pre></div></div>
+
+<p>说明 : 显示指定工作目录下之内容（列出目前工作目录所含之档案及子目录)。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>参数	说明
+-a	显示所有档案及目录 (ls内定将档案名或目录名称开头为"."的视为隐藏档，不会列出) 
+-l	除档案名称外，亦将档案型态、权限、拥有者、档案大小等资讯详细列出 
+-r	将档案以相反次序显示(原定依英文字母次序) 
+-t	将档案依建立时间之先后次序列出
+-A	同 -a ，但不列出 "." (目前目录) 及 ".." (父目录) 
+-F	在列出的档案名称后加一符号；例如可执行档则加 "*", 目录则加 "/"
+-R	若目录下有档案，则以下之档案亦皆依序列出
+
+</code></pre></div></div>
+
+<p>ls -l 
+ls -la 所有
+ls -l ja* 通配符查找</p>
+
+<p>例子：</p>
+
+<p>列出目前工作目录下所有名称是 s 开头的档案，愈新的排愈后面 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ls -ltr s* 
+</code></pre></div></div>
+
+<p>将 /bin 目录以下所有目录及档案详细资料列出 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ls -lR /bin 
+</code></pre></div></div>
+
+<p>列出目前工作目录下所有档案及目录；目录于名称后加 “/”, 可执行档于名称后加 “*” :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ls -AF 
+</code></pre></div></div>
+
+<h5 id="7指令名称rm"><strong>（7）指令名称：rm</strong></h5>
+
+<p>使用方式：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm [options] name... 
+</code></pre></div></div>
+
+<p>说明：删除档案及目录。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>参数	说明
+-i	删除前逐一询问确认。
+-f	即使原档案属性设为唯读，亦直接删除，无需逐一确认。
+-r	将目录及以下之档案亦逐一删除。
+</code></pre></div></div>
+<p>范例：
+删除所有C语言程式档；删除前逐一询问确认 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm -i *.c 
+</code></pre></div></div>
+
+<p>将 Finished 子目录及子目录中所有档案删除 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rm -r Finished 
+</code></pre></div></div>
+
+<h5 id="8指令名称rmdir"><strong>（8）指令名称：rmdir</strong></h5>
+
+<p>使用方式：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> rmdir [-p] dirName 
+</code></pre></div></div>
+
+<p>说明： 删除空的目录。</p>
+
+<p>参数： -p 是当子目录被删除后使它也成为空目录的话，则顺便一并删除。 
+范例： 
+将工作目录下，名为 AAA 的子目录删除 :</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rmdir AAA 
+</code></pre></div></div>
+
+<p>在工作目录下的 BBB 目录中，删除名为 Test 的子目录。若 Test 删除后，BBB 目录成为空目录，则 BBB 亦予删除。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rmdir -p BBB/Test 
+</code></pre></div></div>
+
+<h5 id="9指令名称touch"><strong>（9）指令名称：touch</strong></h5>
+
+<p>使用方式：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>touch [-acfm] 
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[-r reference-file] [--file=reference-file] 
+[-t MMDDhhmm[CC]YY][.ss] 
+[-d time] [--date=time] [--time={atime,access,use,mtime,modify}]
+[--no-create] [--help] [--version] 
+file1 [file2 ...] 
+</code></pre></div></div>
+
+<p>说明：
+touch 指令改变档案的时间记录。 ls -l 可以显示档案的时间记录。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>参数	说明
+a	改变档案的读取时间记录
+m	改变档案的修改时间记录
+c	假如目的档案不存在，不会建立新的档案。
+f	不使用，是为了与其他 unix 系统的相容性而保留
+r	使用参考档的时间记录，与 --file 的效果一样
+d	设定时间与日期，可以使用各种不同的格式
+t	设定档案的时间记录，格式与 date 指令相同
+
+</code></pre></div></div>
+
+<h5 id="10指令名称gzip"><strong>（10）指令名称：gzip</strong></h5>
+
+<p>说明：gzip命令用于压缩文件。 
+参数 ： -d 将压缩文件解压
+范例：
+如果要将ye.txt文件压缩，可用如下命令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gzip ye.txt 
+</code></pre></div></div>
+
+<p>这样就可以压缩文件并在文件名后面加上gz扩展名，变成文件ye.txt.gz。 
+解压缩文件可用gzip -d命令实现：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gzip -d ye.txt.gz 
+</code></pre></div></div>
+
+<p>这样就可以解压缩文件并删除gz扩展名。</p>
+
+<h5 id="11指定reset"><strong>（11）指定reset</strong></h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>reset 清空命令行
+</code></pre></div></div>
+<p>好了，暂时用到的命令就先整理出来，以免忘记咯，等不记得时候翻出来看看~~</p>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2016/09/21/linux-xshell/">Xshell 远程连接Linux服务器</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/linux/vim-config">vim 的安装配置及使用</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

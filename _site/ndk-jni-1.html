@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Android NDK开发JNI简介及调用流程（一）</title>
+    <meta name="description" content="前言前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！JNI简介　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/ndk-jni-1">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Android NDK开发JNI简介及调用流程（一）</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-10-04
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#NDK" title="Category: NDK" rel="category">NDK</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#NDK" title="Category: NDK" rel="category">NDK</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#ndk" title="Tag: ndk" rel="tag">ndk</a-->
+        <a href="/tag/#ndk" title="Tag: ndk" rel="tag">ndk</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h3 id="前言"><strong>前言</strong></h3>
+<p>前段时间学习了C、C++的一些基础知识后，了解了它们的编码风格，要想掌握NDK开发，前提是会使用JNI，下面我们开始简单的介绍吧！</p>
+
+<h3 id="jni简介"><strong>JNI简介</strong></h3>
+
+<p>　　JNI全称是Java Native Interface（Java本地接口），本地接口就是指用C和C++开发的接口。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。</p>
+
+<p>　　开发JNI程序会受到系统环境的限制，因为用C/C++语言写出来的代码或模块，编译过程当中要依赖当前操作系统环境所提供的一些库函数，并和本地库链接在一起。而且编译后生成的二进制代码只能在本地操作系统环境下运行，因为不同的操作系统环境，有自己的本地库和CPU指令集，而且各个平台对标准C/C++的规范和标准库函数实现方式也有所区别。这就造成使用了JNI接口的JAVA程序，不再像以前那样自由的跨平台。如果要实现跨平台，就必须将本地代码在不同的操作系统平台下编译出相应的动态库。</p>
+
+<!-- more -->
+<p><strong>JNI的开发流程主要分为以下几个步骤：</strong></p>
+
+<ol>
+  <li>
+    <p>编写带有native声明方法的java类；</p>
+  </li>
+  <li>
+    <p>用”javac”命令来编译所编写的java类；</p>
+  </li>
+  <li>
+    <p>使用”javah”java类的名生成扩展名为h的头文件；</p>
+  </li>
+  <li>
+    <p>复制jni.h和jni_md.h文件到CPP工程中;</p>
+  </li>
+  <li>
+    <p>实现.h头文件中声明的函数</p>
+  </li>
+  <li>
+    <p>生成dll动态链接库</p>
+  </li>
+  <li>
+    <p>配置dll文件所在目录到环境变量</p>
+  </li>
+  <li>
+    <p>重启Eclipse</p>
+  </li>
+</ol>
+
+<p>&lt;font color=green&gt;<strong>jni调用dill的流程图如下：</strong></p>
+
+<p><img src="http://img.blog.csdn.net/20160921002729113" alt="这里写图片描述" /></p>
+
+<p>通过上面的分析，相信大家已经对jni的开发流程有一个整体的认识，接下来，我们将通过实例更进一步的了解。</p>
+
+<h4 id="font-colorblue第一步编写带有native声明方法的java类">&lt;font color=blue&gt;<strong>第一步：编写带有native声明方法的java类</strong></h4>
+
+<p>JniTest.java</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">study</span><span class="p">.</span><span class="n">jni</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="n">class</span> <span class="n">JniTest</span> <span class="p">{</span>
+	
+	<span class="k">public</span> <span class="n">native</span> <span class="n">static</span> <span class="k">String</span> <span class="n">getStringFromC</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h4 id="font-colorblue第二步用javac命令来编译所编写的java类">&lt;font color=blue&gt;<strong>第二步：用”javac”命令来编译所编写的java类；</strong></h4>
+
+<p>首先我们必须得配有java环境变量，然后我们右键点击项目-&gt;properties,复制项目路径；</p>
+
+<p><img src="http://img.blog.csdn.net/20160921004851299" alt="这里写图片描述" /></p>
+
+<p>然后进入dos命令，</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\Users\uuxuh&gt;cd E:\Documents\11\JniTest
+
+C:\Users\uuxuh&gt;E:
+
+E:\Documents\11\JniTest&gt;cd src
+
+E:\Documents\11\JniTest\src&gt;
+</code></pre></div></div>
+
+<h4 id="font-colorblue第三步使用javahjava类的名生成h的头文件">&lt;font color=blue&gt;<strong>第三步：使用”javah”java类的名生成.h的头文件</strong></h4>
+<p>接着，复制我们的完整类名（包名+类名），执行命令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>E:\Documents\11\JniTest\src&gt;javah com.study.jni.JniTest
+</code></pre></div></div>
+<p>回到工程目录下，刷新项目，编译后的.h头文件就出现了。</p>
+
+<p>源码：</p>
+
+<p>com_study_jni_JniTest.h</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/* DO NOT EDIT THIS FILE - it is machine generated */
+#include &lt;jni.h&gt;
+/* Header for class com_study_jni_JniTest */
+
+#ifndef _Included_com_study_jni_JniTest
+#define _Included_com_study_jni_JniTest
+#ifdef __cplusplus
+extern "C" {
+#endif
+/*
+ * Class:     com_study_jni_JniTest
+ * Method:    getStringFromC
+ * Signature: ()Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_study_jni_JniTest_getStringFromC
+  (JNIEnv *, jclass);
+
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+</code></pre></div></div>
+
+<h4 id="font-colorblue第四步复制jnih和jni_mdh文件到cpp工程中">&lt;font color=blue&gt;<strong>第四步：复制jni.h和jni_md.h文件到CPP工程中</strong></h4>
+<p>将要编译的文件中引入了</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#inlcude&lt;jni.h&gt;
+</code></pre></div></div>
+<p>头文件，所以我们手动导入这两个文件到CPP工程中，</p>
+
+<p>以我的jdk1.7.0_75为例，两个头文件的位置分别为：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jni.h    jdk1.7.0_75/include
+jni_md.h    jdk1.7.0_75/include/linux
+</code></pre></div></div>
+<p>将我们生成.h头文件复制到项目的代码文件目录下 ， 在解决方案中的头文件目录-&gt; 右键-&gt; 添加 -&gt; 添加现有项 。 将我们的头文件添加进来，还有jni.h和jni_md.h一起添加进来，如图：</p>
+
+<p><img src="http://img.blog.csdn.net/20160921011013003" alt="这里写图片描述" /></p>
+
+<h4 id="font-colorblue第五步实现h头文件中声明的函数">&lt;font color=blue&gt;<strong>第五步：实现.h头文件中声明的函数</strong></h4>
+
+<p>c代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "com_study_jni_JniTest.h"
+
+//函数实现
+JNIEXPORT jstring JNICALL Java_com_study_jni_JniTest_getStringFromC
+(JNIEnv *env, jclass jcls){
+	//简单的实现
+return (*env)-&gt;NewStringUTF(env, "C String");
+
+
+}
+
+</code></pre></div></div>
+<h4 id="font-colorblue第六步生成dll动态链接库">&lt;font color=blue&gt;<strong>第六步：生成dll动态链接库</strong></h4>
+
+<p>我们以VS2013为例：</p>
+
+<p>操作步骤：</p>
+
+<p>选中项目 -&gt; 右键 -&gt; 属性 -&gt; 常规 -&gt; 项目默认值 -&gt; 配置类型 , 选择动态库.dll，</p>
+
+<p><img src="http://img.blog.csdn.net/20160921011522662" alt="这里写图片描述" /></p>
+
+<p>如图，右上角配置管理器，根据我们所使用的平台进去配置一下：</p>
+
+<p><img src="http://img.blog.csdn.net/20160921011811821" alt="这里写图片描述" /></p>
+
+<p>这里我使用64位的，所以活动解决方案平台下新建了一个x64，部署项目配置也选择x64。</p>
+
+<p>配置完了之后，最后生成解决方案。去项目目录下查看dll动态库。</p>
+
+<p><img src="http://img.blog.csdn.net/20160921012257530" alt="这里写图片描述" /></p>
+
+<h4 id="font-colorblue第七步配置dll文件所在目录到环境变量">&lt;font color=blue&gt;<strong>第七步：配置dll文件所在目录到环境变量</strong></h4>
+
+<p>我们把生成dll文件的路径配置java环境变量里面，这样java 才会知道有dll动态库存在，配置完之后，重启下Eclipse。</p>
+
+<p>最后我们在java中调用动态库，完整代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">study</span><span class="p">.</span><span class="n">jni</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="n">class</span> <span class="n">JniTest</span> <span class="p">{</span>
+	
+	<span class="k">public</span> <span class="n">native</span> <span class="n">static</span> <span class="k">String</span> <span class="n">getStringFromC</span><span class="p">();</span>
+
+	<span class="k">public</span> <span class="n">static</span> <span class="n">void</span> <span class="n">main</span><span class="p">(</span><span class="k">String</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nf">System</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">getStringFromC</span><span class="p">());</span>
+	<span class="p">}</span>
+	
+<span class="p">//</span> <span class="err">加载动态库</span>
+	<span class="n">static</span><span class="p">{</span>
+	   <span class="nf">System</span><span class="p">.</span><span class="n">loadLibrary</span><span class="p">(</span><span class="s2">"jni_study"</span><span class="p">);</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>最后运行一下项目控制台打印出C中返回给我们的字符串。</p>
+
+<p><img src="http://img.blog.csdn.net/20160921013119011" alt="这里写图片描述" /></p>
+
+<p>好了，整个jni的调用流程已经说的非常详细了，但这只是jni入门的基础，后续会继续更新！</p>
+
+<blockquote>
+  <p>学习理解并整理下来的笔记；<br />
+希望大家能够指点或提出宝贵意见，一起学习，谢谢！ 
+转载请注明出处：<a href="http://blog.csdn.net/u011974987/article/details/52602913">http://blog.csdn.net/u011974987/article/details/52602913</a>
+个人主页：<a href="http://xuhaoblog.com">xuhaoblog.com</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/ndk-jni-5">Android NDK 开发AndroidStudio 2.2 更友好的支持NDK（五）
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/ndk-jni-3">Android NDK开发C访问Java属性和方法（三）
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/ndk-jni-2">Android NDK开发JNI传递参数和返回值（二）
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/linux/shell-script-05">shell 脚本基础学习之函数（五）</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/ndk-jni-2">Android NDK开发JNI传递参数和返回值（二）</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

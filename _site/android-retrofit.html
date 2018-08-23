@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Android 网络请求库Retrofit简单使用</title>
+    <meta name="description" content="什么是 Retrofit ?Retrofit是一套 RESTful 架构的 Android（Java）客户端实现，基于注解，提供 JSON to POJO（Plain Ordinary Java Object ，简单Java对象），POJO to JSON，网络请求（POST，GET， PUT，DELETE 等）...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/android-retrofit">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Android 网络请求库Retrofit简单使用</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-04-13
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Android" title="Category: Android" rel="category">Android</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#Android" title="Category: Android" rel="category">Android</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Android" title="Tag: Android" rel="tag">Android</a-->
+        <a href="/tag/#Android" title="Tag: Android" rel="tag">Android</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h2 id="什么是-retrofit-"><strong>什么是 Retrofit ?</strong></h2>
+<p>Retrofit是一套 RESTful 架构的 Android（Java）客户端实现，基于注解，提供 JSON to POJO（Plain Ordinary Java Object ，简单Java对象），POJO to JSON，网络请求（POST，GET， PUT，DELETE 等）封装。</p>
+
+<p>既然只是一个网络请求封装库，现在已经有了那么多的大家已经耳熟能详的网络请求封装库了，为什么还要介绍它呢，原因在于 Retrofit 是一套注解形的网络请求封装库，让我们的代码结构更给为清晰。它可以直接解析JSON数据变成JAVA对象，甚至支持回调操作，处理不同的结果。
+想更详细的了解 Retrofit，可以查看<a href="http://square.github.io/retrofit/">官方文档</a> 。</p>
+
+<p>话不多说，直入主题~~</p>
+<h3 id="一集成"><strong>一、集成</strong></h3>
+<p>目前我使用的是AndroidStudio,那么在model的build.gradle文件中添加以下引用：</p>
+<pre><code class="language-Java">compile 'com.squareup.okhttp3:okhttp:3.2.0' 
+compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+</code></pre>
+<!-- more -->
+<p><strong>说明：</strong></p>
+
+<p>Retrofit依赖于okhttp，所以需要集成okhttp
+API返回的数据为JSON格式，在此我使用的是Gson对返回数据解析.<strong>请使用最新版的Gson</strong></p>
+
+<h3 id="二返回的数据格式"><strong>二、返回的数据格式</strong></h3>
+<p>使用的是百度API的数据接口：<a href="http://apistore.baidu.com/apiworks/servicedetail/1756.html">名人名言API</a>
+<img src="http://img.blog.csdn.net/20160408133309596" alt="这里写图片描述" /></p>
+
+<p><img src="http://img.blog.csdn.net/20160408133322319" alt="这里写图片描述" /></p>
+
+<p>该接口的API主机地址为：http://apistore.baidu.com；
+需要访问的接口：avatardata/mingrenmingyan/lookup；</p>
+
+<p>需要一个key等于apikey的Header和一个keyword等于<strong>名人名言</strong>的查询关键字,而且该请求为<strong>GET</strong>请求.</p>
+
+<p>访问该API返回的数据格式如下：</p>
+<pre><code class="language-Java">{
+    "total": 914,
+    "result": [
+        {
+            "famous_name": "布兰登",
+            "famous_saying": "人生至善，就是对生活乐观，对工作愉快，对事业兴奋。"
+        },
+        {
+            "famous_name": "魏书生",
+            "famous_saying": "抽打自己的鞭子要掌握在自己的手里，在漫长的人生道路的每一步上，都要经常鞭策自警，万不可以为有过一两次抽打就可以沿途平安了。"
+        },
+        {
+            "famous_name": "亨·易卜生",
+            "famous_saying": "夺走了普通人生活的幻想，也就等于夺去了他的幸福"
+        },
+        {
+            "famous_name": "佚名",
+            "famous_saying": "不知道自己走向何方的人，大都是人生的匆匆过客。"
+        },
+        {
+            "famous_name": "南丁格尔",
+            "famous_saying": "人生欲求安全，当有五要。一是清洁空气，二是澄清饮水，三是流通沟渠，四是扫洒屋宇，五是日光充足。"
+        }
+    ],
+    "error_code": 0,
+    "reason": "Succes"
+}
+</code></pre>
+
+<h3 id="三androidstudio插件-gsonformat"><strong>三、AndroidStudio插件<a href="https://plugins.jetbrains.com/plugin/7654?pr=androidstudio"> GsonFormat</a></strong></h3>
+
+<p>我们根据上面API返回的json数据来创建一个FamousInfo数据对象，我们可以利用AndroidStudio插件<a href="https://plugins.jetbrains.com/plugin/7654?pr=androidstudio"> GsonFormat</a> 快速，方便的将json数据转为Java 对象，
+FamousInfo.java</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">woyou</span><span class="o">.</span><span class="na">androidsample</span><span class="o">.</span><span class="na">bean</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Created by Xiho on 2016/3/14.
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">FamousInfo</span> <span class="o">{</span>
+
+    <span class="cm">/**
+     * total : 227
+     * result : [{"famous_name":"车尔尼雪夫斯基","famous_saying":"非凡的单纯，非凡的明确\u2014\u2014这是天才的智慧的最可惊人的品质。"},{"famous_name":"约·德莱顿","famous_saying":"天才在社会生活中往往显得迟钝而"},{"famous_name":"雨果","famous_saying":"敢于冲撞命运才是天才"},{"famous_name":"卡莱尔","famous_saying":"所谓天才，就是比任何人都先抵挡痛苦的经验本领。"},{"famous_name":"林肯","famous_saying":"卓越的天才不屑走一条人家走过的路。他寻找迄今没有开拓过的地区。"},{"famous_name":"席勒","famous_saying":"产生天才的土壤比天才还要难找"},{"famous_name":"爱因斯坦","famous_saying":"任何天才不能在孤独的状态中发展"},{"famous_name":"民谚","famous_saying":"名人的古怪行为是天才的标志，凡人的古怪行为是神经出了毛病"},{"famous_name":"鲁迅","famous_saying":"哪里有天才，我是把别人喝咖啡的工夫都用在了工作上了。"},{"famous_name":"塞涅夫","famous_saying":"没有某些发狂的劲头，就没有天才。"},{"famous_name":"狄德罗","famous_saying":"精神的浩瀚想象的活跃心灵的勤奋：就是天才。"},{"famous_name":"爱默生","famous_saying":"平凡的人希望，天才的人创造。"},{"famous_name":"契诃夫","famous_saying":"真正的天才是常常隐藏在群众里面，绝不挤向人前去露脸的。"},{"famous_name":"别林斯基","famous_saying":"任何天才，不经过艰苦不断的劳动，不经过最使空想家头疼和懊恼的最初纯物质和机械的劳动，就无法精通任何种类的艺术。"},{"famous_name":"杨格","famous_saying":"我愿意以天才比美德，以学问比财富。如美德越少的人，越需要财富，天才越低的人，越需要学问。"},{"famous_name":"巴尔扎克","famous_saying":"职业尽管不同，但天才的品德并无分别。"},{"famous_name":"恩格斯","famous_saying":"逆境使天才脱颖而出，顺境会埋没"},{"famous_name":"巴尔扎克","famous_saying":"破坏的人和建设的人，两者都是意志的现象：一个是准备工作，另一个是完成工作；前者好像是一个恶的天才，后者似乎是一个善的天才；对这一个给予光荣，对另一个给予忘却。恶者哇啦哇啦，把庸俗的人们从梦里惊醒，对他佩服得五体投地，可是善者却一直默不作声。"},{"famous_name":"培根","famous_saying":"如果孩子确有某种超群的天才，那当然应该扶植发展。但就一般情况说，下面这句格言很有用的：\u201c长期的训练会通过适应化难为易。\u201d"},{"famous_name":"爱迪生","famous_saying":"天才是百分之一的灵感，百分之九十九的血汗。"}]
+     * error_code : 0
+     * reason : Succes
+     */</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">total</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">error_code</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">reason</span><span class="o">;</span>
+    <span class="cm">/**
+     * famous_name : 车尔尼雪夫斯基
+     * famous_saying : 非凡的单纯，非凡的明确——这是天才的智慧的最可惊人的品质。
+     */</span>
+
+    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ResultEntity</span><span class="o">&gt;</span> <span class="n">result</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTotal</span><span class="o">(</span><span class="kt">int</span> <span class="n">total</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">total</span> <span class="o">=</span> <span class="n">total</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setError_code</span><span class="o">(</span><span class="kt">int</span> <span class="n">error_code</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">error_code</span> <span class="o">=</span> <span class="n">error_code</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setReason</span><span class="o">(</span><span class="n">String</span> <span class="n">reason</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">reason</span> <span class="o">=</span> <span class="n">reason</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setResult</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">ResultEntity</span><span class="o">&gt;</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getTotal</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">total</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getError_code</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">error_code</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getReason</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">reason</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ResultEntity</span><span class="o">&gt;</span> <span class="nf">getResult</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ResultEntity</span> <span class="o">{</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">famous_name</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">famous_saying</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFamous_name</span><span class="o">(</span><span class="n">String</span> <span class="n">famous_name</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">famous_name</span> <span class="o">=</span> <span class="n">famous_name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFamous_saying</span><span class="o">(</span><span class="n">String</span> <span class="n">famous_saying</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">famous_saying</span> <span class="o">=</span> <span class="n">famous_saying</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getFamous_name</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">famous_name</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">getFamous_saying</span><span class="o">()</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">famous_saying</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+
+</code></pre></div></div>
+
+<h3 id="四实现过程"><strong>四、实现过程</strong></h3>
+<p>首先， 按照官方的说明，我们需要创建一个接口，返回 Call<FamousInfo>；如下：</FamousInfo></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@GET</span><span class="o">(</span><span class="s">"/avatardata/mingrenmingyan/lookup"</span><span class="o">)</span>
+    <span class="n">Call</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">&gt;</span> <span class="nf">getFamousResult</span><span class="o">(</span><span class="nd">@Header</span><span class="o">(</span><span class="s">"apiKey"</span><span class="o">)</span> <span class="n">String</span> <span class="n">apiKey</span><span class="o">,</span>
+                                     <span class="nd">@Query</span><span class="o">(</span><span class="s">"keyword"</span><span class="o">)</span> <span class="n">String</span> <span class="n">keyword</span><span class="o">,</span>
+                                     <span class="nd">@Query</span><span class="o">(</span><span class="s">"page"</span><span class="o">)</span> <span class="kt">int</span> <span class="n">page</span><span class="o">,</span>
+                                     <span class="nd">@Query</span><span class="o">(</span><span class="s">"rows"</span><span class="o">)</span> <span class="kt">int</span> <span class="n">rows</span><span class="o">);</span>
+
+</code></pre></div></div>
+<p>这里我们使用的是Retrofit 提供注解的方式来定义接口的</p>
+<ul>
+  <li>@get后面我们填写需要访问对应的接口地址</li>
+  <li>@Header用来添加Header</li>
+  <li>@Query用来添加查询关键字</li>
+</ul>
+
+<p>现在接口定义好了，我们来** 定义Retrofit 网络接口服务的包装类 **：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">woyou</span><span class="o">.</span><span class="na">androidsample</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">retrofit2.GsonConverterFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">retrofit2.Retrofit</span><span class="o">;</span>
+
+<span class="cm">/**
+ * Retrofit 网络接口服务的包装类
+ * Created by Xiho on 2016/3/14.
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RetrofitWrapper</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">RetrofitWrapper</span> <span class="n">instance</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">Context</span> <span class="n">mContext</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">Retrofit</span> <span class="n">retrofit</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="nf">RetrofitWrapper</span><span class="o">()</span> <span class="o">{</span>
+           <span class="c1">//1.创建Retrofit对象</span>
+        <span class="n">retrofit</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Retrofit</span><span class="o">.</span><span class="na">Builder</span><span class="o">().</span><span class="na">baseUrl</span><span class="o">(</span><span class="n">Constant</span><span class="o">.</span><span class="na">BASEURL</span><span class="o">)</span> <span class="c1">// 定义访问的主机地址</span>
+                <span class="o">.</span><span class="na">addConverterFactory</span><span class="o">(</span><span class="n">GsonConverterFactory</span><span class="o">.</span><span class="na">create</span><span class="o">())</span>  <span class="c1">//解析方法</span>
+                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="cm">/**
+     * 单例模式
+     *
+     * @return
+     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">RetrofitWrapper</span> <span class="nf">getInstance</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">instance</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">RetrofitWrapper</span><span class="o">.</span><span class="na">class</span><span class="o">){</span>
+                <span class="k">if</span> <span class="o">(</span><span class="n">instance</span><span class="o">==</span><span class="kc">null</span><span class="o">){</span>
+                    <span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RetrofitWrapper</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">public</span> <span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">T</span> <span class="nf">create</span><span class="o">(</span><span class="kd">final</span> <span class="n">Class</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">service</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">retrofit</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+
+
+<span class="cm">/** 
+   * Created by Xiho on 2016/3/14. 
+   */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Constant</span> <span class="o">{</span>    
+    <span class="kd">public</span>  <span class="kd">static</span> <span class="n">String</span> <span class="n">BASEURL</span><span class="o">=</span><span class="s">"http://apis.baidu.com"</span><span class="o">;</span> <span class="c1">//服务器地址   </span>
+    <span class="kd">public</span>  <span class="kd">static</span> <span class="n">String</span> <span class="n">APIKEY</span><span class="o">=</span><span class="s">"4c4f0c3c49e09d5578ae0ba49fa84a97"</span><span class="o">;</span>
+
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>网络服务的包装类定义好了之后，在定义一个访问的Model（个人编码风格，其实可以更简洁点）。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FamousInfoModel</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">FamousInfoModel</span> <span class="n">famousInfoModel</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">FamousService</span> <span class="n">mFamousService</span><span class="o">;</span>
+
+    <span class="cm">/**
+     * 单例模式
+     *
+     * @return
+     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">FamousInfoModel</span> <span class="nf">getInstance</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">famousInfoModel</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">famousInfoModel</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FamousInfoModel</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">famousInfoModel</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">private</span> <span class="nf">FamousInfoModel</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">mFamousService</span> <span class="o">=</span> <span class="o">(</span><span class="n">FamousService</span><span class="o">)</span> <span class="n">RetrofitWrapper</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="n">FamousService</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 查询名人名言
+     *
+     * @param famousInfoReq
+     * @return
+     */</span>
+    <span class="kd">public</span> <span class="n">Call</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">&gt;</span> <span class="nf">queryLookUp</span><span class="o">(</span><span class="n">FamousInfoReq</span> <span class="n">famousInfoReq</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Call</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">&gt;</span> <span class="n">infoCall</span> <span class="o">=</span> <span class="n">mFamousService</span><span class="o">.</span><span class="na">getFamousResult</span><span class="o">(</span><span class="n">famousInfoReq</span><span class="o">.</span><span class="na">apiKey</span><span class="o">,</span> <span class="n">famousInfoReq</span><span class="o">.</span><span class="na">keyword</span><span class="o">,</span> <span class="n">famousInfoReq</span><span class="o">.</span><span class="na">page</span><span class="o">,</span> <span class="n">famousInfoReq</span><span class="o">.</span><span class="na">rows</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">infoCall</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<h3 id="五如何使用"><strong>五、如何使用</strong></h3>
+<p>构建好接口以后,可以使用了!</p>
+
+<p>使用分为四步:</p>
+
+<ul>
+  <li>创建Retrofit对象</li>
+  <li>创建访问API的请求</li>
+  <li>发送请求</li>
+  <li>处理结果
+主要代码如下：
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">FamousInfoModel</span> <span class="n">famousInfoModel</span> <span class="o">=</span><span class="n">FamousInfoModel</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">getApplicationContext</span><span class="o">());</span>
+<span class="c1">// 获取事件</span>
+  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">initEvent</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">mSerachBtn</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">View</span><span class="o">.</span><span class="na">OnClickListener</span><span class="o">()</span> <span class="o">{</span>
+          <span class="nd">@Override</span>
+          <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onClick</span><span class="o">(</span><span class="n">View</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+              <span class="c1">//创建访问的API请求</span>
+              <span class="n">Call</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">&gt;</span> <span class="n">callFamous</span><span class="o">=</span> <span class="n">famousInfoModel</span><span class="o">.</span><span class="na">queryLookUp</span><span class="o">(</span><span class="n">initParams</span><span class="o">());</span>
+              <span class="c1">//发送请求</span>
+              <span class="n">callFamous</span><span class="o">.</span><span class="na">enqueue</span><span class="o">(</span><span class="k">new</span> <span class="n">Callback</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">&gt;()</span> <span class="o">{</span>
+                  <span class="nd">@Override</span>
+                  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onResponse</span><span class="o">(</span><span class="n">Call</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">&gt;</span> <span class="n">call</span><span class="o">,</span> <span class="n">Response</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">&gt;</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+                      <span class="k">if</span><span class="o">(</span><span class="n">response</span><span class="o">.</span><span class="na">isSuccess</span><span class="o">()){</span>
+                          <span class="n">FamousInfo</span> <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">body</span><span class="o">();</span>
+                          <span class="k">if</span><span class="o">(</span><span class="n">result</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+                              <span class="n">List</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">.</span><span class="na">ResultEntity</span><span class="o">&gt;</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">getResult</span><span class="o">();</span>
+                                  <span class="n">mTxtContent</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">"1、"</span><span class="o">+</span><span class="n">entity</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="na">getFamous_saying</span><span class="o">()+</span><span class="s">"\n---"</span><span class="o">+</span><span class="n">entity</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="na">getFamous_name</span><span class="o">()+</span><span class="s">"\n 2、"</span>
+                                          <span class="o">+</span><span class="n">entity</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">getFamous_saying</span><span class="o">()+</span><span class="s">"\n---"</span><span class="o">+</span><span class="n">entity</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">).</span><span class="na">getFamous_name</span><span class="o">());</span>
+                          <span class="o">}</span>
+                      <span class="o">}</span>
+                  <span class="o">}</span>
+                  <span class="nd">@Override</span>
+                  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onFailure</span><span class="o">(</span><span class="n">Call</span><span class="o">&lt;</span><span class="n">FamousInfo</span><span class="o">&gt;</span> <span class="n">call</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+
+                  <span class="o">}</span>
+              <span class="o">});</span>
+          <span class="o">}</span>
+      <span class="o">});</span>
+  <span class="o">}</span>
+</code></pre></div>    </div>
+    <p>最后运行的效果图如下：</p>
+  </li>
+</ul>
+
+<p><img src="http://img.blog.csdn.net/20160408133246502" alt="这里写图片描述" /></p>
+
+<p>** 搜索的结果我只是显示了其中一部分，只用来使用Retrofit 这个框架，没有很具体去做一些处理啦，后面还会用一些其他的库，还会使用本Demo 来进行测试，所以这次就简单写了下。**   <br />
+附上源码：<a href="http://download.csdn.net/download/u011974987/9461917">AndroidRetrofitSample</a>   <br /></p>
+
+<h3 id="六扩展阅读"><strong>六、扩展阅读</strong></h3>
+
+<p>** Retrofit:**</p>
+<ul>
+  <li>Retrofit 官方文档：<a href="http://square.github.io/retrofit/">http://square.github.io/retrofit/</a></li>
+  <li>Retrofit 使用介绍：<a href="http://www.cnblogs.com/angeldevil/p/3757335.html">http://www.cnblogs.com/angeldevil/p/3757335.html</a></li>
+  <li>Retrofit 离线缓存策略：<a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2016/0115/3873.html">http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2016/0115/3873.html</a></li>
+</ul>
+
+<blockquote>
+  <p>转载请标明出处： http://blog.csdn.net/u011974987/article/details/50895633</p>
+</blockquote>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/android-sim">Android-L SIM卡自适应更新语言问题
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/Android-getdate-language">Android 中取得当前时区（以GMT形式）和语言
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/android-5.1-settings">Android 5.1 Settings源码简要分析</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2016/04/16/theadpool-analysis/">Android 中线程池的分析</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

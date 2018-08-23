@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>shell 命令和流程控制（二）</title>
+    <meta name="description" content="前言Linxu shell 脚本基础这里介绍到第二篇，详细介绍shell 命令和流程控制，这部分介绍三类命令，在学习时大家应该加以比较学习。Linux shell脚本基础课程前面一篇介绍的都是语法基础的开头、注释、变量和 环境变量，这里将介绍shell命令和控制流程的第一部分，在shell脚本中可以使用三类命令，...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/linux/shell-script-02">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>shell 命令和流程控制（二）</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-09-30
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<!-- <span class="point">•</span> -->
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Shell" title="Category: Shell" rel="category">Shell</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#Shell" title="Category: Shell" rel="category">Shell</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Shell" title="Tag: Shell" rel="tag">Shell</a-->
+        <a href="/tag/#Shell" title="Tag: Shell" rel="tag">Shell</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h2 id="前言">前言</h2>
+<p>Linxu shell 脚本基础这里介绍到第二篇，详细介绍shell 命令和流程控制，这部分介绍三类命令，在学习时大家应该加以比较学习。
+Linux shell脚本基础课程<a href="http://xuhaoblog.com/linux/shell-script-01.html">前面一篇</a>介绍的都是语法基础的开头、注释、变量和 环境变量，这里将介绍shell命令和控制流程的第一部分，在shell脚本中可以使用三类命令，而控制流程就放在下一讲吧。</p>
+
+<hr />
+
+<h2 id="正文">正文</h2>
+
+<h2 id="115-shell命令和流程控制"><strong>1.1.5 Shell命令和流程控制</strong></h2>
+
+<p>在shell脚本中可以使用三类命令：</p>
+
+<h3 id="1unix-命令"><strong>1)Unix 命令:</strong></h3>
+<p>虽然在shell脚本中可以使用任意的unix命令，但是还是由一些相对更常用的命令。这些命令通常是用来进行文件和文字操作的。
+<!-- more -->
+常用命令语法及功能</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo "some text": 将文字内容打印在屏幕上
+
+ls: 文件列表
+
+wc –l filewc -w filewc -c file: 计算文件行数计算文件中的单词数计算文件中的字符数
+
+cp sourcefile destfile: 文件拷贝
+
+mv oldname newname : 重命名文件或移动文件
+
+rm file: 删除文件
+
+grep 'pattern' file: 在文件内搜索字符串比如：grep 'searchstring' file.txt
+
+cut -b colnum file: 指定欲显示的文件内容范围，并将它们输出到标准输出设备比如：输出每行第5个到第9个字
+符cut -b5-9 file.txt千万不要和cat命令混淆，这是两个完全不同的命令
+
+cat file.txt: 输出文件内容到标准输出设备（屏幕）上
+
+file somefile: 得到文件类型
+
+read var: 提示用户输入，并将输入赋值给变量
+
+sort file.txt: 对file.txt文件中的行进行排序
+
+uniq: 删除文本文件中出现的行列比如： sort file.txt | uniq
+
+expr: 进行数学运算Example: add 2 and 3expr 2 "+" 3
+
+find: 搜索文件比如：根据文件名搜索find . -name filename -print
+
+tee: 将数据输出到标准输出设备(屏幕) 和文件比如：somecommand | tee outfile
+
+basename file: 返回不包含路径的文件名比如： basename /bin/tux将返回 tux
+
+dirname file: 返回文件所在路径比如：dirname /bin/tux将返回 /bin
+
+head file: 打印文本文件开头几行
+
+tail file : 打印文本文件末尾几行
+
+sed: Sed是一个基本的查找替换程序。可以从标准输入（比如命令管道）读入文本，并将
+结果输出到标准输出（屏幕）。该命令采用正则表达式（见参考）进行搜索。不要和shell中的通配符相混淆。比如：将linuxfocus 替换为LinuxFocus ：cat text.file | sed 's/linuxfocus/LinuxFocus/' &gt; 
+
+newtext.fileawk: awk 用来从文本文件中提取字段。缺省地，字段分割符是空格，可以使用-F指定其他分割符。
+
+cat file.txt | awk -F, '{print $1 "," $3 }'这里我们使用，作为字段分割符，同时打印第一个和第三个字段。如果该文件内容如下： Adam Bor, 34, IndiaKerry Miller, 22, USA命令输出结果为：Adam Bor, IndiaKerry Miller, USA
+
+</code></pre></div></div>
+
+<hr />
+<h3 id="2-概念-管道-重定向和-backtick"><strong>2) 概念: 管道, 重定向和 backtick</strong></h3>
+
+<p>&lt;font color=red&gt;这些不是系统命令，但是他们真的很重要。&lt;/font&gt;</p>
+
+<p><strong>管道 (|)：</strong>
+ 将一个命令的输出作为另外一个命令的输入。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>grep "hello" file.txt | wc -l
+</code></pre></div></div>
+
+<p>在file.txt中搜索包含有”hello”的行并计算其行数。
+在这里grep命令的输出作为wc命令的输入。当然您可以使用多个命令。</p>
+
+<p><strong>重定向：</strong>
+将命令的结果输出到文件，而不是标准输出（屏幕）。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; 写入文件并覆盖旧文件
+&gt;&gt; 加到文件的尾部，保留旧文件内容。
+</code></pre></div></div>
+
+<p><strong>反短斜线：</strong>
+使用反短斜线可以将一个命令的输出作为另外一个命令的一个命令行参数。
+命令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find . -mtime -1 -type f -print
+</code></pre></div></div>
+<p>用来查找过去24小时（-mtime –2则表示过去48小时）内修改过的文件。如果您想将所有查找到的文件打一个包，则可以使用以下脚本：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<span class="c"># The ticks are backticks (`) not normal quotes ('):</span>
+<span class="nb">tar</span> <span class="nt">-zcvf</span> lastmod.tar.gz <span class="sb">`</span>find <span class="nb">.</span> <span class="nt">-mtime</span> <span class="nt">-1</span> <span class="nt">-type</span> f <span class="nt">-print</span><span class="sb">`</span>
+</code></pre></div></div>
+
+<hr />
+
+<h3 id="3-流程控制"><strong>3) 流程控制</strong></h3>
+
+<h4 id="1if"><strong>1.if</strong></h4>
+<p>“if” 表达式 如果条件为真则执行then后面的部分：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if ....; then
+....
+elif ....; then
+....
+else
+....
+fi
+</code></pre></div></div>
+<p>大多数情况下，可以使用测试命令来对条件进行测试。比如可以比较字符串、判断文件是否存在及是否可读等等…</p>
+
+<p>通常用” [ ] “来表示条件测试。注意这里的空格很重要。要确保方括号的空格。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ -f "somefile" ] ：判断是否是一个文件
+[ -x "/bin/ls" ] ：判断/bin/ls是否存在并有可执行权限
+[ -n "$var" ] ：判断$var变量是否有值
+[ "$a" = "$b" ] ：判断$a和$b是否相等
+</code></pre></div></div>
+
+<p>执行man test可以查看所有测试表达式可以比较和判断的类型。
+直接执行以下脚本：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<span class="k">if</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$SHELL</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"/bin/bash"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+</span><span class="nb">echo</span> <span class="s2">"your login shell is the bash (bourne again shell)"</span>
+<span class="k">else
+</span><span class="nb">echo</span> <span class="s2">"your login shell is not bash but </span><span class="nv">$SHELL</span><span class="s2">"</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+<p>变量$SHELL包含了登录shell的名称，我们和/bin/bash进行了比较。
+快捷操作符
+熟悉C语言的朋友可能会很喜欢下面的表达式：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ -f "/etc/shadow" ] &amp;&amp; echo "This computer uses shadow passwors"
+</code></pre></div></div>
+
+<p>这里 &amp;&amp; 就是一个快捷操作符，如果左边的表达式为真则执行右边的语句。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>您也可以认为是逻辑运算中的与操作。上例中表示如果/etc/shadow文件存在则打印” This computer uses shadow passwors”。同样或操作(</td>
+      <td> </td>
+      <td>)在shell编程中也是可用的。这里有个例子：</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<span class="nv">mailfolder</span><span class="o">=</span>/var/spool/mail/james
+<span class="o">[</span> <span class="nt">-r</span> <span class="s2">"</span><span class="nv">$mailfolder</span><span class="s2">"</span> <span class="o">]</span><span class="s1">' '</span><span class="o">{</span> <span class="nb">echo</span> <span class="s2">"Can not read </span><span class="nv">$mailfolder</span><span class="s2">"</span> <span class="p">;</span> <span class="nb">exit </span>1<span class="p">;</span> <span class="o">}</span>
+<span class="nb">echo</span> <span class="s2">"</span><span class="nv">$mailfolder</span><span class="s2"> has mail from:"</span>
+<span class="nb">grep</span> <span class="s2">"^From "</span> <span class="nv">$mailfolder</span>
+</code></pre></div></div>
+<p>该脚本首先判断mailfolder是否可读。如果可读则打印该文件中的”From” 一行。如果不可读则或操作生效，打印错误信息后脚本退出。这里有个问题，那就是我们必须有两个命令：</p>
+<ul>
+  <li>打印错误信息</li>
+  <li>退出程序
+我们使用花括号以匿名函数的形式将两个命令放到一起作为一个命令使用。一般函数将在下文提及。
+不用与和或操作符，我们也可以用if表达式作任何事情，但是使用与或操作符会更便利很多。</li>
+</ul>
+
+<h4 id="2case"><strong>2.case</strong></h4>
+<p><strong>case :</strong>表达式可以用来匹配一个给定的字符串，而不是数字。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>case ... in
+...) do something here ;;
+esac
+</code></pre></div></div>
+
+<p>让我们看一个例子。 file命令可以辨别出一个给定文件的文件类型，比如：
+file lf.gz
+这将返回：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lf.gz: gzip compressed data, deflated, original filename,
+last modified: Mon Aug 27 23:09:18 2001, os: Unix
+</code></pre></div></div>
+
+<p>我们利用这一点写了一个叫做smartzip的脚本，该脚本可以自动解压bzip2, gzip 和zip 类型的压缩文件：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<span class="nv">ftype</span><span class="o">=</span><span class="sb">`</span>file <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span><span class="sb">`</span>
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$ftype</span><span class="s2">"</span> <span class="k">in</span>
+<span class="s2">"</span><span class="nv">$1</span><span class="s2">: Zip archive"</span><span class="k">*</span><span class="p">)</span>
+unzip <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">;;</span>
+<span class="s2">"</span><span class="nv">$1</span><span class="s2">: gzip compressed"</span><span class="k">*</span><span class="p">)</span>
+<span class="nb">gunzip</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">;;</span>
+<span class="s2">"</span><span class="nv">$1</span><span class="s2">: bzip2 compressed"</span><span class="k">*</span><span class="p">)</span>
+bunzip2 <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="p">;;</span>
+<span class="k">*</span><span class="p">)</span> <span class="nb">echo</span> <span class="s2">"File </span><span class="nv">$1</span><span class="s2"> can not be uncompressed with smartzip"</span><span class="p">;;</span>
+<span class="k">esac</span>
+
+</code></pre></div></div>
+
+<p>您可能注意到我们在这里使用了一个特殊的变量$1。该变量包含了传递给该程序的第一个参数值。
+也就是说，当我们运行：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>smartzip articles.zip
+</code></pre></div></div>
+
+<p>$1 就是字符串 articles.zip</p>
+
+<h4 id="3-selsect"><strong>3. selsect</strong></h4>
+<p>select 表达式是一种bash的扩展应用，尤其擅长于交互式使用。用户可以从一组不同的值中进行选择。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select var in ... ; do
+break
+done	
+.... now $var can be used ....
+</code></pre></div></div>
+<p>下面是一个例子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/sh</span>
+<span class="nb">echo</span> <span class="s2">"What is your favourite OS?"</span>
+<span class="k">select </span>var <span class="k">in</span> <span class="s2">"Linux"</span> <span class="s2">"Gnu Hurd"</span> <span class="s2">"Free BSD"</span> <span class="s2">"Other"</span><span class="p">;</span> <span class="k">do
+</span><span class="nb">break	
+</span><span class="k">done
+</span><span class="nb">echo</span> <span class="s2">"You have selected </span><span class="nv">$var</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>下面是该脚本运行的结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>What is your favourite OS?
+1) Linux
+2) Gnu Hurd
+3) Free BSD
+4) Other
+#? 1
+You have selected Linux
+</code></pre></div></div>
+<p>上面就是这一篇的内容，控制流程比较多，这里先介绍这三个。下篇继续。。。</p>
+
+<hr />
+<h2 id="更多相关系列传送门">更多相关系列传送门：</h2>
+<p><strong>【个人博客】shel 脚本系列</strong></p>
+
+<ul>
+  <li><a href="http://xuhaoblog.com/linux/shell-script-01.html">【Linux 系统编程】shell 脚本基础学习（一）</a></li>
+  <li><a href="http://xuhaoblog.com/linux/shell-script-02.html">【Linux 系统编程】shell 命令和流程控制（二）</a></li>
+  <li><a href="http://xuhaoblog.com/linux/shell-script-03.html">【Linux 系统编程】shell 流程控制loop和引号（三）</a></li>
+  <li><a href="http://xuhaoblog.com/linux/shell-script-04.html">【Linux 系统编程】shell 输入/输出重定向（四）</a></li>
+  <li><a href="http://xuhaoblog.com/linux/shell-script-05.html">【Linux 系统编程】shell 脚本基础学习之函数（五）</a></li>
+</ul>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/linux/shell-script-05">shell 脚本基础学习之函数（五）
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/linux/shell-script-04">shell 输入/输出重定向（四）
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/linux/shell-script-01">shell 脚本基础学习（一）</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/linux/shell-script-03">shell 流程控制loop和引号（三）</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>
