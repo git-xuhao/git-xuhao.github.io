@@ -92,6 +92,16 @@ layout: default
                                 <i class="fa fa-map-marker" style="padding:2px"></i>
                                 {{ site.user_location }}
                         </p>
+                        <p class="contact">
+                            <a href="mailto:{{site.email}}" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+                            <a href="https://github.com/{{site.github_username}}" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> {% if site.weibo_username %}
+                            <a href="http://weibo.com/{{site.weibo_username}}" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a> {% endif %} {% if site.zhihu_username %}
+                            <a href="https://www.zhihu.com/people/{{site.zhihu_username}}" title="Zhihu"><i class="iconfont icon-daoruzhihu"></i></a> {% endif %} {% if site.twitter_username %}
+                            <a href="https://twitter.com/{{site.twitter_username}}" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a> {% endif %} {% if site.facebook_username %}
+                            <a href="https://www.facebook.com/{{site.facebook_username}}" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a> {% endif %}  {% if site.linkedIn_username %}
+                            <a href="https://www.linkedin.com/in/{{site.linkedIn_username}}" title="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a> {% endif %} {% if site.dribbble_username %}
+                            <a href=" https://dribbble.com/{{site.dribbble_username}}" title="Dribbble"><i class="fa fa-dribbble" aria-hidden="true"></i></a> {% endif %}
+                        </p>
                     <small style="color: #666666">{{ site.user_description }}</small>
                 </div>
     
@@ -180,7 +190,7 @@ layout: default
                     Links
                 </div>
                 <ul  class="content-ul">
-                        <a href="http://blog.csdn.net/u011974987" class="previous" target="_blank"><i class="fa fa-angle-double-right"></i> CSDN</a>
+                        <a href="https://me.csdn.net/u011974987" class="previous" target="_blank"><i class="fa fa-angle-double-right"></i> CSDN</a>
                 </ul>
             </div>
         </div>

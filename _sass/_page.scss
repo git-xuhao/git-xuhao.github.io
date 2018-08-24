@@ -16,8 +16,8 @@
         width: 75%;
         float: left;
         padding: 20px 30px;
-        line-height: 1.6;
-        font-size: 16px;
+        line-height: 1.5;
+        font-size: 15px;
         background-color: #f8f8fd;
         box-shadow: 0 1px 2px rgba(0,0,0,0.4),0 0 30px rgba(10,10,0,0.1) inset;
         >h1 {
@@ -32,7 +32,7 @@
                 color: #6a6b6b;
             }
             li {
-                line-height: 1.8;
+                line-height: 1.5;
                 color: #888888;
                 time {
                     display: inline-block;
@@ -51,13 +51,15 @@
                 }
                 .categories {
                     padding: 0 15px;
+                 
                     i {
                         color: #9e9d9d;
                     }
                     a {
-                        padding: 1px 5px;
-                        background-color: #317ff7;
+                        padding: 3px 5px;
+                        background-color: hsl(194, 67%, 46%);
                         color: #fff;
+                        border-radius: 5px;
                         font-size: 90%;
                         transition: 0.3s ease;
                         &:hover {

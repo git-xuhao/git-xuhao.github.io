@@ -7,29 +7,29 @@
         }
     }
     .left {
-        border-radius: 5px;
+        border-radius: 0px;
         >ul {
             padding: 0;
             >li {
                 list-style: none;
             }
             li {
-                color: #333;
+                color: #666666;
                 h2 {
                     border: none;
                     font-size: 22px;
                     margin: 0;
                 }
                 .label {
-                    margin-bottom: 15px;
+                    margin-bottom: 5px;
                     overflow: hidden;
                     .label-card {
                         float: left;
-                        margin-right: 15px;
+                        margin-right: 10px;
                         i {
                             padding-right: 0;
-                            margin-right: 3px;
-                            color: #666666;
+                            margin-right: 0px;
+                            color: #c7cbe6;
                         }
                     }
                     .categories {
@@ -38,13 +38,13 @@
                 }
                 .excerpt {
                     h2 {
-                        font-size: 24px;
-                    }
-                    h3 {
                         font-size: 22px;
                     }
-                    h4 {
+                    h3 {
                         font-size: 20px;
+                    }
+                    h4 {
+                        font-size: 18px;
                     }
                 }
                 .read-all {
