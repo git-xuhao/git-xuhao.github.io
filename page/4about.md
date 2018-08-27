@@ -21,7 +21,6 @@ I am a android developer focusing .Always hungry to keep learning.
 * GitHub：[徐昊Xiho](https://github.com/git-xuhao)
 * email：igeekho@gmail.com
 * [Weibo](http://weibo.com/xuxiho)
-* [知乎](https://www.zhihu.com/people/gaohaoyang)
 * [Facebook](https://www.facebook.com/google.xu)
 
 

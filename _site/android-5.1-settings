@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Android 5.1 Settings源码简要分析</title>
+    <meta name="description" content="概述：先声明：本人工作快两年了，仍是菜鸟级别的，惭愧啊！以前遇到好多知识点都没有记录下来，感觉挺可惜的，现在有机会接触Android 源码。我们一个Android组的搞Setting，我觉得是得写得东西，毕竟才接触，现在只能看一段时间代码，就先记录下一些收获吧，说多了就是泪~本文主要针对L平台上Settings模...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/android-5.1-settings">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Android 5.1 Settings源码简要分析</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-04-12
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Android" title="Category: Android" rel="category">Android</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#Android" title="Category: Android" rel="category">Android</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Android" title="Tag: Android" rel="tag">Android</a-->
+        <a href="/tag/#Android" title="Tag: Android" rel="tag">Android</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h2 id="概述"><strong>概述：</strong></h2>
+<p><strong>先声明：</strong>本人工作快两年了，仍是菜鸟级别的，惭愧啊！以前遇到好多知识点都没有记录下来，感觉挺可惜的，现在有机会接触Android 源码。我们一个Android组的搞Setting，我觉得是得写得东西，毕竟才接触，现在只能看一段时间代码，就先记录下一些收获吧，说多了就是泪~本文主要针对L平台上Settings模块正常启动流程做一个简要分析，并试着分析一下Settings下面某选项的实现。</p>
+
+<h3 id="setting-简介"><strong>Setting 简介</strong></h3>
+<p>在之前的KK平台上Settings模块的第一个Activity名字为Settings，其继承的是PreferenceActivity，设置的每一个选项都是对应的一个Header对象，并且Header对象允许显示switch控件，button控件，checkbox控件等。如下图1.1，WLAN和蓝牙上使用到了switch开关。但在L上面，WLAN和蓝牙的这两个开关已经去掉了，如图1.2，在Settings模块的首个页面似乎就只是一个普通的Listview，那它用的还是不是Header呢？或者说取而代之的是什么呢？继续往下看吧~</p>
+
+<p><img src="https://img-blog.csdn.net/20160329120918137" alt="图片1.1" /><br />
+<strong>图片-1.1</strong>
+<!-- more -->
+<img src="https://img-blog.csdn.net/20160329121723202" alt="这里写图片描述" />
+<strong>图片-1.2</strong></p>
+<h3 id="l-settings-模块首界面初始化流程"><strong>L Settings 模块首界面初始化流程</strong></h3>
+
+<p>L Settings模块首界面为Settings，继承自SettingsActivity，SettingsActivity继承自Activity。</p>
+
+<p>首先看一下Settings.java代码可以发现它没有重写任何SettingsActiviy的方法，也没有增加任何自己的方法，唯独增加了许多静态内部类，如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/**
+ * Top-level Settings activity
+ */
+public class Settings extends SettingsActivity {
+
+    /*
+    * Settings subclasses for launching independently.
+    */
+    public static class BluetoothSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class WirelessSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class SimSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class TetherSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class VpnSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class DateTimeSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class StorageSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class WifiSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class WifiP2pSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class InputMethodAndLanguageSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class KeyboardLayoutPickerActivity extends SettingsActivity { /* empty */ }
+    public static class InputMethodAndSubtypeEnablerActivity extends SettingsActivity { /* empty */ }
+    public static class VoiceInputSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class SpellCheckersSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class LocalePickerActivity extends SettingsActivity { /* empty */ }
+    public static class UserDictionarySettingsActivity extends SettingsActivity { /* empty */ }
+    public static class HomeSettingsActivity extends SettingsActivity { /* empty */ }
+    ...
+    }
+</code></pre></div></div>
+
+<p>看注释可以知道，这些子类是为了启动特定独立的Settings选项而创建的，例如在某个应用里需要设置无线那么只需要启动 WirelessSettingsActivity 就可以了。</p>
+
+<p>所以Settings模块的启动流程直接看SettingsActiviy就行了。</p>
+<ol>
+  <li><strong>SettingsActivity.onCreate方法</strong>
+ onCreate方法是Activity的生命周期第一步，看看 SettingsActivity在这里都做了些什么？</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> // Should happen before any call to getIntent()
+
+     getMetaData();
+</code></pre></div></div>
+
+<p>这个方法用来获得Activity的额外数据mFragmentClass，如果可以获得这个数据，那么下面会去显示mFragmentClass对应的Activity。直接启动Settings模块不会获得这个数据。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>     mIsShowingDashboard = className.equals(Settings.class.getName());
+</code></pre></div></div>
+<p>这一步很重要，因为我们是从Settings这个Activity过来的，所以这里的 mIsShowingDashboard 为 true 。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>		 // This is a "Sub Settings" when:
+
+        // - this is a real SubSettings
+
+        // - or :settings:show_fragment_as_subsetting is passed to the Intent
+
+        final boolean isSubSettings = className.equals(SubSettings.class.getName()) ||
+
+                intent.getBooleanExtra(EXTRA_SHOW_FRAGMENT_AS_SUBSETTING, false);
+</code></pre></div></div>
+<p>这个判断很重要但很明显这时isSubSettings的值是fasle，暂时忽略。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  setContentView(mIsShowingDashboard ?
+
+                R.layout.settings_main_dashboard : R.layout.settings_main_prefs);
+</code></pre></div></div>
+<p>前面知道这里的 mIsShowingDashboard为true，所以这里使用的布局文件为R.layout.settings_main_dashboard。settings_main_dashboard.xml文件如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+             android:id="@+id/main_content"
+
+             android:layout_height="match_parent"
+
+             android:layout_width="match_parent"
+
+             android:background="@color/dashboard_background_color"
+
+             /&gt;
+</code></pre></div></div>
+
+<p>由于mIsShowingDashboard为true，直接走到下面这段</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  else {
+
+                // No UP affordance if we are displaying the main Dashboard
+
+                mDisplayHomeAsUpEnabled = false;
+
+                // Show Search affordance
+
+                mDisplaySearch = true;
+
+                mInitialTitleResId = R.string.dashboard_title;
+
+                switchToFragment(DashboardSummary.class.getName(), null, false, false,
+
+                        mInitialTitleResId, mInitialTitle, false);
+
+              }
+
+
+</code></pre></div></div>
+<p>这里看到switchToFragment这个方法，可以知道这里是要切换DashboardSummary这个Fragment.</p>
+
+<p>接下来就看看DashboardSummary是个什么玩意？</p>
+
+<p>dashboard中文意思是仪表盘，这里是指DashboardSummary就是用来显示Settings所有选项的。</p>
+
+<p>在DashboardSummary的onCreateView里加载了这个布局文件R.layout.dashboard</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/dashboard"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+
+    android:scrollbarStyle="outsideOverlay"
+
+    android:clipToPadding="false"&gt;
+
+ 
+
+        &lt;LinearLayout
+
+                android:id="@+id/dashboard_container"
+
+                android:layout_width="match_parent"
+
+                android:layout_height="match_parent"
+
+                android:layout_gravity="center_horizontal"
+
+                android:paddingStart="@dimen/dashboard_padding_start"
+
+                android:paddingEnd="@dimen/dashboard_padding_end"
+
+                android:paddingTop="@dimen/dashboard_padding_top"
+
+                android:paddingBottom="@dimen/dashboard_padding_bottom"
+
+                android:orientation="vertical"
+
+                /&gt;
+
+ 
+
+&lt;/ScrollView&gt;
+</code></pre></div></div>
+<p>看了上面的布局文件可以知道Settings的选项视图应该就是显示在dashboard_container中了。</p>
+
+<p><br />
+DashboardSummary走完onCreateView方法后会走onResume,然后一路下来又会调到SettingsActivity的</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>loadCategoriesFromResource(R.xml.dashboard_categories, categories);
+</code></pre></div></div>
+
+<p>这一步是通过 R.xml.dashboard_categories来加载categories，这里的categorys为ArrayList<DashboardCategory> mCategories。接着来看看dashboard_categories.xml这个文件吧</DashboardCategory></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="c">&lt;!-- Copyright (C) 2014 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+--&gt;</span>
+
+<span class="nt">&lt;dashboard-categories</span>
+        <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span><span class="nt">&gt;</span>
+
+    <span class="c">&lt;!-- WIRELESS and NETWORKS --&gt;</span>
+    <span class="nt">&lt;dashboard-category</span>
+            <span class="na">android:id=</span><span class="s">"@+id/wireless_section"</span>
+            <span class="na">android:title=</span><span class="s">"@string/header_category_wireless_networks"</span> <span class="nt">&gt;</span>
+
+        <span class="c">&lt;!-- Wifi --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/wifi_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/wifi_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.wifi.WifiSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_wireless"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!--HetComm--&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/hetcomm_settings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_hetcomm"</span>
+                <span class="na">android:title=</span><span class="s">"@string/hetcom_setting_title"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;intent</span> <span class="na">android:action=</span><span class="s">"com.android.settings.HETCOMM_SETTINGS"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/dashboard-tile&gt;</span>
+
+        <span class="c">&lt;!-- Bluetooth --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/bluetooth_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/bluetooth_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.bluetooth.BluetoothSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_bluetooth2"</span>
+                <span class="nt">/&gt;</span>
+                
+        <span class="c">&lt;!-- Hotknot --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/hotknot_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/hotknot_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.mediatek.settings.hotknot.HotKnotSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_hotknot"</span> 
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- SIM Cards --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/sim_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/sim_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.sim.SimSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_sim_sd"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Data Usage --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/data_usage_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/data_usage_summary_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.DataUsageSummary"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_data_usage"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Operator hook --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/operator_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.WirelessSettings"</span> <span class="nt">&gt;</span>
+            <span class="nt">&lt;intent</span> <span class="na">android:action=</span><span class="s">"com.android.settings.OPERATOR_APPLICATION_SETTING"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/dashboard-tile&gt;</span>
+
+        <span class="c">&lt;!-- Other wireless and network controls --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/wireless_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/radio_controls_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.WirelessSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_more"</span>
+                <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;/dashboard-category&gt;</span>
+
+    <span class="c">&lt;!-- DEVICE --&gt;</span>
+    <span class="nt">&lt;dashboard-category</span>
+            <span class="na">android:id=</span><span class="s">"@+id/device_section"</span>
+            <span class="na">android:title=</span><span class="s">"@string/header_category_device"</span> <span class="nt">&gt;</span>
+
+        <span class="c">&lt;!-- Home --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/home_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/home_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.HomeSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_home"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Display --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/display_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/display_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.DisplaySettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_display"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Notifications --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/notification_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/notification_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.mediatek.audioprofile.AudioProfileSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_notifications"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Storage --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/storage_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/storage_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.deviceinfo.Memory"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_storage"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Battery --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/battery_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/power_usage_summary_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.fuelgauge.PowerUsageSummary"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_battery"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Application Settings --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/application_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/applications_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.applications.ManageApplications"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_applications"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Manage users --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/user_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/user_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.users.UserSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_multiuser"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Manage NFC payment apps --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/nfc_payment_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/nfc_payment_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.nfc.PaymentSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_nfc_payment"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Manufacturer hook --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/manufacturer_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.WirelessSettings"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;intent</span> <span class="na">android:action=</span><span class="s">"com.android.settings.MANUFACTURER_APPLICATION_SETTING"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/dashboard-tile&gt;</span>
+
+    <span class="nt">&lt;/dashboard-category&gt;</span>
+
+    <span class="c">&lt;!-- PERSONAL --&gt;</span>
+    <span class="nt">&lt;dashboard-category</span>
+            <span class="na">android:id=</span><span class="s">"@+id/personal_section"</span>
+            <span class="na">android:title=</span><span class="s">"@string/header_category_personal"</span> <span class="nt">&gt;</span>
+
+        <span class="c">&lt;!-- Location --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/location_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/location_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.location.LocationSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_location"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Security --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/security_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/security_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.SecuritySettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_security"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Account --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/account_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/account_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.accounts.AccountSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_accounts"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Language --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/language_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/language_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.inputmethod.InputMethodAndLanguageSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_language"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Backup and reset --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/privacy_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/privacy_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.PrivacySettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_backup"</span>
+                <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;/dashboard-category&gt;</span>
+
+    <span class="c">&lt;!-- SYSTEM --&gt;</span>
+    <span class="nt">&lt;dashboard-category</span>
+        <span class="na">android:id=</span><span class="s">"@+id/system_section"</span>
+        <span class="na">android:title=</span><span class="s">"@string/header_category_system"</span> <span class="nt">&gt;</span>
+
+        <span class="c">&lt;!-- Date &amp; Time --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/date_time_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/date_and_time_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.DateTimeSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_date_time"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!--Scheduled power on&amp;off--&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/power_settings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_schpwronoff"</span>
+                <span class="na">android:title=</span><span class="s">"@string/schedule_power_on_off_settings_title"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;intent</span> <span class="na">android:action=</span><span class="s">"com.android.settings.SCHEDULE_POWER_ON_OFF_SETTING"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/dashboard-tile&gt;</span>
+
+        <span class="c">&lt;!-- Accessibility feedback --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/accessibility_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/accessibility_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.accessibility.AccessibilitySettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_accessibility"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Print --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/print_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/print_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.print.PrintSettingsFragment"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_print"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- Development --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/development_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/development_settings_title"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.DevelopmentSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_development"</span>
+                <span class="nt">/&gt;</span>
+
+        <span class="c">&lt;!-- About Device --&gt;</span>
+        <span class="nt">&lt;dashboard-tile</span>
+                <span class="na">android:id=</span><span class="s">"@+id/about_settings"</span>
+                <span class="na">android:title=</span><span class="s">"@string/about_settings"</span>
+                <span class="na">android:fragment=</span><span class="s">"com.android.settings.DeviceInfoSettings"</span>
+                <span class="na">android:icon=</span><span class="s">"@drawable/ic_settings_about"</span>
+                <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;/dashboard-category&gt;</span>
+
+<span class="nt">&lt;/dashboard-categories&gt;</span>
+
+</code></pre></div></div>
+
+<p>根据这个文件我们可以知道了，所谓的dashboard就是Settings模块首界面的一个抽象。而dashboard-categorys则是设置分类集合的抽象，而dashboard-category是分类的抽象，dashboard-tile就是分类下每个选项的抽象了。代码中的List<DashboardCategory>对应dashboard-categorys， DashboardCategory对应dashboard-category，而dashboard-tile则对因代码中的DashboardTile。</DashboardCategory></p>
+
+<p>当加载完这些对象后SettingsActivity会将得到的 mCategories 返回给DashboardSummary来初始化Settings的设置选项。</p>
+
+<p>下面这段代码就是DashboardSummary.rebuildUI()中完成界面的初始化</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   long start = System.currentTimeMillis();
+
+        final Resources res = getResources();
+
+ 
+
+        mDashboard.removeAllViews();
+
+ 
+
+        List&lt;DashboardCategory&gt; categories =
+
+                ((SettingsActivity) context).getDashboardCategories(true);
+
+ 
+
+        final int count = categories.size();
+
+        for (int n = 0; n &lt; count; n++) {
+
+            DashboardCategory category = categories.get(n);
+
+ 
+
+            View categoryView = mLayoutInflater.inflate(R.layout.dashboard_category, mDashboard,
+
+                    false);
+
+ 
+
+            TextView categoryLabel = (TextView) categoryView.findViewById(R.id.category_title);
+
+            categoryLabel.setText(category.getTitle(res));
+
+ 
+
+            ViewGroup categoryContent =
+
+                    (ViewGroup) categoryView.findViewById(R.id.category_content);
+
+ 
+
+            final int tilesCount = category.getTilesCount();
+
+            for (int i = 0; i &lt; tilesCount; i++) {
+
+                DashboardTile tile = category.getTile(i);
+
+ 
+
+                DashboardTileView tileView = new DashboardTileView(context);
+
+                updateTileView(context, res, tile, tileView.getImageView(),
+
+                        tileView.getTitleTextView(), tileView.getStatusTextView());
+
+ 
+
+                tileView.setTile(tile);
+
+ 
+
+                categoryContent.addView(tileView);
+
+            }
+
+ 
+
+            // Add the category
+
+            mDashboard.addView(categoryView);
+
+        }
+</code></pre></div></div>
+
+<p>这段代码我就不具体分析了，逻辑很简单，遍历categories这个列表来获取DashboardCategory对象，将所有DashboardCategory对象和DashboardCategory对象中的DashboardTile对象转化为视图对象并添加到主视图对象mDashboard中。</p>
+
+<p>到这里SettingsActivity的onCreate方法就算结束了。总结一下，</p>
+
+<p><strong>1.onCreate完成的任务是切换DashboardSmmary这个Fragment，然后从dashboard_categories.xml中读取预先配置好的文件来初始化Settings的首界面视图。</strong>
+   <strong>2.L中舍弃了Header类，取而代之的是DashboardCategory和DashboardTile类。</strong></p>
+
+<blockquote>
+  <p>转载请注明出处，谢谢~: http://blog.csdn.net/u011974987/article/details/51004854</p>
+</blockquote>
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/android-sim">Android-L SIM卡自适应更新语言问题
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/Android-getdate-language">Android 中取得当前时区（以GMT形式）和语言
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/2016/04/10/ubuntu-update-gun-version/">Ubuntu 更改Gun Make版本</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/android-retrofit">Android 网络请求库Retrofit简单使用</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

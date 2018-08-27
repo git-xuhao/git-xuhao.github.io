@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>使用Gradle和Nexus 搭建私有maven仓库</title>
+    <meta name="description" content="前言：随着业务的增长，需求量增多，我们的App 组件也越来越多，几乎大部分组件都有用到同样的第三方库和公司内部封装的库，而团队中的所有人都重复的从maven 远程的中央仓库下载构建，这样就会加大了仓库的负载和浪费了外网的带宽，网速慢的话，就要等很久很久，半个小时，几个小时，都有可能！这样明显影响项目的开发进度，有...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/maven">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>使用Gradle和Nexus 搭建私有maven仓库</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-07-01
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#技术" title="Category: 技术" rel="category">技术</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#技术" title="Category: 技术" rel="category">技术</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#maven" title="Tag: maven" rel="tag">maven</a-->
+        <a href="/tag/#maven" title="Tag: maven" rel="tag">maven</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h2 id="前言"><strong>前言：</strong></h2>
+<p>随着业务的增长，需求量增多，我们的App 组件也越来越多，几乎大部分组件都有用到同样的第三方库和公司内部封装的库，而团队中的所有人都重复的从maven 远程的中央仓库下载构建，这样就会加大了仓库的负载和浪费了外网的带宽，网速慢的话，就要等很久很久，半个小时，几个小时，都有可能！这样明显影响项目的开发进度，有的公司还是在内网的情况下开发，连接不到中央仓库怎么办？公司内部开发的公共组件怎么让其他项目共用呢？这个时候，我们不得不为自己的团队搭建一个私服maven仓库，来提高我们的开发效率。</p>
+
+<p>起初，对gradle和maven不是很熟，看了网上的教程一脸懵逼，后来，花了点时间，发现整个过程也还是很简单的。↓↓</p>
+
+<p>首先我们来了解一下，</p>
+
+<h2 id="一什么是mavengradle"><strong>一、什么是Maven,Gradle?</strong></h2>
+
+<p><strong>Maven</strong> 是一个项目管理和自动构建工具。Maven 包集中存放的地方，就是 Maven 仓库。这些仓库，可以是放在本地，也可以放在某个远程服务器上。 可以是私有仓库，也可以是公开的。下开发用的库列表：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mavenCentral();
+jcenter()
+maven {
+     url 'file:///Users/my-user-name/Documents/Android/repo/'
+}
+maven {
+    url 'http://localhost:8081/nexus/content/repositories/releases/'
+}
+</code></pre></div></div>
+
+<!-- more -->
+<p>Android Studio Gradle 主要支持两个 Maven 中央库：mavenCentral 和 jcenter。</p>
+
+<ul>
+  <li>mavenCentral 是最早的 maven 中央仓库</li>
+  <li>jcenter 是 Android Studio 0.8 版本起的默认 maven 中央仓库</li>
+  <li>第三个是我的本机的仓库</li>
+  <li>第四个是笔者部署在内网服务器的私有仓库</li>
+</ul>
+
+<p><strong>Gradle</strong> 是一个基于Apache Ant和Apache Maven概念的项目自动化建构工具。它使用一种基于Groovy的特定领域语言来声明项目设置，而不是传统的XML</p>
+
+<h2 id="二使用nexus搭建maven私服-">**二、使用Nexus搭建maven私服 **</h2>
+<h3 id="1nexus--下载安装">1.Nexus  下载安装：</h3>
+<p>官网下载地址：http://www.sonatype.org/nexus/go/，我的开发环境是Windows，我下载的是Nexus Repository Manager OSS 2.xx下面的 All platforms	nexus-2.13.0-01-bundle.zip压缩文件。↓
+<img src="http://img.blog.csdn.net/20160830184129972" alt="这里写图片描述" /></p>
+
+<h3 id="2nexus-启动">2.Nexus 启动：</h3>
+<p>下载完成之后，解压后进入\nexus-2.1.2-bundle\nexus-2.1.2\bin\jsw\，根据操作系统类型选择文件夹，我选的是windows-x86-32文件夹，进入后可看到如下所示bat文件。
+<img src="http://img.blog.csdn.net/20160830185642150" alt="这里写图片描述" /></p>
+
+<p>双击console-nexus.bat运行。再浏览器中输入<a href="http://127.0.0.1:8081/nexus/">http://127.0.0.1:8081/nexus/，</a>出现图（2）所示就代表nexus已经启动成功了。</p>
+
+<p><img src="http://img.blog.csdn.net/20160830190207761" alt="这里写图片描述" />
+图(2)</p>
+
+<p>8081是默认的端口号，要修改端口号，进入\conf\打开nexus.properties文件，修改application-port属性值就可以了。
+默认的用户名和密码分别是：admin和admin123。点击右上角的log in 登录后如图所示：
+点击左侧的 repositories 查看现有的仓库列表：
+<img src="http://img.blog.csdn.net/20160830190723138" alt="这里写图片描述" /></p>
+
+<h3 id="3nexus仓库">3.Nexus仓库：</h3>
+
+<p><strong>这里的仓库分了四种类型</strong></p>
+
+<ol>
+  <li>hosted(宿主仓库):用来部署自己,第三方或者公共仓库的构件</li>
+  <li>proxy(代理仓库):代理远程仓库</li>
+  <li>virtual(虚拟仓库):默认提供了一个 Central M1虚拟仓库 用来将maven 2适配为maven 1</li>
+  <li>group(仓库组):统一管理多个仓库</li>
+</ol>
+
+<p>&lt;font color=blue size=5&gt;Public Repositories:  仓库组</p>
+
+<p><strong>3rd party:</strong> 无法从公共仓库获得的第三方发布版本的构件仓库</p>
+
+<p><strong>Apache Snapshots:</strong> 用了代理ApacheMaven仓库快照版本的构件仓库</p>
+
+<p><strong>Central:</strong> 用来代理maven中央仓库中发布版本构件的仓库</p>
+
+<p><strong>Central M1 shadow:</strong> 用于提供中央仓库中M1格式的发布版本的构件镜像仓库</p>
+
+<p><strong>Codehaus Snapshots:</strong> 用来代理CodehausMaven 仓库的快照版本构件的仓库</p>
+
+<p><strong>Releases:</strong> 用来部署管理内部的发布版本构件的宿主类型仓库</p>
+
+<p><strong>Snapshots:</strong>用来部署管理内部的快照版本构件的宿主类型仓库</p>
+
+<h3 id="4建立nexus宿主仓库">4.建立Nexus宿主仓库</h3>
+<p>新建一个内部仓库，步骤为Repositories –&gt; Add –&gt; Hosted Repository，在页面的下半部分输入框中填入Repository ID和Repository Name即可，另外把Deployment Policy设置为<strong>Allow Redeploy</strong>，点击save就创建完成了。这里我点击添加宿主类型的仓库，在仓库列表的下方会出现新增仓库的配置，如下所示：
+ <img src="http://img.blog.csdn.net/20160830195149877" alt="这里写图片描述" /></p>
+
+<p>建立好新的仓库之后需要配置一下相关账号信息.在安全选项下选择用户选项,可以看到三个默认的账号,分别是管理员账号,部署账号和Nexus账号.正常访问仓库内容的时候是不需要这三个账户的,一般也就是把部署账号暴露出去,方便仓库项目维护人员部署项目使用.所以这里可以用默认的Deployment账户(记得重置下密码).也可以新建一个账号来使用,新建的时候可以通过add role management来控制该账号的权限。
+点击新建的仓库的url可以直接如今仓库的路劲，因为现在还没有部署项目，所以是空的仓库。</p>
+
+<p>&lt;font color=black  size=5&gt;至此，搭建私服的maven仓库就已经完成，下面继续介绍Android 端在AS 上面的应用。</p>
+
+<h2 id="三上传库到maven仓库"><strong>三、上传库到Maven仓库</strong></h2>
+<p>上传库到maven仓库有两种方式，我们先来介绍第一种：</p>
+<ol>
+  <li>首先我们创建一个新的AndroidStudio 项目，然后新建一个module，选择Android Library。</li>
+</ol>
+
+<p><img src="http://img.blog.csdn.net/20160830202410813" alt="这里写图片描述" /></p>
+
+<p>然后，我们随便写一个功能供别人使用。例如我写一个ToastUtils：</p>
+
+<p><img src="http://img.blog.csdn.net/20160830203501192" alt="这里写图片描述" /></p>
+
+<p>然后RebuildProject生成依赖的arr包。</p>
+
+<p>2.在MavenRepoDemo项目的根目录的build.gradle中配置刚刚建立的仓库：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>allprojects {
+    repositories {
+        jcenter()
+        maven{ url 'http://localhost:8081/nexus/content/repositories/releases/'}
+
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+</code></pre></div></div>
+
+<ol>
+  <li>在同目录下配置gradle.properties文件，定义通用属性，方便如果有多个库需要部署时，不需要修改每一个库中的配置：</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Maven仓库的URL
+MAVEN_REPO_RELEASE_URL=http://localhost:8081/nexus/content/repositories/releases/
+MAVEN_REPO_SNAPSHOT_URL=http://localhost:8081/nexus/content/repositories/snapshots/
+
+#对应maven的GroupId的值
+GROUP = common
+#登录nexus ossde的用户名
+
+NEXUS_USERNAME=admin
+#登录nexus oss的密码
+
+NEXUS_PASSWORD=admin123
+
+# groupid
+GROUP_ID = common
+
+# type
+TYPE = aar
+
+# description
+DESCRIPTION = This is Toast lib
+
+</code></pre></div></div>
+
+<p>这里的仓库我用的是Nexus 原有的仓库（你可以换成刚刚新建的仓库地址）。</p>
+
+<ol>
+  <li>修改module对应的build.gradle文件，添加以下配置：</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>apply plugin: 'com.android.library'
+
+apply plugin: 'maven'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+}
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: MAVEN_REPO_SNAPSHOT_URL) {
+                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
+            }
+            repository(url: MAVEN_REPO_RELEASE_URL) {
+                authentication(userName: NEXUS_USERNAME, password: NEXUS_PASSWORD)
+            }
+            pom.project {
+                version '1.0.0'
+                artifactId 'toastutils-lib'
+                groupId GROUP_ID
+                packaging TYPE
+                description DESCRIPTION
+            }
+        }
+    }
+}
+
+artifacts {
+    archives file('toastutils.aar')
+}
+
+
+
+</code></pre></div></div>
+
+<ol>
+  <li>在as右边栏，找到Gradle打开如下：
+<img src="http://img.blog.csdn.net/20160830203919352" alt="这里写图片描述" /></li>
+</ol>
+
+<p>然后双击uploadArchives，编译脚本并上传arr文件到私有仓库，最后在控制台可以看到日志是否上传成功。</p>
+
+<p>可以去仓库查看到刚刚上传的库文件：</p>
+
+<p><img src="http://img.blog.csdn.net/20160830204825029" alt="这里写图片描述" /></p>
+
+<p>第二种，就是直接通过Nexus直接上传，这种就不详细说了，有兴趣的自己去研究下吧！ 嘿嘿</p>
+
+<h2 id="四在项目中应用"><strong>四、在项目中应用</strong></h2>
+<ol>
+  <li>在项目的根目录build.gradle配置如下：</li>
+</ol>
+
+<p><img src="http://img.blog.csdn.net/20160830205442120" alt="这里写图片描述" /></p>
+
+<ol>
+  <li>在app目录下的build.gradle配置如下：</li>
+</ol>
+
+<p><img src="http://img.blog.csdn.net/20160830205622888" alt="这里写图片描述" /></p>
+
+<p>这样我们就完工了。在项目中调用我们库了，别人按照上面的配置就可以引用库使用了。</p>
+
+<p>&lt;font color=black  size=5&gt;<strong>附上Demo的GitHub项目源码</strong>：<a href="https://github.com/git-xuhao/MavenRepoDemo">MavenRepoDemo</a></p>
+
+<p>对于频繁更新的子项目是否适合采用这种方式。因为每次变动都需要上传，而主项目在引用该AAR的时候则需要每次都去检查是否更新， 这会使得编译时间大大增加，有了这个maven库，就不用那么麻烦了。</p>
+
+<h2 id="想了解更多有关的资料"><strong>想了解更多有关的资料：</strong></h2>
+
+<p><a href="http://blog.csdn.net/liujiahan629629/article/details/39272321">Nexus私服使Maven更加强大</a></p>
+
+<p><a href="http://kvh.io/tags/EmbraceAndroidStudio/">拥抱的androidStudio 系列文章 博客比较全</a></p>
+
+<blockquote>
+  <p>学习理解并整理下来的笔记； 
+希望大家能够指点或提出宝贵意见，谢谢！一起学习；
+转载请注明出处：<a href="http://blog.csdn.net/u011974987/article/details/52372185">http://blog.csdn.net/u011974987/article/details/52372185</a>
+个人主页：<a href="http://xuhaoblog.com">xuhaoblog.com</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/performance_tests">Android 性能检测工具</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/2016/07/07/git-clone-not-master-branch/">Git 如何 clone 非 master 分支的代码</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

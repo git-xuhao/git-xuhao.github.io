@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Android 自定义一款炫酷的加载控件</title>
+    <meta name="description" content="概述：在设计应用的时候，我们应该热爱极简主义，简单就是好的，对于很多用户来说，复杂的东西并不受欢迎。我要实现的是根据不同的情况去显示不同的加载效果，随用随调，效果是借鉴于某一项目的效果，我认为有必要提取出来改善封装一下，供以后使用。情况大致分为：加载中、无网络、无数据、加载失败等；预览下效果图我们怎么实现这种效果...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/Android-custom-loadingview">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Android 自定义一款炫酷的加载控件</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-05-14
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#Android" title="Category: Android" rel="category">Android</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#Android" title="Category: Android" rel="category">Android</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Android" title="Tag: Android" rel="tag">Android</a-->
+        <a href="/tag/#Android" title="Tag: Android" rel="tag">Android</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h2 id="概述"><strong>概述：</strong></h2>
+<p>在设计应用的时候，我们应该热爱极简主义，简单就是好的，对于很多用户来说，复杂的东西并不受欢迎。
+我要实现的是根据不同的情况去显示不同的加载效果，随用随调，效果是借鉴于某一项目的效果，我认为有必要提取出来改善封装一下，供以后使用。情况大致分为：加载中、无网络、无数据、加载失败等；
+<!-- more --></p>
+<h4 id="预览下效果图"><strong>预览下效果图</strong></h4>
+
+<p><img src="https://img-blog.csdn.net/20160519152132230" alt="这里写图片描述" /></p>
+
+<h4 id="我们怎么实现这种效果呢"><strong>我们怎么实现这种效果呢</strong></h4>
+<p>view_loading.xml的布局如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;FrameLayout</span> <span class="na">xmlns:android=</span><span class="s">"http://schemas.android.com/apk/res/android"</span>
+    <span class="na">android:layout_width=</span><span class="s">"match_parent"</span>
+    <span class="na">android:layout_height=</span><span class="s">"match_parent"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;LinearLayout</span>
+        <span class="na">android:id=</span><span class="s">"@+id/lin_loading"</span>
+        <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:layout_gravity=</span><span class="s">"center"</span>
+        <span class="na">android:visibility=</span><span class="s">"gone"</span>
+        <span class="na">android:orientation=</span><span class="s">"vertical"</span><span class="nt">&gt;</span>
+
+        <span class="nt">&lt;ImageView</span>
+            <span class="na">android:id=</span><span class="s">"@+id/img_loading"</span>
+            <span class="na">android:layout_width=</span><span class="s">"100dp"</span>
+            <span class="na">android:layout_height=</span><span class="s">"100dp"</span>
+            <span class="na">android:src=</span><span class="s">"@drawable/loading_animation"</span> <span class="nt">/&gt;</span>
+
+        <span class="nt">&lt;TextView</span>
+            <span class="na">android:id=</span><span class="s">"@+id/tv_loading"</span>
+            <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_marginTop=</span><span class="s">"16dp"</span>
+            <span class="na">android:layout_gravity=</span><span class="s">"center_horizontal"</span>
+            <span class="na">android:textSize=</span><span class="s">"14sp"</span> <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;/LinearLayout&gt;</span>
+
+
+    <span class="nt">&lt;LinearLayout</span>
+        <span class="na">android:id=</span><span class="s">"@+id/lin_load"</span>
+        <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+        <span class="na">android:layout_gravity=</span><span class="s">"center"</span>
+        <span class="na">android:gravity=</span><span class="s">"center"</span>
+        <span class="na">android:orientation=</span><span class="s">"vertical"</span>
+        <span class="na">android:visibility=</span><span class="s">"visible"</span>
+
+        <span class="nt">&gt;</span>
+
+        <span class="nt">&lt;ImageView</span>
+            <span class="na">android:id=</span><span class="s">"@+id/iv_load"</span>
+            <span class="na">android:layout_width=</span><span class="s">"100dp"</span>
+            <span class="na">android:layout_height=</span><span class="s">"100dp"</span>
+            <span class="na">android:src=</span><span class="s">"@mipmap/ic_launcher"</span> <span class="nt">/&gt;</span>
+
+        <span class="nt">&lt;TextView</span>
+            <span class="na">android:id=</span><span class="s">"@+id/tv_load"</span>
+            <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_gravity=</span><span class="s">"center_horizontal"</span>
+            <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span> <span class="nt">/&gt;</span>
+
+
+        <span class="nt">&lt;Button</span>
+            <span class="na">android:id=</span><span class="s">"@+id/btn_load"</span>
+            <span class="na">android:layout_width=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_height=</span><span class="s">"wrap_content"</span>
+            <span class="na">android:layout_marginTop=</span><span class="s">"8dp"</span>
+            <span class="na">android:layout_gravity=</span><span class="s">"center_horizontal"</span>
+            <span class="na">android:textSize=</span><span class="s">"14sp"</span> <span class="nt">/&gt;</span>
+
+    <span class="nt">&lt;/LinearLayout&gt;</span>
+
+<span class="nt">&lt;/FrameLayout&gt;</span>
+
+</code></pre></div></div>
+<p><strong>从布局来看，我分了两个部分，一个是加载中，另外一个是带有ImagView、文字和按钮的布局，有人看到这，就会说，哇靠，这不是很简单吗？根据不同的情况去设置Visibility的值就好了啊，没错，原理就是这样。</strong></p>
+
+<p>XHLoadingView.java的代码如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">com</span><span class="p">.</span><span class="n">woyou</span><span class="p">.</span><span class="n">loadingdemo</span><span class="p">.</span><span class="n">widget</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">Context</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">graphics</span><span class="p">.</span><span class="n">drawable</span><span class="p">.</span><span class="n">AnimationDrawable</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">util</span><span class="p">.</span><span class="n">AttributeSet</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">LayoutInflater</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">View</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="n">Button</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="n">FrameLayout</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="n">ImageView</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="n">LinearLayout</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">android</span><span class="p">.</span><span class="n">widget</span><span class="p">.</span><span class="n">TextView</span><span class="p">;</span>
+
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">woyou</span><span class="p">.</span><span class="n">loadingdemo</span><span class="p">.</span><span class="n">LoadingState</span><span class="p">;</span>
+<span class="n">import</span> <span class="n">com</span><span class="p">.</span><span class="n">woyou</span><span class="p">.</span><span class="n">loadingdemo</span><span class="p">.</span><span class="n">R</span><span class="p">;</span>
+
+
+<span class="p">/**</span>
+ <span class="p">*</span> <span class="n">Created</span> <span class="n">by</span> <span class="n">Xiho</span> <span class="n">on</span> <span class="m">11</span><span class="p">:</span><span class="m">21.</span>
+ <span class="p">*/</span>
+<span class="k">public</span> <span class="n">class</span> <span class="n">XHLoadingView</span> <span class="n">extends</span> <span class="n">FrameLayout</span> <span class="p">{</span>
+
+    <span class="n">private</span> <span class="n">Context</span> <span class="n">mContext</span><span class="p">;</span>
+    <span class="p">//</span> <span class="err">加载中的布局</span>
+    <span class="n">private</span> <span class="n">LinearLayout</span> <span class="n">mLinearLoad</span><span class="p">;</span>
+    <span class="p">//</span><span class="err">其他加载的布局</span>
+    <span class="n">private</span> <span class="n">LinearLayout</span> <span class="n">mLinearLoading</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">TextView</span> <span class="n">mTvLoading</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">TextView</span> <span class="n">mTvLoad</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">ImageView</span> <span class="n">mIvLoading</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">ImageView</span> <span class="n">mIvLoad</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">Button</span> <span class="n">mBtnLoad</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">LoadingState</span> <span class="n">mState</span><span class="p">;</span>
+
+    <span class="n">private</span> <span class="n">AnimationDrawable</span> <span class="n">animation</span><span class="p">;</span>
+
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span><span class="p">(</span><span class="n">Context</span> <span class="n">context</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">super</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+        <span class="n">mContext</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span><span class="p">(</span><span class="n">Context</span> <span class="n">context</span><span class="p">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">super</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">attrs</span><span class="p">);</span>
+        <span class="n">mContext</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span><span class="p">(</span><span class="n">Context</span> <span class="n">context</span><span class="p">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">int</span> <span class="n">defStyleAttr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">super</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">defStyleAttr</span><span class="p">);</span>
+        <span class="n">mContext</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span><span class="p">(</span><span class="n">Context</span> <span class="n">context</span><span class="p">,</span> <span class="n">AttributeSet</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">int</span> <span class="n">defStyleAttr</span><span class="p">,</span> <span class="n">int</span> <span class="n">defStyleRes</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">super</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">defStyleAttr</span><span class="p">,</span> <span class="n">defStyleRes</span><span class="p">);</span>
+        <span class="n">mContext</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+
+    <span class="p">}</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">build</span><span class="p">(){</span>
+        <span class="n">LayoutInflater</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="n">mContext</span><span class="p">).</span><span class="n">inflate</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">layout</span><span class="p">.</span><span class="n">view_loading</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+
+        <span class="n">mLinearLoading</span> <span class="p">=</span> <span class="p">(</span><span class="n">LinearLayout</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">lin_loading</span><span class="p">);</span>
+
+        <span class="n">mLinearLoad</span> <span class="p">=</span> <span class="p">(</span><span class="n">LinearLayout</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">lin_load</span><span class="p">);</span>
+
+        <span class="n">mIvLoading</span> <span class="p">=</span> <span class="p">(</span><span class="n">ImageView</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">img_loading</span><span class="p">);</span>
+
+        <span class="n">mIvLoad</span> <span class="p">=</span> <span class="p">(</span><span class="n">ImageView</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">iv_load</span><span class="p">);</span>
+
+        <span class="n">mTvLoading</span> <span class="p">=</span> <span class="p">(</span><span class="n">TextView</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">tv_loading</span><span class="p">);</span>
+
+        <span class="n">mTvLoad</span> <span class="p">=</span> <span class="p">(</span><span class="n">TextView</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">tv_load</span><span class="p">);</span>
+
+        <span class="n">mBtnLoad</span> <span class="p">=</span> <span class="p">(</span><span class="n">Button</span><span class="p">)</span> <span class="n">findViewById</span><span class="p">(</span><span class="n">R</span><span class="p">.</span><span class="n">id</span><span class="p">.</span><span class="n">btn_load</span><span class="p">);</span>
+
+        <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setOnClickListener</span><span class="p">(</span><span class="n">new</span> <span class="n">OnClickListener</span><span class="p">()</span> <span class="p">{</span>
+            <span class="p">@</span><span class="n">Override</span>
+            <span class="k">public</span> <span class="n">void</span> <span class="n">onClick</span><span class="p">(</span><span class="n">View</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">setState</span><span class="p">(</span><span class="n">LoadingState</span><span class="p">.</span><span class="n">STATE_LOADING</span><span class="p">);</span>
+                <span class="n">mOnRetryListener</span><span class="p">.</span><span class="n">onRetry</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+
+    <span class="p">}</span>
+
+
+    <span class="p">@</span><span class="n">Override</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">setVisibility</span><span class="p">(</span><span class="n">int</span> <span class="n">visibility</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">super</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">visibility</span><span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">View</span><span class="p">.</span><span class="n">GONE</span><span class="p">==</span><span class="n">visibility</span> <span class="p">&amp;&amp;</span> <span class="n">mState</span><span class="p">==</span><span class="n">LoadingState</span><span class="p">.</span><span class="n">STATE_LOADING</span> <span class="p">&amp;&amp;</span> <span class="n">animation</span><span class="c1">!=null&amp;&amp;animation.isRunning()){
+</span>            <span class="n">animation</span><span class="p">.</span><span class="nf">stop</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">加载中提示文字</span>
+     <span class="p">*/</span>
+    <span class="n">private</span> <span class="k">String</span> <span class="n">mLoadingText</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">int</span> <span class="n">mLoadingIcon</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadingIcon</span><span class="p">(</span><span class="n">int</span> <span class="n">resId</span><span class="p">){</span>
+        <span class="n">mLoadingIcon</span> <span class="p">=</span> <span class="n">resId</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">加载数据为空提示文字</span>
+     <span class="p">*/</span>
+    <span class="n">private</span> <span class="k">String</span> <span class="n">mLoadEmptyText</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">int</span> <span class="n">mLoadEmptyIcon</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withEmptyIcon</span><span class="p">(</span><span class="n">int</span> <span class="n">resId</span><span class="p">){</span>
+        <span class="n">mLoadEmptyIcon</span> <span class="p">=</span> <span class="n">resId</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">无网络提示</span>
+     <span class="p">*/</span>
+    <span class="n">private</span> <span class="k">String</span> <span class="n">mLoadNoNetworkText</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">int</span> <span class="n">mNoNetworkIcon</span><span class="p">;</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withNoNetIcon</span><span class="p">(</span><span class="n">int</span> <span class="n">resId</span><span class="p">){</span>
+        <span class="n">mNoNetworkIcon</span> <span class="p">=</span> <span class="n">resId</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">private</span> <span class="n">OnRetryListener</span> <span class="n">mOnRetryListener</span><span class="p">;</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">定义重试的的接口</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">interface</span> <span class="n">OnRetryListener</span> <span class="p">{</span>
+        <span class="n">void</span> <span class="n">onRetry</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withOnRetryListener</span><span class="p">(</span><span class="n">OnRetryListener</span> <span class="n">mOnRetryListener</span><span class="p">){</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">mOnRetryListener</span> <span class="p">=</span> <span class="n">mOnRetryListener</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span>  <span class="err">设置加载的状态</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">state</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">void</span> <span class="n">setState</span><span class="p">(</span><span class="n">LoadingState</span> <span class="n">state</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">mState</span><span class="p">==</span><span class="n">state</span><span class="p">){</span>
+            <span class="n">return</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">state</span><span class="p">==</span><span class="n">LoadingState</span><span class="p">.</span><span class="n">STATE_LOADING</span><span class="p">){</span>
+            <span class="n">mLinearLoading</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">VISIBLE</span><span class="p">);</span>
+            <span class="n">mLinearLoad</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">GONE</span><span class="p">);</span>
+        <span class="p">}</span><span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">state</span><span class="c1">!=LoadingState.STATE_LOADING){
+</span>            <span class="n">mLinearLoading</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">GONE</span><span class="p">);</span>
+            <span class="n">mLinearLoad</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">VISIBLE</span><span class="p">);</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">animation</span><span class="c1">!=null &amp;&amp; mState==LoadingState.STATE_LOADING)
+</span>                <span class="n">animation</span><span class="p">.</span><span class="nf">stop</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="n">changeState</span><span class="p">(</span><span class="n">state</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="k">public</span> <span class="k">boolean</span> <span class="n">btnEmptyEnable</span> <span class="p">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">boolean</span> <span class="n">btnErrorEnable</span> <span class="p">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">boolean</span> <span class="n">btnNoNetworkEnable</span> <span class="p">=</span> <span class="nb">true</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withBtnNoNetEnnable</span><span class="p">(</span><span class="k">boolean</span> <span class="n">ennable</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">btnNoNetworkEnable</span> <span class="p">=</span> <span class="n">ennable</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withBtnErrorEnnable</span><span class="p">(</span><span class="k">boolean</span> <span class="n">ennable</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">btnErrorEnable</span> <span class="p">=</span> <span class="n">ennable</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withBtnEmptyEnnable</span><span class="p">(</span><span class="k">boolean</span> <span class="n">ennable</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">btnEmptyEnable</span> <span class="p">=</span> <span class="n">ennable</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">改变状态</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">state</span>
+     <span class="p">*/</span>
+    <span class="n">private</span> <span class="n">void</span> <span class="n">changeState</span><span class="p">(</span><span class="n">LoadingState</span> <span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">switch</span> <span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">//</span><span class="err">加载中</span>
+            <span class="k">case</span> <span class="n">STATE_LOADING</span><span class="p">:</span>
+                <span class="n">mState</span> <span class="p">=</span> <span class="n">LoadingState</span><span class="p">.</span><span class="n">STATE_LOADING</span><span class="p">;</span>
+                <span class="n">mIvLoading</span><span class="p">.</span><span class="n">setImageResource</span><span class="p">(</span><span class="n">mLoadingIcon</span><span class="p">);</span>
+                <span class="n">mTvLoading</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">mLoadingText</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">animation</span> <span class="p">==</span> <span class="n">null</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">animation</span> <span class="p">=</span> <span class="p">(</span><span class="n">AnimationDrawable</span><span class="p">)</span> <span class="n">mIvLoading</span><span class="p">.</span><span class="n">getDrawable</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">animation</span> <span class="c1">!= null)
+</span>                    <span class="n">animation</span><span class="p">.</span><span class="n">start</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">//</span><span class="err">数据为空</span>
+            <span class="k">case</span> <span class="n">STATE_EMPTY</span><span class="p">:</span>
+                <span class="n">mState</span> <span class="p">=</span> <span class="n">LoadingState</span><span class="p">.</span><span class="n">STATE_EMPTY</span><span class="p">;</span>
+                <span class="n">mIvLoad</span><span class="p">.</span><span class="n">setImageResource</span><span class="p">(</span><span class="n">mLoadEmptyIcon</span><span class="p">);</span>
+                <span class="n">mTvLoad</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">mLoadEmptyText</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">btnEmptyEnable</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">VISIBLE</span><span class="p">);</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">btn_empty_text</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">GONE</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">//</span><span class="err">加载失败</span>
+            <span class="k">case</span> <span class="n">STATE_ERROR</span><span class="p">:</span>
+                <span class="n">mState</span> <span class="p">=</span> <span class="n">LoadingState</span><span class="p">.</span><span class="n">STATE_ERROR</span><span class="p">;</span>
+                <span class="n">mIvLoad</span><span class="p">.</span><span class="n">setImageResource</span><span class="p">(</span><span class="n">mErrorIco</span><span class="p">);</span>
+                <span class="n">mTvLoad</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">mLoadErrorText</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">btnErrorEnable</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">VISIBLE</span><span class="p">);</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">btn_error_text</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">GONE</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">//</span><span class="err">无网络</span>
+            <span class="k">case</span> <span class="n">STATE_NO_NET</span><span class="p">:</span>
+                <span class="n">mState</span> <span class="p">=</span> <span class="n">LoadingState</span><span class="p">.</span><span class="n">STATE_NO_NET</span><span class="p">;</span>
+                <span class="n">mIvLoad</span><span class="p">.</span><span class="n">setImageResource</span><span class="p">(</span><span class="n">mNoNetworkIcon</span><span class="p">);</span>
+                <span class="n">mTvLoad</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">mLoadNoNetworkText</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">btnNoNetworkEnable</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">VISIBLE</span><span class="p">);</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setText</span><span class="p">(</span><span class="n">btn_nonet_text</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="n">mBtnLoad</span><span class="p">.</span><span class="n">setVisibility</span><span class="p">(</span><span class="n">GONE</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">后台或者本地出现错误提示</span>
+     <span class="p">*/</span>
+    <span class="n">private</span> <span class="k">String</span> <span class="n">mLoadErrorText</span><span class="p">;</span>
+    <span class="n">private</span> <span class="n">int</span> <span class="n">mErrorIco</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withErrorIco</span><span class="p">(</span><span class="n">int</span> <span class="n">resId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">mErrorIco</span> <span class="p">=</span> <span class="n">resId</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">加载空数据</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">resId</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadEmptyText</span><span class="p">(</span><span class="n">int</span> <span class="n">resId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">mLoadEmptyText</span> <span class="p">=</span> <span class="n">getResources</span><span class="p">().</span><span class="n">getString</span><span class="p">(</span><span class="n">resId</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadEmptyText</span><span class="p">(</span><span class="k">String</span> <span class="n">mLoadEmptyText</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">mLoadEmptyText</span> <span class="p">=</span> <span class="n">mLoadEmptyText</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span>  <span class="err">无网络时候加载文字</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">resId</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadNoNetworkText</span><span class="p">(</span><span class="n">int</span> <span class="n">resId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">mLoadNoNetworkText</span> <span class="p">=</span> <span class="n">getResources</span><span class="p">().</span><span class="n">getString</span><span class="p">(</span><span class="n">resId</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">String</span> <span class="n">btn_empty_text</span> <span class="p">=</span> <span class="s2">"重试"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">String</span> <span class="n">btn_error_text</span> <span class="p">=</span> <span class="s2">"重试"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">String</span> <span class="n">btn_nonet_text</span> <span class="p">=</span> <span class="s2">"重试"</span><span class="p">;</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">数据为空的</span><span class="n">Button</span><span class="err">的文字提示</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">text</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withBtnEmptyText</span><span class="p">(</span><span class="k">String</span> <span class="n">text</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">btn_empty_text</span> <span class="p">=</span> <span class="n">text</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">加载错误的</span><span class="n">Button</span><span class="err">的文字提示</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">text</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withBtnErrorText</span><span class="p">(</span><span class="k">String</span> <span class="n">text</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">btn_error_text</span> <span class="p">=</span> <span class="n">text</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">加载错误的文字提示</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">resId</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadErrorText</span><span class="p">(</span><span class="n">int</span> <span class="n">resId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">mLoadErrorText</span> <span class="p">=</span> <span class="n">getResources</span><span class="p">().</span><span class="n">getString</span><span class="p">(</span><span class="n">resId</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadErrorText</span><span class="p">(</span><span class="k">String</span> <span class="n">mLoadedErrorText</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">mLoadErrorText</span> <span class="p">=</span> <span class="n">mLoadedErrorText</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">加载无网络的</span><span class="n">Button</span><span class="err">的文字提示</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">text</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withBtnNoNetText</span><span class="p">(</span><span class="k">String</span> <span class="n">text</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">btn_nonet_text</span> <span class="p">=</span> <span class="n">text</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="p">/**</span>
+     <span class="p">*</span> <span class="err">加载没有网路的文字提示</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">param</span> <span class="n">mLoadedNoNetText</span>
+     <span class="p">*</span> <span class="p">@</span><span class="n">return</span>
+     <span class="p">*/</span>
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadNoNetworkText</span><span class="p">(</span><span class="k">String</span> <span class="n">mLoadedNoNetText</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">mLoadNoNetworkText</span> <span class="p">=</span> <span class="n">mLoadedNoNetText</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadingText</span><span class="p">(</span><span class="n">int</span> <span class="n">resId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">mLoadingText</span> <span class="p">=</span> <span class="n">getResources</span><span class="p">().</span><span class="n">getString</span><span class="p">(</span><span class="n">resId</span><span class="p">);</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">XHLoadingView</span> <span class="n">withLoadingText</span><span class="p">(</span><span class="k">String</span> <span class="n">mLoadingText</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">mLoadingText</span> <span class="p">=</span> <span class="n">mLoadingText</span><span class="p">;</span>
+        <span class="n">return</span> <span class="n">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>针对不同的情况作了不同的处理，然后我们在需要的Activity调用。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	private XHLoadingView mLoadingView;
+	 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display);
+        mLoadingView = (XHLoadingView) findViewById(R.id.lv_loading);
+        mLoadingView.withLoadEmptyText("≥﹏≤ , 啥也木有 !").withEmptyIcon(R.drawable.disk_file_no_data).withBtnEmptyEnnable(false)
+                    .withErrorIco(R.drawable.ic_chat_empty).withLoadErrorText("(῀( ˙᷄ỏ˙᷅ )῀)ᵒᵐᵍᵎᵎᵎ,我家程序猿跑路了 !").withBtnErrorText("臭狗屎!!!")
+                    .withLoadNoNetworkText("你挡着信号啦o(￣ヘ￣o)☞ᗒᗒ 你走").withNoNetIcon(R.drawable.ic_chat_empty).withBtnNoNetText("网弄好了，重试")
+                    .withLoadingIcon(R.drawable.loading_animation).withLoadingText("加载中...").withOnRetryListener(new XHLoadingView.OnRetryListener() {
+                @Override
+                public void onRetry() {
+                    SnackbarUtil.show(mLoadingView,"已经在努力重试了",0);
+                }
+            }).build();
+     }
+
+........
+
+  //加载中
+      mLoadingView.setVisibility(View.VISIBLE);
+      mLoadingView.setState(LoadingState.STATE_LOADING);
+
+ //空数据
+	  mLoadingView.setVisibility(View.VISIBLE);
+      mLoadingView.setState(LoadingState.STATE_EMPTY)
+ //无网络
+	  mLoadingView.setVisibility(View.VISIBLE);
+      mLoadingView.setState(LoadingState.STATE_NO_NET);
+
+ //加载错误
+	  mLoadingView.setVisibility(View.VISIBLE);
+      mLoadingView.setState(LoadingState.STATE_ERROR);
+
+.......
+
+
+   }
+</code></pre></div></div>
+
+<p>源码中注释详细，就不用再做过多的解释了吧！</p>
+
+<h4 id="完整代码xhloadingview"><strong>完整代码</strong>：<a href="https://github.com/git-xuhao/XHLoadingView">XHLoadingView</a></h4>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <h2 id="similar_posts">Similar Posts</h2>
+                        <ul>
+                        
+                        <li class="relatedPost">
+                            <a href="/android-sim">Android-L SIM卡自适应更新语言问题
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                        
+                        <li class="relatedPost">
+                            <a href="/Android-getdate-language">Android 中取得当前时区（以GMT形式）和语言
+                            
+                            </a>
+                        </li>
+                        
+                        
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+            </ul>
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/hexo-github-pages">基于Hexo+GitHub Pages 搭建个人博客教程</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/performance_tests">Android 性能检测工具</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#similar_posts">Similar Posts</a></li>
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>
