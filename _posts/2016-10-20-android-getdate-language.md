@@ -5,6 +5,7 @@ permalink: Android-getdate-language
 date: 2016-10-20 18:05:00
 categories: Android
 tags: Android 
+desc: 国际化需求，要访问当地的时区和语言，作为参数上传服务器处理一些业务，Android手机中如果想以GMT形式（GMT+08:00）得到当前时区，如下的工具类做个记录：
 ---
 
 
