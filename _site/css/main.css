@@ -336,30 +336,24 @@ header {
         color: #000000;
         transition: 0.3s ease; }
         .page .left ul li .title:hover {
-          color: #4d6dad; }
+          color: #495f8a; }
       .page .left ul li i {
         margin-right: 5px; }
-      .page .left ul li .categories {
-        padding: 0 15px; }
-        .page .left ul li .categories i {
-          color: #9e9d9d; }
-        .page .left ul li .categories a {
-          padding: 3px 5px;
-          background-color: #279fc4;
-          color: #fff;
-          border-radius: 5px;
-          font-size: 90%;
-          transition: 0.3s ease; }
-          .page .left ul li .categories a:hover {
-            background-color: #b6b6b9; }
+      .page .left ul li .categories i {
+        color: #9e9d9d; }
+      .page .left ul li .categories a {
+        color: #cf4e80;
+        border-radius: 3px;
+        font-weight: bold;
+        transition: 0.3s ease; }
       .page .left ul li .pageTag i {
         color: #c6cbe9; }
       .page .left ul li .pageTag a {
-        padding: 0 5px;
-        background-color: #c6cbe9;
-        border-radius: 4px;
+        padding: 2px 3px;
+        background-color: #dce0f7;
+        border-radius: 2px;
         color: #fff;
-        font-size: 90%;
+        font-size: 70%;
         transition: 0.3s ease; }
         .page .left ul li .pageTag a:hover {
           background-color: #c0ddc7; }
@@ -722,7 +716,7 @@ pre {
           .page[index] .left > ul li .label .label-card i {
             padding-right: 0;
             margin-right: 0px;
-            color: #c7cbe6; }
+            color: #7db7e6; }
         .page[index] .left > ul li .label .categories {
           padding: 0; }
       .page[index] .left > ul li .excerpt h2 {

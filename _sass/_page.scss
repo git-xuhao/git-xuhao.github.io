@@ -43,28 +43,27 @@
                     color: #000000;
                     transition: 0.3s ease;
                     &:hover {
-                        color: #4d6dad;
+                        color: #495f8a;
                     }
                 }
                 i {
                     margin-right: 5px;
                 }
                 .categories {
-                    padding: 0 15px;
                  
                     i {
                         color: #9e9d9d;
                     }
                     a {
-                        padding: 3px 5px;
-                        background-color: hsl(194, 67%, 46%);
-                        color: #fff;
-                        border-radius: 5px;
-                        font-size: 90%;
+                        // background-color: #2c97ee;
+                        color: rgb(207, 78, 128);
+                        border-radius: 3px;
+                        font-weight: bold;
+
                         transition: 0.3s ease;
-                        &:hover {
-                            background-color: #b6b6b9;
-                        }
+                        // &:hover {
+                        //     // background-color: #b6b6b9;
+                        // }
                     }
                 }
                 .pageTag {
@@ -74,11 +73,11 @@
                     a {
 
                         // border: 1px solid #aaa;
-                        padding: 0 5px;
-                        background-color: #c6cbe9;
-                        border-radius: 4px;
+                        padding: 2px 3px;
+                        background-color: #dce0f7;
+                        border-radius: 2px;
                         color: #fff;
-                        font-size: 90%;
+                        font-size: 70%;
                         transition: 0.3s ease;
                         &:hover {
                             background-color: #c0ddc7;
