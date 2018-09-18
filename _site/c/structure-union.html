@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>C 语言结构体和联合体（六）</title>
+    <meta name="description" content="结构体在C语言中，可以使用结构体（Struct）来存放一组不同类型的数据。结构体的定义形式为：struct 结构体名{    结构体所包含的变量或数组};结构体是一种集合，它里面包含了多个变量或数组，它们的类型可以相同，也可以不同，每个这样的变量或数组都称为结构体的成员（Member）。请看下面的一个栗子：str...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/c/structure-union">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>C 语言结构体和联合体（六）</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-08-25
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#C/C++" title="Category: C/C++" rel="category">C/C++</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#C/C++" title="Category: C/C++" rel="category">C/C++</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#C%2FC%2B%2B" title="Tag: C/C++" rel="tag">C/C++</a-->
+        <a href="/tag/#C/C++" title="Tag: C/C++" rel="tag">C/C++</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h3 id="结构体"><strong>结构体</strong></h3>
+
+<p>在C语言中，可以使用结构体（Struct）来存放一组不同类型的数据。结构体的定义形式为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct 结构体名{
+    结构体所包含的变量或数组
+};
+</code></pre></div></div>
+<p>结构体是一种集合，它里面包含了多个变量或数组，它们的类型可以相同，也可以不同，每个这样的变量或数组都称为结构体的成员（Member）。请看下面的一个栗子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct stu{
+    char *name;  //姓名
+    int num;  //学号
+    int age;  //年龄
+    char group;  //所在学习小组
+    float score;  //成绩
+};
+</code></pre></div></div>
+<!-- more -->
+<p>stu 为结构体名，它包含了 5 个成员，分别是 name、num、age、group、score。结构体成员的定义方式与变量和数组的定义方式相同，只是不能初始化。</p>
+
+<blockquote>
+  <p>注意大括号后面的分号“；”不能少哦~</p>
+</blockquote>
+
+<p>结构体也是一种数据类型，它由我们自己来定义，可以包含多个其他类型的数据。
+像int、float、char 等是由C语言本身提供的数据类型，不能再进行分拆，我们称之为基本数据类型；而结构体可以包含多个基本类型的数据，也可以包含其他的结构体。</p>
+
+<h4 id="结构体变量"><strong>结构体变量</strong></h4>
+
+<p>既然结构体是一种数据类型，那么就可以用它来定义变量。例如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct stu stu1, stu2;
+</code></pre></div></div>
+<p>定义了两个变量 stu1 和 stu2，它们都是 stu 类型，都由 5 个成员组成。注意关键字struct不能少。</p>
+
+<p>还可以在定义结构体的同时定义结构体变量：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct stu{
+    char *name;  //姓名
+    int num;  //学号
+    int age;  //年龄
+    char group;  //所在学习小组
+    float score;  //成绩
+} stu1, stu2;
+</code></pre></div></div>
+
+<p>如果只需要 stu1、stu2 两个变量，后面不需要再使用结构体名定义其他变量，那么在定义时也可以不给出结构体名，如下所示：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct{  //没有写 stu
+    char *name;  //姓名
+    int num;  //学号
+    int age;  //年龄
+    char group;  //所在学习小组
+    float score;  //成绩
+} stu1, stu2;
+</code></pre></div></div>
+
+<p>这样的写法很简单，但是因为没有结构体名，后面就没法用该结构体定义新的变量了。</p>
+
+<p>理论上讲结构体的各个成员在内存中是连续存储的，和数组非常类似，例如上面的结构体变量 stu1、stu2 的内存分布如下图所示，共占用 4+4+4+1+4 = 17 个字节。但是在编译器的具体实现中，各个成员之间可能会存在空隙，C语言中，结构体大小的内存分配，参考于这片文章：<a href="http://blog.csdn.net/zhangjay/article/details/6408907">C语言中结构体大小计算即存储分配</a></p>
+
+<p>这里我在做下总结：</p>
+
+<p>运算符sizeof可以计算出给定类型的大小，对于32位系统来说，sizeof(char) = 1; sizeof(int) = 4。基本数据类型的大小很好计算，我们来看一下如何计算构造数据类型的大小。</p>
+
+<p>　　C语言中的构造数据类型有三种：数组、结构体和共用体。</p>
+
+<p>　　数组是相同类型的元素的集合，只要会计算单个元素的大小，整个数组所占空间等于基础元素大小乘上元素的个数。</p>
+
+<p>　　结构体中的成员可以是不同的数据类型，成员按照定义时的顺序依次存储在连续的内存空间。和数组不一样的是，结构体的大小不是所有成员大小简单的相加，需要考虑到系统在存储结构体变量时的地址对齐问题。看下面这样的一个结构体：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>　　struct stu1
+　　{
+　　int i;
+　　char c;
+　　int j;
+　　}；
+</code></pre></div></div>
+
+<p>　　先介绍一个相关的概念——偏移量。偏移量指的是结构体变量中成员的地址和结构体变量地址 的差。结构体大小等于最后一个成员的偏移量加上最后一个成员的大小。显然，结构体变量中第一个成员的地址就是结构体变量的首地址。因此，第一个成员i的偏 移量为0。第二个成员c的偏移量是第一个成员的偏移量加上第一个成员的大小（0+4）,其值为4；第三个成员j的偏移量是第二个成员的偏移量加上第二个成 员的大小（4+1）,其值为5。</p>
+
+<p>　　实际上，由于存储变量时地址对齐的要求，编译器在编译程序时会遵循两条原则：一、结构体变量中成员的偏移量必须是成员大小的整数倍（0被认为是任何数的整数倍） 二、结构体大小必须是所有成员大小的整数倍。</p>
+
+<p>　　对照第一条，上面的例子中前两个成员的偏移量都满足要求，但第三个成员的偏移量为5，并不是自身(int)大小的整数倍。编译器在处理时会在第二个成员后面补上3个空字节，使得第三个成员的偏移量变成8。</p>
+
+<p>　　对照第二条，结构体大小等于最后一个成员的偏移量加上其大小，上面的例子中计算出来的大小为12，满足要求。</p>
+
+<p>　　再看一个满足第一条，不满足第二条的情况：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>　　struct stu2
+　　{
+　　int k;
+　　short t;
+　　}；
+</code></pre></div></div>
+
+<p>　　成员k的偏移量为0；成员t的偏移量为4，都不需要调整。但计算出来的大小为6，显然不 是成员k大小的整数倍。因此，编译器会在成员t后面补上2个字节，使得结构体的大小变成8从而满足第二个要求。由此可见，大家在定义结构体类型时需要考虑 到字节对齐的情况，不同的顺序会影响到结构体的大小。对比下面两种定义顺序</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>　　struct stu3
+　　{
+　　char c1;
+　　int i;
+　　char c2;
+　　}
+
+　　struct stu4
+　　{
+　　char c1;
+　　char c2;
+　　int i;
+　　}
+</code></pre></div></div>
+
+<p>　　虽然结构体stu3和stu4中成员都一样，但sizeof(struct stu3)的值为12而sizeof(struct stu4)的值为8。</p>
+
+<p>　　如果结构体中的成员又是另外一种结构体类型时应该怎么计算呢？只需把其展开即可。但有一点需要注意，展开后的结构体的第一个成员的偏移量应当是被展开的结构体中最大的成员的整数倍。看下面的例子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>　　struct stu5
+　　{
+　　short i;
+　　
+　　struct{
+　　  char c;
+　　  int j;
+　　} ss;
+　
+　　int k;
+　　}
+</code></pre></div></div>
+
+<p>　　结构体stu5的成员ss.c的偏移量应该是4，而不是2。整个结构体大小应该是16。</p>
+
+<p>　　如何给结构体变量分配空间由编译器决定，以上情况针对的是Linux下的GCC。其他平台的C编译器可能会有不同的处理，看到这里估计还是有些同学不太明白，多看几遍，领悟领悟，就好啦！</p>
+
+<h4 id="成员的获取和赋值"><strong>成员的获取和赋值</strong></h4>
+
+<p>结构体和数组类似，也是一组数据的集合，整体使用没有太大的意义。数组使用下标[ ]获取单个元素，结构体使用点号.获取单个成员。获取结构体成员的一般格式为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>结构体变量名.成员名;
+</code></pre></div></div>
+<p>通过上面的格式就可以获取成员的值，和给成员赋值，看下面的栗子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+int main(){
+    struct{
+        char *name;  //姓名
+        int num;  //学号
+        int age;  //年龄
+        char group;  //所在小组
+        float score;  //成绩
+    } stu1;
+    //给结构体成员赋值
+    stu1.name = "haozi";
+    stu1.num = 12;
+    stu1.age = 18;
+    stu1.group = 'A';
+    stu1.score = 136.5;
+    //读取结构体成员的值
+    printf("%s的学号是%d，年龄是%d，在%c组，今年的成绩是%.1f！\n", stu1.name, stu1.num, stu1.age, stu1.group, stu1.score);
+    return 0;
+}
+</code></pre></div></div>
+<p><strong>运行结果：</strong>
+haozi的学号是12，年龄是18，在A组，今年的成绩是136.5！
+除了这种方式赋值外，还可以在定义的时候赋值：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct{
+    char *name;  //姓名
+    int num;  //学号
+    int age;  //年龄
+    char group;  //所在小组
+    float score;  //成绩
+} stu1, stu2 = { "haozi", 12, 18, 'A', 136.5 };
+</code></pre></div></div>
+<p>不过整体赋值仅限于定义结构体变量的时候，在使用过程中只能对成员逐一赋值，这和数组的赋值非常类似。</p>
+
+<h4 id="结构体与指针"><strong>结构体与指针</strong></h4>
+<p>指针也可以指向一个结构体，定义的形式一般为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct 结构体名 *变量名;
+</code></pre></div></div>
+
+<p>看例子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct Man{
+	char name[20];
+	int age;
+};
+void main(){
+	struct Man m1 = {"Jack",30};
+	//结构体指针
+	struct Man *p = &amp;m1;
+	printf("%s,%d\n", m1.name, m1.age);
+	printf("%s,%d\n",(*p).name,(*p).age);
+	//“-&gt;”（箭头）是“(*p).”简写形式
+	printf("%s,%d\n", p-&gt;name, p-&gt;age);
+	//(*env)-&gt;
+
+	system("pause");
+}
+</code></pre></div></div>
+
+<p>编译出的结果是：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Jack,30
+Jack,30
+Jack,30
+请按任意键继续. . .
+</code></pre></div></div>
+
+<p>上面代码：<code class="highlighter-rouge">printf("%s,%d\n", m1.name, m1.age);</code>还可以换成： <code class="highlighter-rouge">printf("%s,%d\n", （*p）.name, m1.age);</code>或者 <code class="highlighter-rouge">printf("%s,%d\n", p-&gt;name, m1.age)</code>;
+其运行结果还是一样的。</p>
+
+<p>获取结构体成员通过结构体指针可以获取结构体成员，一般形式为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(*pointer).memberName
+</code></pre></div></div>
+
+<p>或者：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pointer-&gt;memberName
+</code></pre></div></div>
+
+<h3 id="联合体共用体"><strong>联合体（共用体）</strong></h3>
+
+<p>结构体（Struct）是一种构造类型或复杂类型，它可以包含多个类型不同的成员。在C语言中，还有另外一种和结构体非常类似的语法，叫做共用体（Union），它的定义格式为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>union 共用体名{
+    成员列表
+};
+</code></pre></div></div>
+<p>共用体有时也被成为联合体；</p>
+
+<p>结构体和共用体的区别在于：结构体的各个成员会占用不同的内存，互相之间没有影响；而共用体的所有成员占用同一段内存，修改一个成员会影响其余所有成员。</p>
+
+<p>结构体占用的内存大于等于所有成员占用的内存的总和（成员之间可能会存在缝隙），共用体占用的内存等于最长的成员占用的内存。共用体使用了内存覆盖技术，同一时刻只能保存一个成员的值，如果对新的成员赋值，就会把原来成员的值覆盖掉。</p>
+
+<p>共用体也是一种自定义类型，可以通过它来创建变量，例如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>union data{
+    int n;
+    char ch;
+    double f;
+};
+union data a, b, c;
+</code></pre></div></div>
+<p>上面是先定义共用体，再创建变量，也可以在定义共用体的同时创建变量：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>union data{
+    int n;
+    char ch;
+    double f;
+} a, b, c;
+</code></pre></div></div>
+
+<p>共用体 data 中，成员 f 占用的内存最多，为 8 个字节，所以 data 类型的变量（也就是 a、b、c）也占用 8 个字节的内存，请看下面的栗子：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include&lt;stdio.h&gt;  
+union var{  
+        long j;  
+        int i;  
+};  
+main(){  
+        union var v;  
+        v.j = 5;  
+        printf("v.j is %d\n",v.i);  
+        v.i = 6;  //最后一次赋值有效
+        printf("now v.j is %ld! the address is %p\n",v.j,&amp;v.j);  
+        
+        printf("now v.i is %d! the address is %p\n",v.i,&amp;v.i);  
+
+		system("pause");
+}  
+</code></pre></div></div>
+<p>编译并运行结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>v.j is 5  
+now v.j is 6! the address is 0xbfad1e2c  
+now v.i is 6! the address is 0xbfad1e2c  
+</code></pre></div></div>
+<p>这段代码不但验证了共用体的长度，还说明共用体成员之间会相互影响，修改一个成员的值会影响其他成员。</p>
+
+<h1 id="csdn">CSDN</h1>
+<h3 id="更多系列相关文章传送门">更多系列相关文章传送门：</h3>
+
+<ul>
+  <li><a href="http://blog.csdn.net/u011974987/article/details/52138798">C语言（一）基本数据类型</a></li>
+  <li><a href="http://blog.csdn.net/u011974987/article/details/52142794">C语言（二）有符号数和无符号数的理解</a></li>
+  <li><a href="http://blog.csdn.net/u011974987/article/details/52200178">C语言（三）字符串处理函数</a></li>
+  <li><a href="http://blog.csdn.net/u011974987/article/details/52270018">C语言（四）指针概念的理解</a></li>
+  <li><a href="http://blog.csdn.net/u011974987/article/details/52290724">C语言（五）内存的分配与释放</a></li>
+  <li><a href="http://blog.csdn.net/u011974987/article/details/52305364">C语言（六）结构体和联合体</a></li>
+  <li><a href="http://blog.csdn.net/u011974987/article/details/52354074">C语言（七）文件的相关操作</a></li>
+</ul>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/c/memory_allocation">C 语言内存分配与释放（五）</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/c/c-file-operation">C 语言文件的相关操作（七）</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

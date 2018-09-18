@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Git 本地提交未Push 自动切到其他版本的解决姿势</title>
+    <meta name="description" content="现象描述：我在现有的分支上进行修改代码，使用git提交本地代码后，SourceTree上面没有记录，我就纳闷了，我原本以为我提交到其他项目了，仔细查看了几个项目的提交记录也都没有，于是退出SourceTree，在打开这个项目还是没记录，并且最新修改的分支在两个版本之前的Develop v2.2.2分支（这个我记得...">
+
+    <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico?" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_8v3czwksspqlg14i.css">
+    <link rel="stylesheet" href="/css/main.css ">
+    <link rel="canonical" href="http://localhost:4000/git-not_push">
+    <link rel="alternate" type="application/rss+xml" title="XUHAO’S 博客" href="http://localhost:4000/feed.xml ">
+
+
+    <script>
+    // 百度统计代码
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3e58af9d5d9338b706ad81d79dcedb4c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    <script>
+    // google analytics
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-122974929-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+
+
+</head>
+
+
+  <body>
+
+    <header id="top">
+    <div class="wrapper">
+        <a href="/" class="brand">XUHAO’S 博客</a>
+        <small>Always hungry to keep learning.</small>
+        <button id="headerMenu" class="menu"><i class="fa fa-bars"></i></button>
+        <nav id="headerNav">
+            <ul>
+                <li>
+                    
+                    <a href="/">
+                    
+                        <i class="fa fa-home"></i>博客
+                    </a>
+                </li>
+
+                
+                    
+                    <li>
+                        
+                        <a href="/archive/">
+                        
+                            <i class="fa fa-archive"></i>归档
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/category/">
+                        
+                            <i class="fa fa-th-list"></i>分类
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/collection/">
+                        
+                            <i class="fa fa-bookmark"></i>书签
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/demo/">
+                        
+                            <i class="fa fa-play"></i>项目
+                        </a>
+                    </li>
+                    
+                
+                    
+                    <li>
+                        
+                        <a href="/about/">
+                        
+                            <i class="fa fa-user"></i>关于
+                        </a>
+                    </li>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="page clearfix" post>
+    <div class="left">
+        <h1>Git 本地提交未Push 自动切到其他版本的解决姿势</h1>
+        <div class="label">
+
+            <div class="label-card">
+                <i class="fa fa-calendar"></i>2016-10-25
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+                
+            </div>
+
+            <div class="label-card">
+            
+
+
+<span class="categories">
+  <!-- <i class="fa fa-th-list"></i>
+  
+    
+        <a href="/category/#GitHub" title="Category: GitHub" rel="category">GitHub</a>
+    
+  
+ -->
+  <i class="fa "></i>
+  
+    
+        <a href="/category/#GitHub" title="Category: GitHub" rel="category">GitHub</a>
+    
+  
+
+  <!-- <span class="point">•</span> -->
+</span>
+
+
+            </div>
+
+            <div class="label-card">
+            
+<!-- <span class="point">•</span> -->
+<span class="pageTag">
+  <i class="fa fa-tags"></i>
+  
+    
+        <!--a href="/tag/#Git" title="Tag: Git" rel="tag">Git</a-->
+        <a href="/tag/#Git" title="Tag: Git" rel="tag">Git</a>
+    
+  
+
+</span>
+
+            </div>
+
+        </div>
+        <hr>
+        <article itemscope itemtype="http://schema.org/BlogPosting">
+        <h3 id="现象描述"><strong>现象描述：</strong></h3>
+
+<p>我在现有的分支上进行修改代码，使用git提交本地代码后，SourceTree上面没有记录，我就纳闷了，我原本以为我提交到其他项目了，仔细查看了几个项目的提交记录也都没有，于是退出SourceTree，在打开这个项目还是没记录，并且最新修改的分支在两个版本之前的Develop v2.2.2分支（这个我记得我是在最新的分支上开发的，不排除我在其他分支上进行开发的情况），不过这个都不是事儿，怎么恢复修改的代码到最新的分支上面呢？下面提供解决方案~~</p>
+
+<h3 id="解决方案"><strong>解决方案：</strong></h3>
+
+<ol>
+  <li>打开<strong>gitbash</strong> 命令行；</li>
+  <li>输出<strong>git log</strong> 查看不到提交历史的历史记录；</li>
+  <li>输入<strong>git reflog</strong>可以查看所有分支的所有操作记录（包括（包括commit和reset的操作），包括已经被删除的commit记录，git log则不能察看已经删除了的commit记录。</li>
+</ol>
+
+<p><img src="https://img-blog.csdn.net/20161024172334515" alt="这里写图片描述" /></p>
+
+<p><strong>上面红色箭头指的地方就查看不到记录。</strong>
+<!-- more --></p>
+<ol>
+  <li>（上面已经说明了,当前最新提交的分支在v2.2.2上）然后我们要恢复5d3c053 这个分支到v2.2.4上面，那我们就要使用<strong>git cherry</strong>了。</li>
+  <li>使用 cherry-pick.  根据git 文档：</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Apply the changes introduced by some existing commits 
+</code></pre></div></div>
+
+<p>就是对已经存在的commit 进行apply (可以理解为再次提交）</p>
+
+<p>简单用法：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git cherry-pick &lt;commit id&gt;
+</code></pre></div></div>
+
+<p>例如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$  git checkout old_cc
+$  git cherry-pick 67fbeee# 这个 67fbeee号码，位于：
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Commit: 67fbeee108798cf43895db16cdcf91c2b1d5298d [67fbeee]
+Parents: fa10c134b8
+Author: xuhao &lt;504105930@qq.com&gt;
+Date: 2016年10月21日 18:27:14
+Labels: tag:, v2.2.3
+更改版本号，解决发布问题标题问题
+
+</code></pre></div></div>
+
+<p>如上图：
+由于adb install 这个记录可能在v2.2.2分支提交的，现在要把这个分支提交到v2.2.4分支上；</p>
+
+<p>结果如下：</p>
+
+<p><img src="https://img-blog.csdn.net/20161024175356461" alt="这里写图片描述" />，</p>
+
+<p>最后之前丢失的那条记录也出来了，成功的解决了~~，sourceTree记录图如下：</p>
+
+<p><img src="https://img-blog.csdn.net/20161024175647103" alt="这里写图片描述" /></p>
+
+<p>总结：不管用什么工具，只有熟练掌握了命令才是王道啊~</p>
+
+<blockquote>
+  <p>本文由博主辛苦整理下来的笔记； 
+希望大家能够指点或提出宝贵意见，共同学习，谢谢！ 
+转载请注明出处：<a href="http://xuhaoblog.com/git/not_push.html">http://xuhaoblog.com/git/not_push.html</a>
+欢迎关注我的社交网站~
+个人博客：<a href="http://xuhaoblog.com">xuhaoblog.com</a>
+新浪微博：<a href="http://weibo.com/xuxiho">http://weibo.com/xuxiho</a>
+github：<a href="https://github.com/git-xuhao">https://github.com/git-xuhao</a></p>
+</blockquote>
+
+
+        </article>
+        <hr>
+
+        
+        
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+            
+            
+                
+                    
+                
+            
+        
+        
+
+        <div class="post-recent">
+    <div class="pre">
+        
+        <p><strong>上一篇</strong> <a href="/Android-getdate-language">Android 中取得当前时区（以GMT形式）和语言</a></p>
+        
+    </div>
+    <div class="nex">
+
+        
+        <p><strong>下一篇</strong> <a href="/android-sim">Android-L SIM卡自适应更新语言问题</a></p>
+        
+    </div>
+</div>
+
+
+        <h2 id="comments">Comments</h2>
+        
+  
+  <!-- Gitalk 评论 start  -->
+  <!-- Link Gitalk 的支持文件  -->
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+  
+  <div id="gitalk-container">
+      <script type="text/javascript">
+      var gitalk = new Gitalk({
+  
+      // gitalk的主要参数
+          clientID: `3d507f3b58e98bd4c002`,
+          clientSecret: `20eb5562ff08dcc12a9a61edbdb8b29f9135e302`,
+          repo: `git-xuhao.github.io`,
+          owner: `git-xuhao`,
+          admin: [`git-xuhao`],
+          id: location.pathname,
+          distractionFreeMode: false
+
+      });
+      gitalk.render('gitalk-container');
+  </script>
+  </div>
+  <!-- Gitalk end -->
+
+
+
+    </div>
+    <button class="anchor"><i class="fa fa-anchor"></i></button>
+    <div class="right">
+        <div class="wrap">
+
+            <!-- Content -->
+            <div class="side content">
+                <div>
+                    目录
+                </div>
+                <ul id="content-side" class="content-ul">
+                    
+                    <li><a href="#comments">Comments</a></li>
+                </ul>
+            </div>
+            <!-- 其他div框放到这里 -->
+            <!-- <div class="side">bbbb</div> -->
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * target _blank
+ */
+(function() {
+    var aTags = document.querySelectorAll('article a:not([id])')
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute('target', '_blank')
+    }
+}());
+</script>
+<script src="/js/pageContent.js " charset="utf-8"></script>
+
+
+    <footer class="site-footer">
+
+
+    <div class="wrapper">
+
+        <p class="description">
+             徐昊Xiho开源技术博客 
+        </p>
+        <p class="contact">
+            <b>| 联系我</b>
+            <a href="mailto:igeekho@gmail.com" title="email"><i class="fa fa-envelope-square" aria-hidden="true"></i></a> 
+            <a href="https://github.com/git-xuhao" title="GitHub"><i class="fa fa-github" aria-hidden="true"></i></a> 
+            <a href="http://weibo.com/xuxiho" title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a>    
+            <a href="https://www.facebook.com/google.xu" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a>    
+        </p>
+        <p>
+            本站总访问量<span id="busuanzi_value_site_pv"></span>次，本站访客数<span id="busuanzi_value_site_uv"></span>人次
+        </p>
+      
+            <span>
+                © 2015-2018  Power by Jekyll </a>
+            </span>
+    
+    </div>
+</footer>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <div class="back-to-top">
+    <a href="#top" data-scroll>
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </a>
+</div>
+
+    <script src=" /js/main.js " charset="utf-8"></script>
+    <script src=" /js/smooth-scroll.min.js " charset="utf-8"></script>
+    <script type="text/javascript">
+      smoothScroll.init({
+        speed: 500, // Integer. How fast to complete the scroll in milliseconds
+        easing: 'easeInOutCubic', // Easing pattern to use
+        offset: 20, // Integer. How far to offset the scrolling anchor location in pixels
+      });
+    </script>
+    <!-- <script src=" /js/scroll.min.js " charset="utf-8"></script> -->
+  </body>
+
+</html>

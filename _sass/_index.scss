@@ -1,4 +1,16 @@
 .page[index] {
+    .card {
+        // background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/279756/2017_bg.png);
+        background-size: cover;
+        width: 100%;
+        height: auto;
+        border-radius: 5px;
+        box-shadow: -20px 30px 116px 0 rgba(165, 151, 151, 0.54);
+        overflow: hidden;
+        z-index: 4;
+        color: white;
+        padding: 20px;
+      }
     a {
         color: #4d6dad;
         transition: 0.5s ease;
