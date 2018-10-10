@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Android-L SIM卡自适应更新语言问题</title>
-    <meta name="description" content="前言每次到发布UAT和Release 版本的时候，不同的组件总是出现各种问题，在测试中版本中就没有测试出来，就在今天发布Global（海外）版的时候遇到了一个之前并没发现的问题，就是刷机的rom版本是Global版的，默认的系统语言是英文版的。刚刷完机，插上中国区域的SIM 卡，第一次开机时候，语言自动切换到中文...">
+    <meta name="description" content="  前言  正文          一、系统设定默认语言规则      二、修改默认语言      前言每次到发布UAT和Release 版本的时候，不同的组件总是出现各种问题，在测试中版本中就没有测试出来，就在今天发布Global（海外）版的时候遇到了一个之前并没发现的问题，就是刷机的rom版本是Global版...">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="icon" href="/favicon.ico?" type="image/x-icon">
@@ -200,7 +200,17 @@
         </div>
         <hr>
         <article itemscope itemtype="http://schema.org/BlogPosting">
-        <h2 id="前言"><strong>前言</strong></h2>
+        <ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言"><strong>前言</strong></a></li>
+  <li><a href="#正文" id="markdown-toc-正文"><strong>正文</strong></a>    <ul>
+      <li><a href="#一系统设定默认语言规则" id="markdown-toc-一系统设定默认语言规则">一、系统设定默认语言规则</a></li>
+      <li><a href="#二修改默认语言" id="markdown-toc-二修改默认语言">二、修改默认语言</a></li>
+      <li><a href="#补充" id="markdown-toc-补充">补充：</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="前言"><strong>前言</strong></h2>
 <p>每次到发布UAT和Release 版本的时候，不同的组件总是出现各种问题，在测试中版本中就没有测试出来，就在今天发布Global（海外）版的时候遇到了一个之前并没发现的问题，就是刷机的rom版本是Global版的，默认的系统语言是英文版的。刚刷完机，插上中国区域的SIM 卡，第一次开机时候，语言自动切换到中文了，由于之前也没这方面经验，对这并不清楚，然后就当BUG 让我修改，后来在网上查了下资料，才了解MTK平台 确实有这么回事，Mark一下~详情如下：</p>
 
 <hr />

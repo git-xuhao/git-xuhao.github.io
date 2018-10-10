@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Android NDK 开发AndroidStudio 2.2 更友好的支持NDK（五）</title>
-    <meta name="description" content="前言之前一直在用Eclipse 做开发，直到今年年初才将项目迁移到Google 推荐的AndroidStudio上面，毕竟这是一个趋势，可谁知道事情根本没有我想的那么简单，这期间遇到了N多坑，我想这些坑可能大家也有可能遇到，不在这里详细叙述。最终一个个问题的去解决，走完了这些坑，觉得还挺好用的，Eclipse 是...">
+    <meta name="description" content="  前言  正文          1. 下载开发工具和NDK（windows10 64位环境）      创建支持Native Code新项目      编译运行示例 APP      将 C/C++ 代码添加到现有的项目中      创建新的 native source 文件      创建 CMake 构建...">
 
     <link rel="shortcut icon" href="/favicon.ico?" type="image/x-icon">
     <link rel="icon" href="/favicon.ico?" type="image/x-icon">
@@ -200,7 +200,31 @@
         </div>
         <hr>
         <article itemscope itemtype="http://schema.org/BlogPosting">
-        <h2 id="前言"><strong>前言</strong></h2>
+        <ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言"><strong>前言</strong></a></li>
+  <li><a href="#正文" id="markdown-toc-正文"><strong>正文</strong></a>    <ul>
+      <li><a href="#1-下载开发工具和ndkwindows10-64位环境" id="markdown-toc-1-下载开发工具和ndkwindows10-64位环境"><strong>1. 下载开发工具和NDK（windows10 64位环境）</strong></a></li>
+      <li><a href="#创建支持native-code新项目" id="markdown-toc-创建支持native-code新项目"><strong>创建支持Native Code新项目</strong></a></li>
+      <li><a href="#编译运行示例-app" id="markdown-toc-编译运行示例-app"><strong>编译运行示例 APP</strong></a></li>
+      <li><a href="#将-cc-代码添加到现有的项目中" id="markdown-toc-将-cc-代码添加到现有的项目中"><strong>将 C/C++ 代码添加到现有的项目中</strong></a></li>
+      <li><a href="#创建新的-native-source-文件" id="markdown-toc-创建新的-native-source-文件"><strong>创建新的 native source 文件</strong></a></li>
+      <li><a href="#创建-cmake-构建脚本" id="markdown-toc-创建-cmake-构建脚本"><strong>创建 CMake 构建脚本</strong></a>        <ul>
+          <li><a href="#添加-ndk-apis" id="markdown-toc-添加-ndk-apis"><strong>添加 NDK APIs</strong></a></li>
+          <li><a href="#添加其他的预编译库" id="markdown-toc-添加其他的预编译库"><strong>添加其他的预编译库</strong></a></li>
+        </ul>
+      </li>
+      <li><a href="#关联本地库与-gradle" id="markdown-toc-关联本地库与-gradle"><strong>关联本地库与 Gradle</strong></a>        <ul>
+          <li><a href="#使用-android-studio-图形化界面" id="markdown-toc-使用-android-studio-图形化界面"><strong>使用 Android Studio 图形化界面</strong></a></li>
+          <li><a href="#配置-gradle" id="markdown-toc-配置-gradle"><strong>配置 Gradle</strong></a></li>
+          <li><a href="#可选配置" id="markdown-toc-可选配置"><strong>可选配置</strong></a></li>
+          <li><a href="#指定-abi" id="markdown-toc-指定-abi"><strong>指定 ABI</strong></a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="前言"><strong>前言</strong></h2>
 <p>之前一直在用Eclipse 做开发，直到今年年初才将项目迁移到Google 推荐的AndroidStudio上面，毕竟这是一个趋势，可谁知道事情根本没有我想的那么简单，这期间遇到了N多坑，我想这些坑可能大家也有可能遇到，不在这里详细叙述。最终一个个问题的去解决，走完了这些坑，觉得还挺好用的，Eclipse 是一个吃内存的IDE，反正我每次打开，编写代码的时候就会卡，有时候还是死掉，已无力吐糟~~，AndroidStudio的界面更人性化，除此之外，还有更多的功能。所以决定把之前在正在eclipse上开发的一个使用NDK开发的android项目转移到AndroidStudio上，在2.2之前对C/C++ 支持不是很友好，没有语法提示，编译也不方便等问题，所以期待了的Android Studio 2.2 版本稳定版终于在前段发布，一直未来得及尝试，今天把整个过程记下来，希望能给你有所帮助。</p>
 
 <p>参考文献：https://developer.android.com/studio/projects/add-native-code.html#create-sources</p>

@@ -5,8 +5,8 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 10 Oct 2018 21:49:27 +0800</pubDate>
-    <lastBuildDate>Wed, 10 Oct 2018 21:49:27 +0800</lastBuildDate>
+    <pubDate>Wed, 10 Oct 2018 22:46:07 +0800</pubDate>
+    <lastBuildDate>Wed, 10 Oct 2018 22:46:07 +0800</lastBuildDate>
     <generator>Jekyll v3.8.3</generator>
     
       <item>
@@ -140,7 +140,16 @@ limitations under the License.
     
       <item>
         <title>Android-L SIM卡自适应更新语言问题</title>
-        <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h2&gt;
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#前言&quot; id=&quot;markdown-toc-前言&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#正文&quot; id=&quot;markdown-toc-正文&quot;&gt;&lt;strong&gt;正文&lt;/strong&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#一系统设定默认语言规则&quot; id=&quot;markdown-toc-一系统设定默认语言规则&quot;&gt;一、系统设定默认语言规则&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#二修改默认语言&quot; id=&quot;markdown-toc-二修改默认语言&quot;&gt;二、修改默认语言&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;前言&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h2&gt;
 每次到发布UAT和Release 版本的时候，不同的组件总是出现各种问题，在测试中版本中就没有测试出来，就在今天发布Global（海外）版的时候遇到了一个之前并没发现的问题，就是刷机的rom版本是Global版的，默认的系统语言是英文版的。刚刷完机，插上中国区域的SIM 卡，第一次开机时候，语言自动切换到中文了，由于之前也没这方面经验，对这并不清楚，然后就当BUG 让我修改，后来在网上查了下资料，才了解MTK平台 确实有这么回事，Mark一下~详情如下：
 
 &lt;hr /&gt;
@@ -238,7 +247,12 @@ config.simSetLocale = true;
     
       <item>
         <title>Git 本地提交未Push 自动切到其他版本的解决姿势</title>
-        <description>&lt;h3 id=&quot;现象描述&quot;&gt;&lt;strong&gt;现象描述：&lt;/strong&gt;&lt;/h3&gt;
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#现象描述&quot; id=&quot;markdown-toc-现象描述&quot;&gt;&lt;strong&gt;现象描述：&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#解决方案&quot; id=&quot;markdown-toc-解决方案&quot;&gt;&lt;strong&gt;解决方案：&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;现象描述&quot;&gt;&lt;strong&gt;现象描述：&lt;/strong&gt;&lt;/h3&gt;
 
 在现有的分支上进行修改代码，使用git提交本地代码后，SourceTree上面没有记录，我就纳闷了，我原本以为我提交到其他项目了，仔细查看了几个项目的提交记录也都没有，于是退出SourceTree，再打开这个项目还是没记录，并且最新修改的分支在两个版本之前的Develop v2.2.2分支（这个我记得我是在最新的分支上开发的，不排除我在其他分支上进行开发的情况），不过这个都不是事儿，怎么恢复修改的代码到最新的分支上面呢？下面提供解决方案~~
 
@@ -321,7 +335,8 @@ github：&lt;a href=&quot;https://github.com/git-xuhao&quot;&gt;https://github.c
     
       <item>
         <title>Android 中取得当前时区（以GMT形式）和语言</title>
-        <description>国际化需求，要访问当地的时区和语言，作为参数上传服务器处理一些业务，Android手机中如果想以GMT形式（GMT+08:00）得到当前时区，如下的工具类做个记录：
+        <description>
+国际化需求，要访问当地的时区和语言，作为参数上传服务器处理一些业务，Android手机中如果想以GMT形式（GMT+08:00）得到当前时区，如下的工具类做个记录：
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
 /**
  * 时区语言工具类
@@ -374,7 +389,25 @@ public class I18NUtils {
     
       <item>
         <title>Android NDK 开发AndroidStudio 2.2 更友好的支持NDK（五）</title>
-        <description>&lt;h2 id=&quot;前言&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h2&gt;
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#前言&quot; id=&quot;markdown-toc-前言&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#正文&quot; id=&quot;markdown-toc-正文&quot;&gt;&lt;strong&gt;正文&lt;/strong&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#1-下载开发工具和ndkwindows10-64位环境&quot; id=&quot;markdown-toc-1-下载开发工具和ndkwindows10-64位环境&quot;&gt;&lt;strong&gt;1. 下载开发工具和NDK（windows10 64位环境）&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#创建支持native-code新项目&quot; id=&quot;markdown-toc-创建支持native-code新项目&quot;&gt;&lt;strong&gt;创建支持Native Code新项目&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#编译运行示例-app&quot; id=&quot;markdown-toc-编译运行示例-app&quot;&gt;&lt;strong&gt;编译运行示例 APP&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#将-cc-代码添加到现有的项目中&quot; id=&quot;markdown-toc-将-cc-代码添加到现有的项目中&quot;&gt;&lt;strong&gt;将 C/C++ 代码添加到现有的项目中&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#创建新的-native-source-文件&quot; id=&quot;markdown-toc-创建新的-native-source-文件&quot;&gt;&lt;strong&gt;创建新的 native source 文件&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#创建-cmake-构建脚本&quot; id=&quot;markdown-toc-创建-cmake-构建脚本&quot;&gt;&lt;strong&gt;创建 CMake 构建脚本&lt;/strong&gt;&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#添加-ndk-apis&quot; id=&quot;markdown-toc-添加-ndk-apis&quot;&gt;&lt;strong&gt;添加 NDK APIs&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#添加其他的预编译库&quot; id=&quot;markdown-toc-添加其他的预编译库&quot;&gt;&lt;strong&gt;添加其他的预编译库&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#关联本地库与-gradle&quot; id=&quot;markdown-toc-关联本地库与-gradle&quot;&gt;&lt;strong&gt;关联本地库与 Gradle&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;前言&quot;&gt;&lt;strong&gt;前言&lt;/strong&gt;&lt;/h2&gt;
 之前一直在用Eclipse 做开发，直到今年年初才将项目迁移到Google 推荐的AndroidStudio上面，毕竟这是一个趋势，可谁知道事情根本没有我想的那么简单，这期间遇到了N多坑，我想这些坑可能大家也有可能遇到，不在这里详细叙述。最终一个个问题的去解决，走完了这些坑，觉得还挺好用的，Eclipse 是一个吃内存的IDE，反正我每次打开，编写代码的时候就会卡，有时候还是死掉，已无力吐糟~~，AndroidStudio的界面更人性化，除此之外，还有更多的功能。所以决定把之前在正在eclipse上开发的一个使用NDK开发的android项目转移到AndroidStudio上，在2.2之前对C/C++ 支持不是很友好，没有语法提示，编译也不方便等问题，所以期待了的Android Studio 2.2 版本稳定版终于在前段发布，一直未来得及尝试，今天把整个过程记下来，希望能给你有所帮助。
 
 参考文献：https://developer.android.com/studio/projects/add-native-code.html#create-sources

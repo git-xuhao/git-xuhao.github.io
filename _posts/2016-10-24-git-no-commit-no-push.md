@@ -7,7 +7,8 @@ categories: GitHub
 tags: Git
 desc: 在现有的分支上进行修改代码，使用git提交本地代码后，SourceTree上面没有记录，我就纳闷了，我原本以为我提交到其他项目了，仔细查看了几个项目的提交记录也都没有，于是退出SourceTree，再打开这个项目还是没记录...
 ---
-
+* content
+{:toc}
 
 ### **现象描述：**
 

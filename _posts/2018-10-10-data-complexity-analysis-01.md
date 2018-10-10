@@ -5,6 +5,7 @@ permalink: data-complexity-analysis-01
 date: 2018-10-10 21:00:31
 categories: 数据结构与算法
 tags: 数据结构 算法 复杂度分析
+mathjax: true
 desc: 算法复杂度是指算法在编写成可执行程序后，运行时所需要的资源，资源包括时间资源和内存资源。
 ---
 * content
