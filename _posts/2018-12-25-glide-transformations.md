@@ -88,9 +88,7 @@ BitmapTransformation
 
 ## 一个简单的实现看起来可能像这样：
 
-public class FillSpace extends BitmapTransformation {
-    private static final String ID = "com.bumptech.glide.transformations.FillSpace";
-    private static final String ID_BYTES = ID.getBytes(STRING_CHARSET_NAME);
+
 
     @Override
     public Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
