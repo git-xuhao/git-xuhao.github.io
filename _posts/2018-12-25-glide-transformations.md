@@ -3,8 +3,8 @@ layout: post
 title: Glide使用自定义Transformations 必须实现的方法
 key: 100011
 tags: glide Transformation
-category: glide
-date: 2017-12-25 01:15:00 +08:00
+category: 技术
+date: 2018-12-25 11:15:00 
 desc: 为了让内存缓存正常地工作你是否必须实现 equals() 和 hashCode() 方法。很不幸，即使你没有复写这两个方法，BitmapTransformation 和 Transformation 也能通过编译，但这并不意味着它们能正常工作
 ---
 * content
