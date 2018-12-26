@@ -1,7 +1,6 @@
 ---
 layout: post
 title: Glide使用自定义Transformations 必须实现的方法
-key: 100011
 tags: glide Transformation
 category: 技术
 date: 2018-12-25 11:15:00 
